@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Monochromatic Maroon Scale */
+  --color-mono-50: #FAF8F8;
+  --color-mono-100: #F5EEEE;
+  --color-mono-200: #E8DFDF;
+  --color-mono-300: #D8CACA;
+  --color-mono-400: #A89090;
+  --color-mono-500: #7C4646;
+  --color-mono-600: #8B1A1A;
+  --color-mono-700: #6E1313;
+  --color-mono-800: #4E0E0E;
+  --color-mono-900: #1A0D0D;
+
+  /* Semantic / Brand Aliases */
+  --color-red: #8B1A1A;
+  --color-red-rich: #6E1313;
+  --color-red-dark: #4E0E0E;
+  --color-red-50: #FDF5F5;
+  --color-red-100: #F9EBEB;
+
+  --color-cream: #FAF8F8;
+  --color-warm-gray: #F5EEEE;
+  --color-gold-accent: #C59B27;
+  --color-gold-light: #F7EFC8;
+  --color-border: #E8DFDF;
+
+  --color-text: #1A0D0D;
+  --color-text-2: #6A4B4B;
+  --color-text-3: #735656;
+
+  /* Functional Status Colors */
+  --color-green: #14592F;
+  --color-green-bg: #EAF5EF;
+  --color-orange: #9E4A00;
+  --color-orange-bg: #FDF2E7;
+  --color-amber: #D97706;
+  --color-amber-bg: #FEF8E7;
+
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+
+  /* Soft Shadows */
+  --shadow-card: 0 1px 3px 0 rgba(26, 13, 13, 0.03), 0 4px 14px -2px rgba(26, 13, 13, 0.04);
+  --shadow-card-elevated: 0 4px 8px -1px rgba(26, 13, 13, 0.03), 0 14px 28px -4px rgba(26, 13, 13, 0.06);
+  --shadow-glow-maroon: 0 0 24px 2px rgba(139, 26, 26, 0.12);
+  --shadow-modal: 0 20px 40px -8px rgba(26, 13, 13, 0.16);
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-mono-50);
+  color: var(--color-text);
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
