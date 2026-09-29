@@ -2,13 +2,13 @@ import React from 'react'
 import { cn } from '../utils/cn'
 
 const variantClasses = {
-  primary: 'bg-slate-900 text-white hover:bg-slate-800 focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 shadow-xs active:scale-[0.98]',
-  brand: 'bg-brand text-white hover:bg-brand-hover focus:ring-2 focus:ring-brand focus:ring-offset-2 shadow-xs active:scale-[0.98]',
-  gold: 'bg-amber-600 text-white hover:bg-amber-700 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 shadow-xs active:scale-[0.98]',
-  secondary: 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 shadow-xs active:scale-[0.98]',
-  outline: 'bg-transparent text-slate-800 border border-slate-200 hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98]',
-  ghost: 'bg-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100 active:scale-[0.98]',
-  whatsapp: 'bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 shadow-xs active:scale-[0.98]',
+  primary: 'bg-red hover:bg-red-rich text-white font-bold tracking-wider uppercase shadow-subtle active:scale-[0.99] transition-all',
+  dark: 'bg-mono-900 hover:bg-black text-white font-bold tracking-wider uppercase shadow-subtle active:scale-[0.99] transition-all',
+  gold: 'bg-gold-accent hover:bg-[#A88647] text-white font-bold tracking-wider uppercase shadow-subtle active:scale-[0.99] transition-all',
+  secondary: 'bg-white text-text border border-border hover:border-red hover:text-red font-semibold tracking-wide transition-all',
+  outline: 'bg-transparent text-red border border-red hover:bg-red hover:text-white font-bold tracking-wider uppercase transition-all',
+  ghost: 'bg-transparent text-text hover:text-red hover:bg-mono-100 transition-all',
+  whatsapp: 'bg-green hover:bg-[#0E3E20] text-white font-semibold tracking-wide shadow-subtle transition-all',
 }
 
 const sizeClasses = {

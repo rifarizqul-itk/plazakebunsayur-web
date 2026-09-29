@@ -2,61 +2,57 @@
 @import "tailwindcss";
 
 @theme {
-  /* Modern Minimalist Neutral Scale */
-  --color-mono-50: #F8FAFC;
-  --color-mono-100: #F1F5F9;
-  --color-mono-200: #E2E8F0;
-  --color-mono-300: #CBD5E1;
-  --color-mono-400: #94A3B8;
-  --color-mono-500: #64748B;
-  --color-mono-600: #475569;
-  --color-mono-700: #334155;
-  --color-mono-800: #1E293B;
-  --color-mono-900: #0F172A;
+  /* Authentic Plaza Kebun Sayur Monochromatic Maroon Scale (from Insos_Bunsay) */
+  --color-mono-50: #FAF8F8;
+  --color-mono-100: #F5EEEE;
+  --color-mono-200: #E8DFDF;
+  --color-mono-300: #D8CACA;
+  --color-mono-400: #A89090;
+  --color-mono-500: #7C4646;
+  --color-mono-600: #8B1A1A;
+  --color-mono-700: #6E1313;
+  --color-mono-800: #4E0E0E;
+  --color-mono-900: #1A0D0D;
 
-  /* Refined Brand Crimson (Accents only) */
-  --color-brand: #881337;
-  --color-brand-hover: #700f2d;
-  --color-brand-light: #FFF1F2;
-  --color-brand-border: #FECDD3;
+  /* Semantic Brand Palette */
+  --color-red: #8B1A1A;
+  --color-red-rich: #6E1313;
+  --color-red-dark: #4E0E0E;
+  --color-red-50: #FDF5F5;
+  --color-red-100: #F9EBEB;
 
-  /* Aliases for backwards compatibility */
-  --color-red: #881337;
-  --color-red-rich: #700f2d;
-  --color-red-dark: #4C0519;
-  --color-red-50: #FFF1F2;
-  --color-red-100: #FFE4E6;
+  --color-cream: #FAF8F8;
+  --color-warm-gray: #F5EEEE;
+  --color-gold-accent: #C59B27;
+  --color-gold-light: #F7EFC8;
+  --color-gold-muted: #A88647;
+  --color-border: #E8DFDF;
+  --color-border-subtle: #F0E8E8;
 
-  --color-gold-accent: #B45309;
-  --color-gold-light: #FEF3C7;
-  --color-border: #E2E8F0;
-  --color-border-subtle: #F1F5F9;
-
-  --color-text: #0F172A;
-  --color-text-2: #475569;
-  --color-text-3: #94A3B8;
+  --color-text: #1A0D0D;
+  --color-text-2: #523838;
+  --color-text-3: #7A5C5C;
 
   /* Functional Status Colors */
-  --color-green: #059669;
-  --color-green-bg: #ECFDF5;
-  --color-orange: #D97706;
-  --color-orange-bg: #FFFBEB;
+  --color-green: #14592F;
+  --color-green-bg: #EAF5EF;
+  --color-orange: #9E4A00;
+  --color-orange-bg: #FDF2E7;
 
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-  /* Clean, Minimalist Soft Shadows */
-  --shadow-subtle: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
-  --shadow-card: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 2px 8px -2px rgba(15, 23, 42, 0.03);
-  --shadow-card-elevated: 0 10px 25px -5px rgba(15, 23, 42, 0.06), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
-  --shadow-modal: 0 25px 50px -12px rgba(15, 23, 42, 0.2);
+  /* Crisp Luxury Retail Shadows */
+  --shadow-subtle: 0 1px 2px 0 rgba(26, 13, 13, 0.03);
+  --shadow-card: 0 2px 4px 0 rgba(26, 13, 13, 0.02), 0 6px 16px -2px rgba(26, 13, 13, 0.04);
+  --shadow-card-elevated: 0 12px 28px -4px rgba(26, 13, 13, 0.08), 0 6px 12px -4px rgba(26, 13, 13, 0.03);
+  --shadow-modal: 0 25px 50px -12px rgba(26, 13, 13, 0.25);
 }
 
 body {
   font-family: var(--font-sans);
-  background-color: #FFFFFF;
+  background-color: #FAF8F8;
   color: var(--color-text);
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
-  letter-spacing: -0.011em;
 }

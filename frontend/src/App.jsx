@@ -61,7 +61,7 @@ export function App() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-white font-sans text-slate-900 selection:bg-slate-900 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-white font-sans text-neutral-900 selection:bg-brand selection:text-white">
       {/* Top Navigation */}
       <Navbar activeSection={activeSection} onNavigate={handleNavigate} />
 

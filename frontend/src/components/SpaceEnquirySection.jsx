@@ -28,13 +28,13 @@ export function SpaceEnquirySection() {
       id: 'exhibition',
       title: 'Stand Pameran / Atrium',
       icon: CalendarCheck,
-      desc: 'Lahan terbuka di atrium utama untuk penyelenggaraan pameran batu akik, bazar UMKM, dan event promosi.',
+      desc: 'Lahan terbuka di atrium utama untuk pameran batu akik mulia, expo kerajinan, dan bazar promosi.',
     },
     {
       id: 'open_counter',
       title: 'Open Counter / Lapak Teras',
       icon: Building2,
-      desc: 'Booth island atau gerai terbuka di koridor lalu lintas pengunjung untuk produk oleh-oleh atau aksesoris.',
+      desc: 'Booth island atau gerai terbuka di koridor utama pengunjung untuk produk cinderamata atau aksesoris.',
     },
   ]
 
@@ -66,21 +66,25 @@ export function SpaceEnquirySection() {
   }
 
   return (
-    <section id="sewa" className="py-16 sm:py-20 bg-slate-50/60 border-b border-slate-100">
+    <section id="sewa" className="py-16 sm:py-20 bg-bunsay-cream/40 border-b border-neutral-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Header */}
+        {/* Header with Yas Mall Style Tracking */}
         <div className="text-center max-w-2xl mx-auto mb-10">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Penyewaan Kios & Lahan Usaha
+          <span className="text-[11px] font-bold text-brand uppercase tracking-[0.25em] block mb-2">
+            Kemitraan & Investasi
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-neutral-900 tracking-tight font-serif uppercase">
+            PENYEWAAN KIOS & LAHAN USAHA
           </h2>
-          <p className="text-sm text-slate-600 mt-2">
-            Buka gerai bisnis Anda di pusat cinderamata dan perhiasan terpopuler Balikpapan.
+          <div className="w-12 h-0.5 bg-bunsay-gold mx-auto my-3" />
+          <p className="text-xs sm:text-sm text-neutral-600 mt-2">
+            Buka gerai bisnis Anda di pusat cenderamata, perhiasan emas, dan batu mulia terpopuler di Balikpapan.
           </p>
         </div>
 
         {/* Clean Segmented Tab Control */}
-        <div className="flex flex-wrap items-center justify-center gap-2 max-w-xl mx-auto mb-8">
+        <div className="flex flex-wrap items-center justify-center gap-2 max-w-2xl mx-auto mb-8">
           {spaceTypes.map((tab) => {
             const isSelected = activeTab === tab.id
             return (
@@ -91,10 +95,10 @@ export function SpaceEnquirySection() {
                   setActiveTab(tab.id)
                   setFormData((prev) => ({ ...prev, enquiry_type: tab.id }))
                 }}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all cursor-pointer ${
+                className={`px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                   isSelected
-                    ? 'bg-slate-900 text-white shadow-xs'
-                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-slate-900'
+                    ? 'bg-brand text-white border border-brand shadow-sm'
+                    : 'bg-white text-neutral-700 border border-neutral-200 hover:border-brand/40 hover:text-brand'
                 }`}
               >
                 {tab.title}
@@ -103,40 +107,41 @@ export function SpaceEnquirySection() {
           })}
         </div>
 
-        {/* Clean Centered Form Card */}
-        <div className="max-w-2xl mx-auto bg-white rounded-2xl border border-slate-200/80 p-6 sm:p-8 shadow-card">
+        {/* Crisp Centered Form Card */}
+        <div className="max-w-2xl mx-auto bg-white border border-neutral-200 p-7 sm:p-9 shadow-subtle">
           
           {/* Active Tab Notice */}
-          <div className="mb-6 pb-5 border-b border-slate-100">
-            <h3 className="text-base font-bold text-slate-900">
-              Formulir Minat: {spaceTypes.find((t) => t.id === activeTab)?.title}
+          <div className="mb-6 pb-5 border-b border-neutral-100">
+            <h3 className="text-base font-bold text-neutral-900 font-serif">
+              Formulir Permohonan: {spaceTypes.find((t) => t.id === activeTab)?.title}
             </h3>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-neutral-500 mt-1">
               {spaceTypes.find((t) => t.id === activeTab)?.desc}
             </p>
           </div>
 
           {status.success ? (
             <div className="py-8 text-center space-y-4">
-              <CheckCircle2 size={44} className="mx-auto text-emerald-600" />
-              <h4 className="text-base font-bold text-slate-900">Permohonan Berhasil Terkirim</h4>
-              <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
-                Terima kasih. Tim pengelola Plaza Kebun Sayur akan segera menghubungi nomor telepon/WhatsApp Anda untuk informasi ketersediaan unit dan jadwal survei lokasi.
+              <CheckCircle2 size={46} className="mx-auto text-emerald-600" />
+              <h4 className="text-lg font-bold text-neutral-900 font-serif">Permohonan Berhasil Terkirim</h4>
+              <p className="text-xs sm:text-sm text-neutral-600 max-w-md mx-auto leading-relaxed">
+                Terima kasih. Tim manajemen Plaza Kebun Sayur akan segera menghubungi nomor telepon/WhatsApp Anda untuk informasi ketersediaan unit, denah, dan jadwal survei lokasi.
               </p>
-              <Button 
-                variant="secondary" 
-                size="sm" 
-                onClick={() => setStatus({ loading: false, success: false, error: null })}
-                className="text-xs"
-              >
-                Kirim Permohonan Lain
-              </Button>
+              <div className="pt-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setStatus({ loading: false, success: false, error: null })}
+                >
+                  KIRIM PERMOHONAN LAIN
+                </Button>
+              </div>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4 text-xs sm:text-sm">
               
               {status.error && (
-                <div className="flex items-center gap-2 p-3 rounded-lg bg-rose-50 border border-rose-200 text-xs text-rose-800">
+                <div className="flex items-center gap-2 p-3 bg-rose-50 border border-rose-200 text-xs text-rose-800">
                   <AlertCircle size={15} />
                   <span>{status.error}</span>
                 </div>
@@ -144,7 +149,7 @@ export function SpaceEnquirySection() {
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-700 mb-1.5">
                     Nama Lengkap *
                   </label>
                   <input
@@ -153,13 +158,13 @@ export function SpaceEnquirySection() {
                     required
                     value={formData.full_name}
                     onChange={handleChange}
-                    placeholder="Nama Anda"
-                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900 focus:border-slate-900"
+                    placeholder="Nama Lengkap Pemohon"
+                    className="w-full px-3.5 py-2.5 bg-white border border-neutral-300 text-xs sm:text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-700 mb-1.5">
                     Nama Usaha / Brand
                   </label>
                   <input
@@ -167,15 +172,15 @@ export function SpaceEnquirySection() {
                     name="company_name"
                     value={formData.company_name}
                     onChange={handleChange}
-                    placeholder="Nama Toko atau Brand"
-                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900 focus:border-slate-900"
+                    placeholder="Nama Toko atau Merek"
+                    className="w-full px-3.5 py-2.5 bg-white border border-neutral-300 text-xs sm:text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand"
                   />
                 </div>
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-700 mb-1.5">
                     Nomor WhatsApp *
                   </label>
                   <input
@@ -185,19 +190,19 @@ export function SpaceEnquirySection() {
                     value={formData.phone_number}
                     onChange={handleChange}
                     placeholder="0812xxxxxxxx"
-                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900 focus:border-slate-900"
+                    className="w-full px-3.5 py-2.5 bg-white border border-neutral-300 text-xs sm:text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">
-                    Pilihan Lokasi
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-700 mb-1.5">
+                    Pilihan Lokasi Lantai
                   </label>
                   <select
                     name="preferred_floor"
                     value={formData.preferred_floor}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs sm:text-sm text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 focus:border-slate-900 cursor-pointer"
+                    className="w-full px-3.5 py-2.5 bg-white border border-neutral-300 text-xs sm:text-sm text-neutral-900 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand cursor-pointer"
                   >
                     <option value="Lantai Dasar (GF)">Lantai Dasar (GF) - Perhiasan & Kuliner</option>
                     <option value="Lantai 1 (L1)">Lantai 1 (L1) - Kerajinan Dayak & Batik</option>
@@ -208,16 +213,16 @@ export function SpaceEnquirySection() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-700 mb-1.5">
                   Rencana Komoditas / Barang Dagangan
                 </label>
                 <textarea
                   name="business_description"
-                  rows="2"
+                  rows="3"
                   value={formData.business_description}
                   onChange={handleChange}
-                  placeholder="Deskripsikan singkat jenis produk atau rencana jualan Anda..."
-                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900 focus:border-slate-900"
+                  placeholder="Deskripsikan jenis produk, perhiasan, batu mulia, cenderamata, atau konsep usaha Anda..."
+                  className="w-full px-3.5 py-2.5 bg-white border border-neutral-300 text-xs sm:text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand"
                 />
               </div>
 
@@ -228,23 +233,23 @@ export function SpaceEnquirySection() {
                   fullWidth 
                   size="md" 
                   disabled={status.loading}
-                  className="gap-2 text-sm font-semibold"
+                  className="gap-2"
                 >
                   <Send size={15} />
-                  <span>{status.loading ? 'Mengirim...' : 'Kirim Pengajuan Sewa'}</span>
+                  <span>{status.loading ? 'MENGIRIM PERMOHONAN...' : 'KIRIM PERMOHONAN SEWA'}</span>
                 </Button>
               </div>
 
-              <div className="text-center pt-2">
-                <p className="text-xs text-slate-500">
-                  Butuh respon cepat?{' '}
+              <div className="text-center pt-3 border-t border-neutral-100">
+                <p className="text-xs text-neutral-500">
+                  Perlu konsultasi unit langsung?{' '}
                   <a 
                     href="https://wa.me/6281234567890?text=Halo%20Pengelola%20Plaza%20Kebun%20Sayur,%20saya%20tertarik%20sewa%20kios" 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="text-emerald-700 font-semibold hover:underline inline-flex items-center gap-1"
+                    className="text-brand font-bold hover:underline inline-flex items-center gap-1 ml-1"
                   >
-                    <MessageCircle size={13} />
+                    <MessageCircle size={14} />
                     Chat Pengelola via WhatsApp
                   </a>
                 </p>
