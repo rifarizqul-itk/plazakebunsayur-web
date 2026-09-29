@@ -1,0 +1,30 @@
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDE & Editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Environment & Logs
+.env
+.env.backup
+.env.production
+*.log
+
+# Dependencies
+node_modules/
+vendor/
+
+# Build artifacts
+dist/
+build/
+public/storage
+public/hot
+
+# SQLite
+*.sqlite
+*.sqlite-journal
+database/database.sqlite
