@@ -13,48 +13,45 @@ const iconMap = {
 
 export function FacilitiesSection({ facilities = [] }) {
   return (
-    <section id="fasilitas" className="py-20 bg-white border-b border-border">
+    <section id="fasilitas" className="py-16 sm:py-20 bg-white border-b border-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Title */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <span className="text-xs font-extrabold tracking-widest text-gold-accent uppercase">
-            FACILITIES & SERVICES
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-red tracking-tight mt-2">
-            Fasilitas Kenyamanan Pengunjung
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            Fasilitas Pengunjung
           </h2>
-          <p className="text-sm sm:text-base text-text-2 mt-3">
-            Plaza Kebun Sayur menyediakan berbagai sarana pendukung guna menjamin keamanan dan kenyamanan berbelanja bagi seluruh wisatawan lokal maupun mancanegara.
+          <p className="text-sm text-slate-600 mt-2">
+            Sarana pendukung untuk menjamin kenyamanan berbelanja bagi seluruh pengunjung.
           </p>
         </div>
 
         {/* Facilities Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {facilities.map((fac) => {
             const IconComponent = iconMap[fac.icon_name] || Sparkles
             return (
               <div
                 key={fac.id}
-                className="bg-mono-50 rounded-2xl p-6 sm:p-7 border border-border hover:border-red/40 shadow-card hover:shadow-card-elevated transition-all duration-200 group flex flex-col justify-between"
+                className="bg-slate-50/60 rounded-xl p-5 sm:p-6 border border-slate-200/70 hover:border-slate-300 hover:bg-white hover:shadow-subtle transition-all duration-200 flex flex-col justify-between"
               >
-                <div className="space-y-4">
-                  {/* Icon Badge */}
-                  <div className="w-13 h-13 rounded-2xl bg-red text-white flex items-center justify-center shadow-xs group-hover:scale-105 group-hover:bg-gold-accent group-hover:text-mono-900 transition-all duration-300">
-                    <IconComponent size={24} />
+                <div className="space-y-3">
+                  {/* Clean Icon Badge */}
+                  <div className="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-700 shadow-xs">
+                    <IconComponent size={20} />
                   </div>
 
-                  <h3 className="text-lg font-bold text-text group-hover:text-red transition-colors">
+                  <h3 className="text-base font-bold text-slate-900">
                     {fac.name}
                   </h3>
 
-                  <p className="text-xs sm:text-sm text-text-2 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                     {fac.description}
                   </p>
                 </div>
 
-                <div className="pt-5 mt-4 border-t border-border/80 flex items-center gap-1.5 text-xs text-gold-accent font-bold">
-                  <MapPin size={13} />
+                <div className="pt-4 mt-3 border-t border-slate-200/60 flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+                  <MapPin size={12} className="text-slate-400" />
                   <span>{fac.location_note || 'Dalam Gedung'}</span>
                 </div>
               </div>

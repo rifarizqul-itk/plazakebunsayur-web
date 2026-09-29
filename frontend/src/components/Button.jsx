@@ -2,12 +2,13 @@ import React from 'react'
 import { cn } from '../utils/cn'
 
 const variantClasses = {
-  primary: 'bg-red text-white hover:bg-red-rich focus:ring-2 focus:ring-red focus:ring-offset-2 shadow-xs hover:shadow-sm active:scale-[0.98]',
-  gold: 'bg-gold-accent text-white hover:bg-[#b0871e] focus:ring-2 focus:ring-gold-accent focus:ring-offset-2 shadow-xs hover:shadow-sm active:scale-[0.98]',
-  secondary: 'bg-mono-100 text-text border border-border hover:bg-mono-200 focus:ring-2 focus:ring-red focus:ring-offset-2 active:scale-[0.98]',
-  outline: 'bg-transparent text-red border border-red hover:bg-red-50 focus:ring-2 focus:ring-red focus:ring-offset-2 active:scale-[0.98]',
-  ghost: 'bg-transparent text-text hover:bg-mono-100 active:scale-[0.98]',
-  whatsapp: 'bg-[#25D366] text-white hover:bg-[#1EBE5D] focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2 shadow-xs hover:shadow-sm active:scale-[0.98]',
+  primary: 'bg-slate-900 text-white hover:bg-slate-800 focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 shadow-xs active:scale-[0.98]',
+  brand: 'bg-brand text-white hover:bg-brand-hover focus:ring-2 focus:ring-brand focus:ring-offset-2 shadow-xs active:scale-[0.98]',
+  gold: 'bg-amber-600 text-white hover:bg-amber-700 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 shadow-xs active:scale-[0.98]',
+  secondary: 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 shadow-xs active:scale-[0.98]',
+  outline: 'bg-transparent text-slate-800 border border-slate-200 hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98]',
+  ghost: 'bg-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100 active:scale-[0.98]',
+  whatsapp: 'bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 shadow-xs active:scale-[0.98]',
 }
 
 const sizeClasses = {

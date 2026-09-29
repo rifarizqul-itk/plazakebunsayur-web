@@ -66,224 +66,192 @@ export function SpaceEnquirySection() {
   }
 
   return (
-    <section id="sewa" className="py-20 bg-mono-50">
+    <section id="sewa" className="py-16 sm:py-20 bg-slate-50/60 border-b border-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <span className="text-xs font-extrabold tracking-widest text-gold-accent uppercase">
-            SPACE ENQUIRY • KEMITRAAN USAHA
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-red tracking-tight mt-2">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             Penyewaan Kios & Lahan Usaha
           </h2>
-          <p className="text-sm sm:text-base text-text-2 mt-3">
-            Buka usaha Anda di pusat kerajinan dan wisata belanja paling legendaris di Balikpapan. Dapatkan kunjungan ribuan wisatawan dan pembeli setiap bulannya.
+          <p className="text-sm text-slate-600 mt-2">
+            Buka gerai bisnis Anda di pusat cinderamata dan perhiasan terpopuler Balikpapan.
           </p>
         </div>
 
-        {/* Tab Selection Cards */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
+        {/* Clean Segmented Tab Control */}
+        <div className="flex flex-wrap items-center justify-center gap-2 max-w-xl mx-auto mb-8">
           {spaceTypes.map((tab) => {
-            const Icon = tab.icon
             const isSelected = activeTab === tab.id
             return (
-              <div
+              <button
                 key={tab.id}
+                type="button"
                 onClick={() => {
                   setActiveTab(tab.id)
                   setFormData((prev) => ({ ...prev, enquiry_type: tab.id }))
                 }}
-                className={`p-6 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all cursor-pointer ${
                   isSelected
-                    ? 'bg-white border-red shadow-card-elevated ring-2 ring-red/20'
-                    : 'bg-white/70 border-border hover:border-gold-accent hover:bg-white shadow-card'
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
-                <div className="space-y-3">
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${
-                    isSelected ? 'bg-red text-white' : 'bg-mono-100 text-text-2'
-                  }`}>
-                    <Icon size={24} />
-                  </div>
-                  <h3 className={`text-base font-bold ${isSelected ? 'text-red' : 'text-text'}`}>
-                    {tab.title}
-                  </h3>
-                  <p className="text-xs text-text-2 leading-relaxed">
-                    {tab.desc}
-                  </p>
-                </div>
-                <div className="mt-4 pt-3 border-t border-border flex items-center justify-between text-xs font-bold">
-                  <span className={isSelected ? 'text-red' : 'text-text-3'}>
-                    {isSelected ? '✓ Terpilih' : 'Pilih Opsi Ini'}
-                  </span>
-                </div>
-              </div>
+                {tab.title}
+              </button>
             )
           })}
         </div>
 
-        {/* Form Container */}
-        <div className="grid lg:grid-cols-12 gap-10 bg-white rounded-3xl border border-border p-6 sm:p-10 shadow-card">
+        {/* Clean Centered Form Card */}
+        <div className="max-w-2xl mx-auto bg-white rounded-2xl border border-slate-200/80 p-6 sm:p-8 shadow-card">
           
-          {/* Left Column: Form Guidelines & Hotline */}
-          <div className="lg:col-span-5 space-y-6 lg:border-r lg:border-border lg:pr-8">
-            <h3 className="text-xl font-bold text-text">
-              Hubungi Tim Pemasaran & Pengelola
+          {/* Active Tab Notice */}
+          <div className="mb-6 pb-5 border-b border-slate-100">
+            <h3 className="text-base font-bold text-slate-900">
+              Formulir Minat: {spaceTypes.find((t) => t.id === activeTab)?.title}
             </h3>
-            <p className="text-sm text-text-2 leading-relaxed">
-              Silakan isi formulir di samping untuk menyampaikan ketertarikan sewa kios, booth terbuka, atau izin penyelenggaraan pameran di Plaza Kebun Sayur.
+            <p className="text-xs text-slate-500 mt-1">
+              {spaceTypes.find((t) => t.id === activeTab)?.desc}
             </p>
-
-            <div className="space-y-4 pt-2">
-              <div className="flex items-start gap-3.5 p-4 rounded-xl bg-mono-50 border border-border">
-                <div className="p-2 rounded-lg bg-green-bg text-green shrink-0">
-                  <Phone size={18} />
-                </div>
-                <div className="text-xs sm:text-sm">
-                  <p className="font-bold text-text">Kantor Pengelola Gedung</p>
-                  <p className="text-text-2 mt-0.5">(0542) 734xxx / 0812-3456-7890</p>
-                  <p className="text-[11px] text-text-3 mt-1">Senin – Sabtu, 08.30 – 16.30 WITA</p>
-                </div>
-              </div>
-
-              <a
-                href="https://wa.me/6281234567890?text=Halo%20Pengelola%20Plaza%20Kebun%20Sayur,%20saya%20tertarik%20untuk%20menyewa%20kios/lahan"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block"
-              >
-                <Button variant="whatsapp" fullWidth className="gap-2">
-                  <MessageCircle size={18} />
-                  <span>Konsultasi Cepat via WhatsApp</span>
-                </Button>
-              </a>
-            </div>
           </div>
 
-          {/* Right Column: Actual Form */}
-          <div className="lg:col-span-7">
-            {status.success ? (
-              <div className="bg-green-bg border border-green/30 rounded-2xl p-8 text-center space-y-4 my-8">
-                <CheckCircle2 size={48} className="mx-auto text-green" />
-                <h4 className="text-lg font-bold text-green">Permohonan Berhasil Dikirim!</h4>
-                <p className="text-sm text-text-2 max-w-md mx-auto">
-                  Terima kasih atas ketertarikan Anda. Tim pengelola Plaza Kebun Sayur akan segera menghubungi nomor telepon/WhatsApp Anda untuk informasi ketersediaan unit dan biaya sewa.
-                </p>
-                <Button 
-                  variant="primary" 
-                  size="sm" 
-                  onClick={() => setStatus({ loading: false, success: false, error: null })}
-                >
-                  Kirim Permohonan Lain
-                </Button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                
-                {status.error && (
-                  <div className="flex items-center gap-2 p-4 rounded-xl bg-red-50 border border-red/30 text-xs text-red font-medium">
-                    <AlertCircle size={16} />
-                    <span>{status.error}</span>
-                  </div>
-                )}
-
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-text-2 mb-1.5">
-                      Nama Lengkap Pemohon *
-                    </label>
-                    <input
-                      type="text"
-                      name="full_name"
-                      required
-                      value={formData.full_name}
-                      onChange={handleChange}
-                      placeholder="Contoh: Budi Santoso"
-                      className="w-full px-3.5 py-2.5 bg-mono-50 border border-border rounded-xl text-sm text-text focus:outline-none focus:ring-2 focus:ring-red"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-text-2 mb-1.5">
-                      Nama Usaha / Brand (Opsional)
-                    </label>
-                    <input
-                      type="text"
-                      name="company_name"
-                      value={formData.company_name}
-                      onChange={handleChange}
-                      placeholder="Contoh: Borneo Craft Gallery"
-                      className="w-full px-3.5 py-2.5 bg-mono-50 border border-border rounded-xl text-sm text-text focus:outline-none focus:ring-2 focus:ring-red"
-                    />
-                  </div>
+          {status.success ? (
+            <div className="py-8 text-center space-y-4">
+              <CheckCircle2 size={44} className="mx-auto text-emerald-600" />
+              <h4 className="text-base font-bold text-slate-900">Permohonan Berhasil Terkirim</h4>
+              <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+                Terima kasih. Tim pengelola Plaza Kebun Sayur akan segera menghubungi nomor telepon/WhatsApp Anda untuk informasi ketersediaan unit dan jadwal survei lokasi.
+              </p>
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                onClick={() => setStatus({ loading: false, success: false, error: null })}
+                className="text-xs"
+              >
+                Kirim Permohonan Lain
+              </Button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4 text-xs sm:text-sm">
+              
+              {status.error && (
+                <div className="flex items-center gap-2 p-3 rounded-lg bg-rose-50 border border-rose-200 text-xs text-rose-800">
+                  <AlertCircle size={15} />
+                  <span>{status.error}</span>
                 </div>
+              )}
 
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-text-2 mb-1.5">
-                      Nomor WhatsApp Aktif *
-                    </label>
-                    <input
-                      type="tel"
-                      name="phone_number"
-                      required
-                      value={formData.phone_number}
-                      onChange={handleChange}
-                      placeholder="0812xxxxxxxx"
-                      className="w-full px-3.5 py-2.5 bg-mono-50 border border-border rounded-xl text-sm text-text focus:outline-none focus:ring-2 focus:ring-red"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-text-2 mb-1.5">
-                      Pilihan Lokasi Lantai
-                    </label>
-                    <select
-                      name="preferred_floor"
-                      value={formData.preferred_floor}
-                      onChange={handleChange}
-                      className="w-full px-3.5 py-2.5 bg-mono-50 border border-border rounded-xl text-sm text-text focus:outline-none focus:ring-2 focus:ring-red cursor-pointer"
-                    >
-                      <option value="Lantai Dasar (GF)">Lantai Dasar (GF) - Area Perhiasan & Kuliner</option>
-                      <option value="Lantai 1 (L1)">Lantai 1 (L1) - Area Kerajinan Dayak & Batik</option>
-                      <option value="Lantai 2 (L2)">Lantai 2 (L2) - Area Food Court & Jasa Poles</option>
-                      <option value="Atrium Utama">Atrium Utama - Area Pameran / Event</option>
-                    </select>
-                  </div>
-                </div>
-
+              <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-text-2 mb-1.5">
-                    Rencana Komoditas / Barang Dagangan
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
+                    Nama Lengkap *
                   </label>
-                  <textarea
-                    name="business_description"
-                    rows="3"
-                    value={formData.business_description}
+                  <input
+                    type="text"
+                    name="full_name"
+                    required
+                    value={formData.full_name}
                     onChange={handleChange}
-                    placeholder="Ceritakan singkat jenis barang yang akan Anda jual atau jenis acara pameran yang direncanakan..."
-                    className="w-full px-3.5 py-2.5 bg-mono-50 border border-border rounded-xl text-sm text-text focus:outline-none focus:ring-2 focus:ring-red"
+                    placeholder="Nama Anda"
+                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900 focus:border-slate-900"
                   />
                 </div>
 
-                <div className="pt-2">
-                  <Button 
-                    type="submit" 
-                    variant="primary" 
-                    fullWidth 
-                    size="lg" 
-                    disabled={status.loading}
-                    className="gap-2"
-                  >
-                    <Send size={18} />
-                    <span>{status.loading ? 'Mengirim Permohonan...' : 'Kirim Pengajuan Sewa Sekarang'}</span>
-                  </Button>
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
+                    Nama Usaha / Brand
+                  </label>
+                  <input
+                    type="text"
+                    name="company_name"
+                    value={formData.company_name}
+                    onChange={handleChange}
+                    placeholder="Nama Toko atau Brand"
+                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900 focus:border-slate-900"
+                  />
+                </div>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
+                    Nomor WhatsApp *
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone_number"
+                    required
+                    value={formData.phone_number}
+                    onChange={handleChange}
+                    placeholder="0812xxxxxxxx"
+                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900 focus:border-slate-900"
+                  />
                 </div>
 
-              </form>
-            )}
-          </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
+                    Pilihan Lokasi
+                  </label>
+                  <select
+                    name="preferred_floor"
+                    value={formData.preferred_floor}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs sm:text-sm text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 focus:border-slate-900 cursor-pointer"
+                  >
+                    <option value="Lantai Dasar (GF)">Lantai Dasar (GF) - Perhiasan & Kuliner</option>
+                    <option value="Lantai 1 (L1)">Lantai 1 (L1) - Kerajinan Dayak & Batik</option>
+                    <option value="Lantai 2 (L2)">Lantai 2 (L2) - Food Court & Jasa Poles</option>
+                    <option value="Atrium Utama">Atrium Utama - Area Pameran</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1">
+                  Rencana Komoditas / Barang Dagangan
+                </label>
+                <textarea
+                  name="business_description"
+                  rows="2"
+                  value={formData.business_description}
+                  onChange={handleChange}
+                  placeholder="Deskripsikan singkat jenis produk atau rencana jualan Anda..."
+                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900 focus:border-slate-900"
+                />
+              </div>
+
+              <div className="pt-2">
+                <Button 
+                  type="submit" 
+                  variant="primary" 
+                  fullWidth 
+                  size="md" 
+                  disabled={status.loading}
+                  className="gap-2 text-sm font-semibold"
+                >
+                  <Send size={15} />
+                  <span>{status.loading ? 'Mengirim...' : 'Kirim Pengajuan Sewa'}</span>
+                </Button>
+              </div>
+
+              <div className="text-center pt-2">
+                <p className="text-xs text-slate-500">
+                  Butuh respon cepat?{' '}
+                  <a 
+                    href="https://wa.me/6281234567890?text=Halo%20Pengelola%20Plaza%20Kebun%20Sayur,%20saya%20tertarik%20sewa%20kios" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-emerald-700 font-semibold hover:underline inline-flex items-center gap-1"
+                  >
+                    <MessageCircle size={13} />
+                    Chat Pengelola via WhatsApp
+                  </a>
+                </p>
+              </div>
+
+            </form>
+          )}
 
         </div>
 

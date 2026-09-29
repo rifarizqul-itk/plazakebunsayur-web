@@ -61,7 +61,7 @@ export function App() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-mono-50 font-sans selection:bg-red selection:text-white">
+    <div className="min-h-screen flex flex-col bg-white font-sans text-slate-900 selection:bg-slate-900 selection:text-white">
       {/* Top Navigation */}
       <Navbar activeSection={activeSection} onNavigate={handleNavigate} />
 
@@ -98,16 +98,17 @@ export function App() {
       {/* Footer */}
       <Footer onNavigate={handleNavigate} />
 
-      {/* Floating WhatsApp Action Button */}
-      <aside aria-label="Kontak Cepat WhatsApp" className="fixed bottom-6 right-6 z-40">
+      {/* Floating WhatsApp Quick Action Button - Minimalist */}
+      <aside aria-label="Kontak Cepat WhatsApp" className="fixed bottom-5 right-5 z-40">
         <a
           href="https://wa.me/6281234567890?text=Halo%20Pengelola%20Plaza%20Kebun%20Sayur,%20saya%20ingin%20bertanya"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2.5 px-4 py-3 bg-[#25D366] hover:bg-[#1EBE5D] text-white rounded-full shadow-modal hover:shadow-card-elevated hover:scale-105 transition-all duration-200 font-bold text-xs sm:text-sm tracking-wide"
+          title="Tanya Pengelola via WhatsApp"
+          className="flex items-center gap-2 px-3.5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full shadow-card hover:shadow-card-elevated active:scale-95 transition-all text-xs font-medium"
         >
-          <MessageCircle size={20} />
-          <span className="hidden sm:inline">Tanya Pengelola</span>
+          <MessageCircle size={17} />
+          <span className="hidden sm:inline">WhatsApp</span>
         </a>
       </aside>
     </div>

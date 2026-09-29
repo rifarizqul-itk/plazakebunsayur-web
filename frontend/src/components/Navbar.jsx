@@ -19,72 +19,72 @@ export function Navbar({ activeSection, onNavigate }) {
   }
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-border shadow-xs transition-all">
+    <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16">
           
           {/* Logo & Brand Identity */}
           <div 
             onClick={() => handleLinkClick('beranda')}
-            className="flex items-center gap-3.5 cursor-pointer group"
+            className="flex items-center gap-3 cursor-pointer group"
           >
             <img 
               src="/assets/main_logo_transparent_for_light_bg.webp" 
               alt="Plaza Kebun Sayur" 
-              className="h-12 w-auto object-contain transition-transform group-hover:scale-105"
+              className="h-9 w-auto object-contain transition-transform group-hover:scale-102"
             />
             <div className="flex flex-col">
-              <span className="font-extrabold text-lg sm:text-xl tracking-tight text-red">
-                PLAZA KEBUN SAYUR
+              <span className="font-bold text-sm sm:text-base tracking-tight text-slate-900">
+                Plaza Kebun Sayur
               </span>
-              <span className="text-[11px] font-semibold tracking-wider text-gold-accent uppercase -mt-1">
-                Pusat Batu Mulia & Kerajinan Kaltim
+              <span className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">
+                Direktori Komersial & Wisata
               </span>
             </div>
           </div>
 
           {/* Desktop Nav Links */}
-          <nav className="hidden lg:flex items-center gap-7">
+          <nav className="hidden lg:flex items-center gap-6">
             {navLinks.map((link) => (
               <button
                 key={link.id}
                 onClick={() => handleLinkClick(link.id)}
-                className={`text-sm font-semibold tracking-wide transition-colors cursor-pointer py-1 relative ${
+                className={`text-xs sm:text-sm font-medium tracking-normal transition-colors cursor-pointer py-1 relative ${
                   activeSection === link.id
-                    ? 'text-red font-bold'
-                    : 'text-text hover:text-red'
+                    ? 'text-slate-900 font-semibold'
+                    : 'text-slate-500 hover:text-slate-900'
                 }`}
               >
                 {link.label}
                 {activeSection === link.id && (
-                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red rounded-full" />
+                  <span className="absolute bottom-0 left-0 w-full h-[2px] bg-slate-900 rounded-full" />
                 )}
               </button>
             ))}
           </nav>
 
-          {/* CTA & Hotline */}
+          {/* Clean Action Button */}
           <div className="hidden sm:flex items-center gap-3">
             <a 
               href="https://wa.me/6281234567890?text=Halo%20Pengelola%20Plaza%20Kebun%20Sayur,%20saya%20ingin%20bertanya%20informasi%20mall"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button variant="whatsapp" size="sm" className="gap-2">
-                <MessageCircle size={16} />
-                <span>Hotline Pengelola</span>
+              <Button variant="secondary" size="sm" className="gap-2 text-xs font-medium text-slate-700">
+                <MessageCircle size={14} className="text-emerald-600" />
+                <span>Hubungi Pengelola</span>
               </Button>
             </a>
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="lg:hidden flex items-center gap-2">
+          <div className="lg:hidden flex items-center">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-xl text-text hover:bg-mono-100 transition-colors cursor-pointer"
+              className="p-2 rounded-lg text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
               aria-label="Toggle Menu"
             >
-              {mobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
+              {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
         </div>
