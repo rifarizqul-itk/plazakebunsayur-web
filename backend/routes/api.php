@@ -1,37 +1,29 @@
 <?php
 
-use App\Models\Category;
-use App\Models\Facility;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\Api\FacilityController;
+use App\Http\Controllers\Api\TenantController;
+use App\Http\Controllers\Api\WhatsOnController;
 use App\Models\Floor;
-use App\Models\SpaceEnquiry;
-use App\Models\Tenant;
-use App\Models\WhatsOn;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Public API Routes for Plaza Kebun Sayur
+| Public API Routes for Plaza Kebun Sayur Web
 |--------------------------------------------------------------------------
 */
 
-// 1. Categories
-Route::get('/categories', function () {
-    $categories = Category::withCount('tenants')
-        ->orderBy('order_index')
-        ->get();
-
-    return response()->json([
-        'success' => true,
-        'data' => $categories,
-    ]);
-});
+// 1. Categories (supports ?type=retail|culinary)
+Route::get('/categories', [CategoryController::class, 'index']);
 
 // 2. Floors
 Route::get('/floors', function () {
-    $floors = Floor::withCount('tenants')
-        ->orderBy('order_index')
-        ->get();
+    $floors = Floor::withCount(['tenants' => function ($q) {
+        $q->where('is_active', true);
+    }])
+    ->orderBy('order_index')
+    ->get();
 
     return response()->json([
         'success' => true,
@@ -39,110 +31,19 @@ Route::get('/floors', function () {
     ]);
 });
 
-// 3. Tenants (with search & filters)
-Route::get('/tenants', function (Request $request) {
-    $query = Tenant::with(['category', 'floor'])
-        ->where('is_active', true);
+// 3. Tenants (supports ?type=, ?category_id=, ?floor_id=, ?q=, pagination ?page=&per_page=12)
+Route::get('/tenants', [TenantController::class, 'index']);
 
-    if ($request->filled('category_id')) {
-        $query->where('category_id', $request->category_id);
-    }
-
-    if ($request->filled('category_slug')) {
-        $query->whereHas('category', function ($q) use ($request) {
-            $q->where('slug', $request->category_slug);
-        });
-    }
-
-    if ($request->filled('floor_id')) {
-        $query->where('floor_id', $request->floor_id);
-    }
-
-    if ($request->filled('q')) {
-        $search = $request->q;
-        $query->where(function ($q) use ($search) {
-            $q->where('name', 'like', "%{$search}%")
-              ->orWhere('unit_number', 'like', "%{$search}%")
-              ->orWhere('description', 'like', "%{$search}%");
-        });
-    }
-
-    if ($request->boolean('featured')) {
-        $query->where('is_featured', true);
-    }
-
-    $tenants = $query->orderBy('is_featured', 'desc')
-        ->orderBy('name', 'asc')
-        ->get();
-
-    return response()->json([
-        'success' => true,
-        'count' => $tenants->count(),
-        'data' => $tenants,
-    ]);
-});
-
-// 4. Single Tenant Detail
-Route::get('/tenants/{slug}', function ($slug) {
-    $tenant = Tenant::with(['category', 'floor'])
-        ->where('slug', $slug)
-        ->first();
-
-    if (! $tenant) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Tenant tidak ditemukan',
-        ], 404);
-    }
-
-    return response()->json([
-        'success' => true,
-        'data' => $tenant,
-    ]);
-});
+// 4. Single Tenant Detail by Slug
+Route::get('/tenants/{slug}', [TenantController::class, 'show']);
 
 // 5. Facilities
-Route::get('/facilities', function () {
-    $facilities = Facility::where('is_active', true)
-        ->orderBy('order_index')
-        ->get();
-
-    return response()->json([
-        'success' => true,
-        'data' => $facilities,
-    ]);
-});
+Route::get('/facilities', [FacilityController::class, 'index']);
 
 // 6. Whats On (Events & Promos)
-Route::get('/whats-on', function () {
-    $whatsOn = WhatsOn::where('is_active', true)
-        ->orderBy('created_at', 'desc')
-        ->get();
+Route::get('/whats-on', [WhatsOnController::class, 'index']);
+Route::get('/whats-on/{slug}', [WhatsOnController::class, 'show']);
 
-    return response()->json([
-        'success' => true,
-        'data' => $whatsOn,
-    ]);
-});
-
-// 7. Space Enquiry Submission (Public Form)
-Route::post('/space-enquiry', function (Request $request) {
-    $validated = $request->validate([
-        'full_name' => 'required|string|max:255',
-        'company_name' => 'nullable|string|max:255',
-        'phone_number' => 'required|string|max:30',
-        'email' => 'nullable|email|max:255',
-        'enquiry_type' => 'required|in:leasing_kios,exhibition,open_counter,other',
-        'preferred_floor' => 'nullable|string|max:50',
-        'business_description' => 'nullable|string',
-        'notes' => 'nullable|string',
-    ]);
-
-    $enquiry = SpaceEnquiry::create($validated);
-
-    return response()->json([
-        'success' => true,
-        'message' => 'Permohonan sewa berhasil diajukan! Tim pengelola akan segera menghubungi Anda.',
-        'data' => $enquiry,
-    ], 201);
-});
+// 7. Public Contact Message Submission (Rate limit 5 requests per 10 minutes per IP)
+Route::post('/contact', [ContactController::class, 'store'])
+    ->middleware('throttle:5,10');

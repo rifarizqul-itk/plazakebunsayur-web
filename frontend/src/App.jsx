@@ -1,118 +1,60 @@
-import React, { useState, useEffect } from 'react'
-import Navbar from './components/Navbar'
-import Hero from './components/Hero'
-import WhatsOnSection from './components/WhatsOnSection'
-import TenantDirectory from './components/TenantDirectory'
-import FacilitiesSection from './components/FacilitiesSection'
-import SpaceEnquirySection from './components/SpaceEnquirySection'
-import AboutSection from './components/AboutSection'
-import Footer from './components/Footer'
-import { MessageCircle } from 'lucide-react'
-import {
-  fetchCategories,
-  fetchFloors,
-  fetchTenants,
-  fetchFacilities,
-  fetchWhatsOn,
-} from './services/api'
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { Navbar } from './components/layout/Navbar';
+import { Footer } from './components/layout/Footer';
+import { Home } from './pages/Home';
+import { ShoppingDirectory } from './pages/ShoppingDirectory';
+import { ShopDetail } from './pages/ShopDetail';
+import { CulinaryDirectory } from './pages/CulinaryDirectory';
+import { CulinaryDetail } from './pages/CulinaryDetail';
+import { EventsPage } from './pages/EventsPage';
+import { EventDetail } from './pages/EventDetail';
+import { PlanYourVisit } from './pages/PlanYourVisit';
+import { ContactPage } from './pages/ContactPage';
+import { NotFound } from './pages/NotFound';
 
-export function App() {
-  const [activeSection, setActiveSection] = useState('beranda')
-  const [categories, setCategories] = useState([])
-  const [floors, setFloors] = useState([])
-  const [tenants, setTenants] = useState([])
-  const [facilities, setFacilities] = useState([])
-  const [whatsOnList, setWhatsOnList] = useState([])
-  const [loading, setLoading] = useState(true)
+/**
+ * Otomatis mengembalikan posisi scroll ke paling atas saat rute berpindah
+ */
+function ScrollToTop() {
+  const { pathname } = useLocation();
 
   useEffect(() => {
-    async function loadData() {
-      try {
-        const [cats, flrs, tnts, facs, news] = await Promise.all([
-          fetchCategories(),
-          fetchFloors(),
-          fetchTenants(),
-          fetchFacilities(),
-          fetchWhatsOn(),
-        ])
-        setCategories(cats)
-        setFloors(flrs)
-        setTenants(tnts)
-        setFacilities(facs)
-        setWhatsOnList(news)
-      } catch (err) {
-        console.error('Failed to load initial data:', err)
-      } finally {
-        setLoading(false)
-      }
-    }
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [pathname]);
 
-    loadData()
-  }, [])
-
-  const handleNavigate = (sectionId) => {
-    setActiveSection(sectionId)
-    const element = document.getElementById(sectionId)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-    }
-  }
-
-  return (
-    <div className="min-h-screen flex flex-col bg-white font-sans text-neutral-900 selection:bg-brand selection:text-white">
-      {/* Top Navigation */}
-      <Navbar activeSection={activeSection} onNavigate={handleNavigate} />
-
-      {/* Main Content */}
-      <main className="flex-1">
-        {/* Hero Banner */}
-        <div id="beranda">
-          <Hero
-            onExploreClick={() => handleNavigate('direktori')}
-            onEnquiryClick={() => handleNavigate('sewa')}
-          />
-        </div>
-
-        {/* What's On / Events & Promos */}
-        <WhatsOnSection whatsOnList={whatsOnList} />
-
-        {/* Commercial Directory (Tenants, Kiosks, Crafts) */}
-        <TenantDirectory
-          tenants={tenants}
-          categories={categories}
-          floors={floors}
-        />
-
-        {/* Mall Facilities */}
-        <FacilitiesSection facilities={facilities} />
-
-        {/* Space Enquiry / Booth & Kiosk Leasing */}
-        <SpaceEnquirySection />
-
-        {/* History, About Us, and Google Maps */}
-        <AboutSection />
-      </main>
-
-      {/* Footer */}
-      <Footer onNavigate={handleNavigate} />
-
-      {/* Floating WhatsApp Quick Action Button - Minimalist */}
-      <aside aria-label="Kontak Cepat WhatsApp" className="fixed bottom-5 right-5 z-40">
-        <a
-          href="https://wa.me/6281234567890?text=Halo%20Pengelola%20Plaza%20Kebun%20Sayur,%20saya%20ingin%20bertanya"
-          target="_blank"
-          rel="noopener noreferrer"
-          title="Tanya Pengelola via WhatsApp"
-          className="flex items-center gap-2 px-3.5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full shadow-card hover:shadow-card-elevated active:scale-95 transition-all text-xs font-medium"
-        >
-          <MessageCircle size={17} />
-          <span className="hidden sm:inline">WhatsApp</span>
-        </a>
-      </aside>
-    </div>
-  )
+  return null;
 }
 
-export default App
+export function App() {
+  return (
+    <BrowserRouter>
+      <ScrollToTop />
+      <div className="min-h-screen flex flex-col bg-canvas font-sans text-text-primary selection:bg-brand-primary selection:text-white">
+        {/* Sticky Topbar Navbar */}
+        <Navbar />
+
+        {/* Dynamic Route Content */}
+        <main className="flex-1 flex flex-col">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/belanja" element={<ShoppingDirectory />} />
+            <Route path="/belanja/:slug" element={<ShopDetail />} />
+            <Route path="/kuliner" element={<CulinaryDirectory />} />
+            <Route path="/kuliner/:slug" element={<CulinaryDetail />} />
+            <Route path="/agenda" element={<EventsPage />} />
+            <Route path="/agenda/:slug" element={<EventDetail />} />
+            <Route path="/panduan-kunjungan" element={<PlanYourVisit />} />
+            <Route path="/kontak" element={<ContactPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+
+        {/* Global Footer */}
+        <Footer />
+      </div>
+    </BrowserRouter>
+  );
+}
+
+export default App;

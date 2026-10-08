@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
 @import "tailwindcss";
 
 @theme {
-  /* Authentic Plaza Kebun Sayur Monochromatic Maroon Scale (from Insos_Bunsay) */
+  /* 1. Skala Monokrom Marun Bunsay */
   --color-mono-50: #FAF8F8;
   --color-mono-100: #F5EEEE;
   --color-mono-200: #E8DFDF;
@@ -14,45 +14,105 @@
   --color-mono-800: #4E0E0E;
   --color-mono-900: #1A0D0D;
 
-  /* Semantic Brand Palette */
-  --color-red: #8B1A1A;
-  --color-red-rich: #6E1313;
-  --color-red-dark: #4E0E0E;
-  --color-red-50: #FDF5F5;
-  --color-red-100: #F9EBEB;
+  /* 2. Permukaan (Surfaces) */
+  --color-canvas: #ffffff;
+  --color-surface-subtle: #FAF8F8;
+  --color-surface-muted: #F5EEEE;
+  --color-surface-elevated: #ffffff;
+  --color-surface-dark: #1A0D0D;
 
-  --color-cream: #FAF8F8;
-  --color-warm-gray: #F5EEEE;
-  --color-gold-accent: #C59B27;
-  --color-gold-light: #F7EFC8;
-  --color-gold-muted: #A88647;
-  --color-border: #E8DFDF;
-  --color-border-subtle: #F0E8E8;
+  /* 3. Teks & Garis Batas */
+  --color-text-primary: #1A0D0D;
+  --color-text-secondary: #5A4545;
+  --color-text-muted: #7A6A6A;
+  --color-border-subtle: #E8DFDF;
+  --color-border-hover: #D8CACA;
+  --color-border-strong: #1A0D0D;
 
-  --color-text: #1A0D0D;
-  --color-text-2: #523838;
-  --color-text-3: #7A5C5C;
+  /* 4. Marun & Emas */
+  --color-brand-primary: #8B1A1A;
+  --color-brand-primary-hover: #6E1313;
+  --color-brand-primary-pressed: #4E0E0E;
+  --color-brand-surface: #FDF5F5;
+  --color-brand-surface-strong: #F9EBEB;
+  --color-gold: #C59B27;
+  --color-gold-text: #8A6B13;
 
-  /* Functional Status Colors */
-  --color-green: #14592F;
-  --color-green-bg: #EAF5EF;
-  --color-orange: #9E4A00;
-  --color-orange-bg: #FDF2E7;
+  /* 5. Komunikasi */
+  --color-whatsapp: #059669;
 
-  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* 6. Tipografi */
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  /* 7. Radius Sudut (Siku-siku struktural, kapsul hanya untuk badge/filter) */
+  --radius-none: 0px;
+  --radius-card: 0px;
+  --radius-button: 0px;
+  --radius-pill: 9999px;
 
-  /* Crisp Luxury Retail Shadows */
-  --shadow-subtle: 0 1px 2px 0 rgba(26, 13, 13, 0.03);
-  --shadow-card: 0 2px 4px 0 rgba(26, 13, 13, 0.02), 0 6px 16px -2px rgba(26, 13, 13, 0.04);
-  --shadow-card-elevated: 0 12px 28px -4px rgba(26, 13, 13, 0.08), 0 6px 12px -4px rgba(26, 13, 13, 0.03);
-  --shadow-modal: 0 25px 50px -12px rgba(26, 13, 13, 0.25);
+  /* 8. Bayangan Bersih Berbasis mono-900 */
+  --shadow-subtle: 0 1px 2px 0 rgba(26, 13, 13, 0.04);
+  --shadow-card: 0 2px 4px -1px rgba(26, 13, 13, 0.04), 0 1px 2px -1px rgba(26, 13, 13, 0.03);
+  --shadow-card-elevated: 0 8px 16px -4px rgba(26, 13, 13, 0.06), 0 2px 4px -2px rgba(26, 13, 13, 0.03);
+}
+
+/* Base Styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  color: var(--color-text-primary);
+  background-color: var(--color-canvas);
 }
 
 body {
   font-family: var(--font-sans);
-  background-color: #FAF8F8;
-  color: var(--color-text);
+  background-color: var(--color-canvas);
+  color: var(--color-text-primary);
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utilities */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Design Spells Animations */
+@keyframes slideProgress {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.animate-slide-progress {
+  animation: slideProgress 5000ms linear forwards;
+}
+
+@keyframes gemSheen {
+  from {
+    transform: translateX(-150%) skewX(-25deg);
+  }
+  to {
+    transform: translateX(200%) skewX(-25deg);
+  }
+}
+
+.group:hover .animate-sheen-sweep {
+  animation: gemSheen 900ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
