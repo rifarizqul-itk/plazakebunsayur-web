@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, MapPin, Compass, ShieldCheck, Car, Plane, Anchor, Utensils, Moon, Users, CreditCard, ChevronRight } from 'lucide-react';
+import { Compass, Car, Plane, Anchor, ChevronRight } from 'lucide-react';
 import { Container } from '../components/layout/Container';
 import { fetchFacilities } from '../services/api';
 
@@ -22,17 +22,6 @@ export function PlanYourVisit() {
       isCancelled = true;
     };
   }, []);
-
-  const iconMap = {
-    Moon: Moon,
-    Users: Users,
-    CreditCard: CreditCard,
-    Car: Car,
-    ShieldCheck: ShieldCheck,
-    Utensils: Utensils,
-    Home: Moon,
-    Coffee: Utensils,
-  };
 
   return (
     <div className="flex flex-col min-h-screen bg-canvas">
@@ -77,9 +66,6 @@ export function PlanYourVisit() {
             {/* Jam Operasional & Lokasi */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="p-6 sm:p-8 bg-surface-subtle border border-border-subtle flex flex-col gap-3 shadow-subtle">
-                <div className="p-2.5 bg-canvas border border-border-subtle text-text-primary w-fit">
-                  <Clock size={20} />
-                </div>
                 <h2 className="text-lg font-bold uppercase tracking-wider text-text-primary">
                   Waktu Operasional Mall
                 </h2>
@@ -93,9 +79,6 @@ export function PlanYourVisit() {
               </div>
 
               <div className="p-6 sm:p-8 bg-surface-subtle border border-border-subtle flex flex-col gap-3 shadow-subtle">
-                <div className="p-2.5 bg-canvas border border-border-subtle text-text-primary w-fit">
-                  <MapPin size={20} />
-                </div>
                 <h2 className="text-lg font-bold uppercase tracking-wider text-text-primary">
                   Alamat & Titik Lokasi
                 </h2>
@@ -162,28 +145,22 @@ export function PlanYourVisit() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {facilities.map((fac) => {
-                  const IconComponent = iconMap[fac.icon_name] || ShieldCheck;
-                  return (
-                    <div
-                      key={fac.id}
-                      className="p-6 bg-surface-subtle border border-border-subtle hover:border-border-strong flex flex-col gap-3 transition-colors shadow-subtle"
-                    >
-                      <div className="flex items-center gap-3 text-text-primary font-bold text-sm uppercase tracking-tight">
-                        <div className="p-2 bg-canvas border border-border-subtle text-text-primary shrink-0">
-                          <IconComponent size={18} />
-                        </div>
-                        <span>{fac.name}</span>
-                      </div>
-                      <span className="text-xs font-semibold uppercase tracking-wider text-text-muted">
-                        Lokasi: {fac.location_note}
-                      </span>
-                      <p className="text-xs text-text-secondary leading-relaxed">
-                        {fac.description}
-                      </p>
+                {facilities.map((fac) => (
+                  <div
+                    key={fac.id}
+                    className="p-6 bg-surface-subtle border border-border-subtle hover:border-border-strong flex flex-col gap-3 transition-colors shadow-subtle"
+                  >
+                    <div className="text-text-primary font-bold text-sm uppercase tracking-tight">
+                      <span>{fac.name}</span>
                     </div>
-                  );
-                })}
+                    <span className="text-xs font-semibold uppercase tracking-wider text-text-muted">
+                      Lokasi: {fac.location_note}
+                    </span>
+                    <p className="text-xs text-text-secondary leading-relaxed">
+                      {fac.description}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
 

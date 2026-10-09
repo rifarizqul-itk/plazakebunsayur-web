@@ -31,11 +31,11 @@ Prioritas: **P1** wajib, **P2** sebaiknya, **P3** opsional.
 
 Pola: kotak berbingkai berisi ikon di dekat heading kartu. Ikon boleh tetap ada hanya bila menjelaskan fungsi, polos dan sebaris dengan judul.
 
-- [ ] **2.1 `HeroSection.jsx` ~L337-L340 dan ~L384-L386.** Hapus pembungkus `p-3 bg-canvas border ...` di sekitar `Clock` dan `MapPin`. Hapus ikonnya juga bila judul sudah jelas.
-- [ ] **2.2 `PlanYourVisit.jsx` ~L80 dan ~L96.** Hapus kotak ikon `Clock` dan `MapPin` di atas H2.
-- [ ] **2.3 `PlanYourVisit.jsx` ~L172-L175.** Kotak ikon di kartu fasilitas. Hapus kotaknya. Ikon boleh dibuang karena `iconMap` memetakan beberapa nama ke ikon yang sama (`Home` ke `Moon`, `Coffee` ke `Utensils`), jadi tidak informatif. Jika ikon dibuang, hapus `iconMap` dan import yang tidak terpakai.
-- [ ] **2.4 `PlanYourVisit.jsx` ~L121-L149.** Tiga kartu transportasi punya ikon `Plane`, `Anchor`, `Car` di samping judul. Boleh dipertahankan **hanya** bila polos (sudah polos). Tidak perlu diubah.
-- [ ] **2.5 Ikon eyebrow di tiga kartu aksi Home** (`Gem`, `Utensils`, `Sparkles`, ~L242, L278, L314). `Sparkles` adalah ikon dekoratif generik, hapus. Dua lainnya hapus juga agar konsisten.
+- [x] **2.1 `HeroSection.jsx` ~L337-L340 dan ~L384-L386.** Hapus pembungkus `p-3 bg-canvas border ...` di sekitar `Clock` dan `MapPin`. Hapus ikonnya juga bila judul sudah jelas.
+- [x] **2.2 `PlanYourVisit.jsx` ~L80 dan ~L96.** Hapus kotak ikon `Clock` dan `MapPin` di atas H2.
+- [x] **2.3 `PlanYourVisit.jsx` ~L172-L175.** Kotak ikon di kartu fasilitas. Hapus kotaknya. Ikon boleh dibuang karena `iconMap` memetakan beberapa nama ke ikon yang sama (`Home` ke `Moon`, `Coffee` ke `Utensils`), jadi tidak informatif. Jika ikon dibuang, hapus `iconMap` dan import yang tidak terpakai.
+- [x] **2.4 `PlanYourVisit.jsx` ~L121-L149.** Tiga kartu transportasi punya ikon `Plane`, `Anchor`, `Car` di samping judul. Boleh dipertahankan **hanya** bila polos (sudah polos). Tidak perlu diubah.
+- [x] **2.5 Ikon eyebrow di tiga kartu aksi Home** (`Gem`, `Utensils`, `Sparkles`, ~L242, L278, L314). `Sparkles` adalah ikon dekoratif generik, hapus. Dua lainnya hapus juga agar konsisten.
 
 **Selesai bila:**
 - `grep -rn "p-[0-9.]* bg-canvas border" frontend/src` tidak menemukan pembungkus ikon

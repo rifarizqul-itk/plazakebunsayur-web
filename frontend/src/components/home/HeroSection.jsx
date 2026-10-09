@@ -2,11 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
-  Clock,
-  MapPin,
-  Sparkles,
-  Utensils,
-  Gem,
   ChevronLeft,
   ChevronRight,
   Copy,
@@ -238,9 +233,8 @@ export function HeroSection() {
               </div>
 
               <div className="relative z-10 flex flex-col gap-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-gold flex items-center gap-1.5">
-                  <Gem size={14} />
-                  <span>Kios Belanja</span>
+                <span className="text-xs font-bold uppercase tracking-wider text-gold">
+                  Kios Belanja
                 </span>
                 <h3 className="text-lg sm:text-xl font-bold text-white leading-snug">
                   Batu Mulia, Perhiasan & Cinderamata
@@ -274,9 +268,8 @@ export function HeroSection() {
               </div>
 
               <div className="relative z-10 flex flex-col gap-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-gold flex items-center gap-1.5">
-                  <Utensils size={14} />
-                  <span>Sentra Kuliner</span>
+                <span className="text-xs font-bold uppercase tracking-wider text-gold">
+                  Sentra Kuliner
                 </span>
                 <h3 className="text-lg sm:text-xl font-bold text-white leading-snug">
                   Kuliner Tradisional & Oleh-Oleh
@@ -310,9 +303,8 @@ export function HeroSection() {
               </div>
 
               <div className="relative z-10 flex flex-col gap-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-gold flex items-center gap-1.5">
-                  <Sparkles size={14} />
-                  <span>Informasi Gedung</span>
+                <span className="text-xs font-bold uppercase tracking-wider text-gold">
+                  Informasi Gedung
                 </span>
                 <h3 className="text-lg sm:text-xl font-bold text-white leading-snug">
                   Panduan Kunjungan & Fasilitas
@@ -334,92 +326,82 @@ export function HeroSection() {
           {/* 3. Quick Info Module: Opening Hours & Getting Here */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
             {/* Box 1: Opening Hours with Live Status Beacon */}
-            <div className="p-6 bg-surface-subtle border border-border-subtle flex items-start gap-4 shadow-subtle hover:border-border-strong transition-colors">
-              <div className="p-3 bg-canvas border border-border-subtle rounded-none text-text-primary shrink-0">
-                <Clock size={24} />
-              </div>
-              <div className="flex flex-col gap-1.5 flex-1">
-                <div className="flex items-center justify-between flex-wrap gap-2">
-                  <h4 className="text-base font-bold uppercase tracking-wider text-text-primary">
-                    Waktu Operasional Mall
-                  </h4>
-                  {/* Live Status Beacon (Design Spell) */}
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold tracking-wide uppercase bg-canvas border border-border-subtle">
-                    {isOpenNow ? (
-                      <>
-                        <span className="relative flex h-2 w-2">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-                        </span>
-                        <span className="text-emerald-700">Buka Sekarang</span>
-                      </>
-                    ) : (
-                      <>
-                        <span className="h-2 w-2 rounded-full bg-mono-400" />
-                        <span className="text-text-muted">Tutup Sekarang</span>
-                      </>
-                    )}
-                  </div>
+            <div className="p-6 bg-surface-subtle border border-border-subtle flex flex-col gap-1.5 shadow-subtle hover:border-border-strong transition-colors">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <h4 className="text-base font-bold uppercase tracking-wider text-text-primary">
+                  Waktu Operasional Mall
+                </h4>
+                {/* Live Status Beacon (Design Spell) */}
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold tracking-wide uppercase bg-canvas border border-border-subtle">
+                  {isOpenNow ? (
+                    <>
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                      </span>
+                      <span className="text-emerald-700">Buka Sekarang</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="h-2 w-2 rounded-full bg-mono-400" />
+                      <span className="text-text-muted">Tutup Sekarang</span>
+                    </>
+                  )}
                 </div>
-                <p className="text-sm font-semibold text-text-primary">
-                  08.00 – 18.00 WITA (Buka Setiap Hari)
-                </p>
-                {witaTime && (
-                  <span className="text-xs text-text-muted">
-                    Waktu lokal WITA saat ini: <span className="font-mono font-medium text-text-secondary">{witaTime}</span>
-                  </span>
-                )}
-                <Link
-                  to="/panduan-kunjungan"
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-brand-primary hover:underline mt-1 self-start"
-                >
-                  <span>Lihat jadwal operasional lengkap</span>
-                  <ArrowRight size={13} />
-                </Link>
               </div>
+              <p className="text-sm font-semibold text-text-primary">
+                08.00 – 18.00 WITA (Buka Setiap Hari)
+              </p>
+              {witaTime && (
+                <span className="text-xs text-text-muted">
+                  Waktu lokal WITA saat ini: <span className="font-mono font-medium text-text-secondary">{witaTime}</span>
+                </span>
+              )}
+              <Link
+                to="/panduan-kunjungan"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-brand-primary hover:underline mt-1 self-start"
+              >
+                <span>Lihat jadwal operasional lengkap</span>
+                <ArrowRight size={13} />
+              </Link>
             </div>
 
             {/* Box 2: Getting Here with Interactive Quick-Copy */}
-            <div className="p-6 bg-surface-subtle border border-border-subtle flex items-start gap-4 shadow-subtle hover:border-border-strong transition-colors">
-              <div className="p-3 bg-canvas border border-border-subtle rounded-none text-text-primary shrink-0">
-                <MapPin size={24} />
-              </div>
-              <div className="flex flex-col gap-1.5 flex-1">
-                <div className="flex items-center justify-between flex-wrap gap-2">
-                  <h4 className="text-base font-bold uppercase tracking-wider text-text-primary">
-                    Petunjuk Lokasi & Akses
-                  </h4>
-                  {/* Interactive Quick-Copy Button (Design Spell) */}
-                  <button
-                    type="button"
-                    onClick={handleCopyAddress}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-text-primary hover:text-brand-primary active:bg-surface-muted bg-canvas border border-border-subtle rounded-none transition-all cursor-pointer"
-                    title="Salin alamat lengkap untuk navigasi GPS / ojek online"
-                  >
-                    {copiedAddress ? (
-                      <>
-                        <Check size={12} className="text-emerald-600" />
-                        <span className="text-emerald-700">Tersalin!</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy size={12} className="text-text-muted" />
-                        <span>Salin Alamat</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-                <p className="text-sm font-semibold text-text-primary">
-                  Jl. Letjen Suprapto, Balikpapan Barat 76131
-                </p>
-                <Link
-                  to="/panduan-kunjungan"
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-brand-primary hover:underline mt-1 self-start"
+            <div className="p-6 bg-surface-subtle border border-border-subtle flex flex-col gap-1.5 shadow-subtle hover:border-border-strong transition-colors">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <h4 className="text-base font-bold uppercase tracking-wider text-text-primary">
+                  Petunjuk Lokasi & Akses
+                </h4>
+                {/* Interactive Quick-Copy Button (Design Spell) */}
+                <button
+                  type="button"
+                  onClick={handleCopyAddress}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-text-primary hover:text-brand-primary active:bg-surface-muted bg-canvas border border-border-subtle rounded-none transition-all cursor-pointer"
+                  title="Salin alamat lengkap untuk navigasi GPS / ojek online"
                 >
-                  <span>Lihat rute dari bandara & pelabuhan</span>
-                  <ArrowRight size={13} />
-                </Link>
+                  {copiedAddress ? (
+                    <>
+                      <Check size={12} className="text-emerald-600" />
+                      <span className="text-emerald-700">Tersalin!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy size={12} className="text-text-muted" />
+                      <span>Salin Alamat</span>
+                    </>
+                  )}
+                </button>
               </div>
+              <p className="text-sm font-semibold text-text-primary">
+                Jl. Letjen Suprapto, Balikpapan Barat 76131
+              </p>
+              <Link
+                to="/panduan-kunjungan"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-brand-primary hover:underline mt-1 self-start"
+              >
+                <span>Lihat rute dari bandara & pelabuhan</span>
+                <ArrowRight size={13} />
+              </Link>
             </div>
           </div>
         </Container>
