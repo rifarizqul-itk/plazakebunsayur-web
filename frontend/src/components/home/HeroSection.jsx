@@ -252,7 +252,7 @@ export function HeroSection() {
           {/* Centered Display Header */}
           <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-text-primary">
-              Layanan dan Komoditas Pasar
+              Apa yang Ada di Plaza Kebun Sayur
             </h2>
             <p className="text-xs sm:text-sm text-text-secondary mt-2">
               Pusat perdagangan batu mulia, kerajinan tradisional, kain tenun, dan kuliner khas Balikpapan dalam satu kawasan terpadu.
@@ -260,14 +260,14 @@ export function HeroSection() {
           </div>
 
           {/* Trio Action Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
             {actionCards.map((card) => (
               <div
                 key={card.id}
-                className={`group relative rounded-md overflow-hidden bg-surface-dark border border-mono-800 flex flex-col justify-end p-6 ${
+                className={`group relative rounded-md overflow-hidden bg-surface-dark border border-mono-800 flex flex-col justify-end p-6 min-h-[300px] sm:min-h-[320px] h-full ${
                   card.featured
-                    ? 'md:col-span-2 lg:col-span-2 aspect-[16/10] sm:aspect-[16/9] lg:aspect-auto min-h-[320px]'
-                    : 'col-span-1 aspect-[16/10] sm:aspect-[4/3]'
+                    ? 'md:col-span-2 lg:col-span-2'
+                    : 'col-span-1'
                 }`}
               >
                 {/* Background Ambient Image */}

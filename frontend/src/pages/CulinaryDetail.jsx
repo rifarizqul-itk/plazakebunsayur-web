@@ -7,6 +7,8 @@ import { Button } from '../components/ui/Button';
 import { fetchTenantBySlug } from '../services/api';
 import { generateWhatsAppLink } from '../utils/whatsapp';
 
+const FALLBACK_CULINARY_IMAGE = 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=1200&q=80';
+
 export function CulinaryDetail() {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -121,18 +123,16 @@ export function CulinaryDetail() {
         <div className="max-w-4xl mx-auto flex flex-col gap-8">
           {/* Main Photo (Clean Frame) */}
           <div className="relative w-full aspect-[4/3] md:aspect-[16/9] bg-surface-muted rounded-md overflow-hidden border border-border-subtle shadow-card">
-            {tenant.image_url ? (
-              <img
-                src={tenant.image_url}
-                alt={tenant.name}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center bg-surface-muted text-center p-6">
-                <Utensils size={44} className="text-mono-400 mb-2 stroke-[1.5]" />
-                <span className="text-xs text-text-secondary font-medium">Sajian Kuliner Tradisional</span>
-              </div>
-            )}
+            <img
+              src={tenant.image_url || FALLBACK_CULINARY_IMAGE}
+              alt={tenant.name}
+              onError={(e) => {
+                if (e.currentTarget.src !== FALLBACK_CULINARY_IMAGE) {
+                  e.currentTarget.src = FALLBACK_CULINARY_IMAGE;
+                }
+              }}
+              className="w-full h-full object-cover"
+            />
           </div>
 
           {/* Info Header */}

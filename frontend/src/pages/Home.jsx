@@ -90,7 +90,7 @@ export function Home() {
                     to={`/agenda/${evt.slug}`}
                     className="inline-flex items-center justify-center gap-2 py-2.5 px-4 min-h-[44px] bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white text-xs font-bold uppercase tracking-wider self-start transition-colors rounded-sm"
                   >
-                    <span>Baca Selengkapnya</span>
+                    <span>Lihat Detail Agenda</span>
                     <ArrowRight size={13} />
                   </Link>
                 </article>

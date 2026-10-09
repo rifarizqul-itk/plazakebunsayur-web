@@ -86,9 +86,9 @@ Eyebrow uppercase muncul sekitar 9 kali, sering mengulang judul. Contoh: "Agenda
 
 Jangan menulis ulang tanpa konfirmasi. Ajukan usulan di PR, jangan langsung diganti.
 
-- [ ] **6.1** "Layanan dan Komoditas Pasar" (`HeroSection.jsx` ~L216) terlalu umum. Usul: "Apa yang ada di Plaza Kebun Sayur".
-- [ ] **6.2** Deskripsi di bawahnya ("... dalam satu kawasan terpadu") memakai frasa generik. Usul: sebut kategori kios yang benar-benar ada.
-- [ ] **6.3** Tombol "Baca Selengkapnya" di agenda. Usul: "Lihat detail agenda".
+- [x] **6.1** "Layanan dan Komoditas Pasar" (`HeroSection.jsx` ~L216) diganti menjadi "Apa yang Ada di Plaza Kebun Sayur" (sesuai persetujuan pemilik).
+- [x] **6.2** Deskripsi di bawahnya ("... dalam satu kawasan terpadu") dipertahankan sebagaimana aslinya (sesuai keputusan pemilik).
+- [x] **6.3** Tombol di agenda diganti menjadi "Lihat Detail Agenda" (sesuai persetujuan pemilik).
 - [x] **6.4** Periksa kata terlarang di `DESIGN.md` (heritage, explore, discover, dll.): `grep -rniE "heritage|landmark|iconic|seamless|discover|explore|vibrant" frontend/src` harus kosong.
 
 ---

@@ -1,7 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Store, MessageCircle } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 import { generateWhatsAppLink } from '../../utils/whatsapp';
+
+const FALLBACK_STOCK_PHOTOS = {
+  culinary: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80',
+  retail: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80',
+};
 
 export function TenantCard({ tenant, basePath = '/belanja' }) {
   if (!tenant) return null;
@@ -11,6 +16,8 @@ export function TenantCard({ tenant, basePath = '/belanja' }) {
 
   const floorText = tenant.floor?.name || tenant.floor?.code || 'Lantai Dasar';
   const unitText = tenant.unit_number ? ` • ${tenant.unit_number}` : '';
+  const fallbackPhoto = FALLBACK_STOCK_PHOTOS[tenant.category?.type] || FALLBACK_STOCK_PHOTOS.retail;
+  const imageSource = tenant.image_url || fallbackPhoto;
 
   return (
     <article className="group flex flex-col bg-canvas border border-border-subtle hover:border-border-strong active:border-border-strong transition-all duration-150 rounded-md overflow-hidden">
@@ -19,21 +26,18 @@ export function TenantCard({ tenant, basePath = '/belanja' }) {
         to={detailLink}
         className="relative block w-full aspect-[4/3] bg-surface-muted overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
       >
-        {tenant.image_url ? (
-          <img
-            src={tenant.image_url}
-            alt={tenant.name}
-            loading="lazy"
-            decoding="async"
-            className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-300"
-          />
-        ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center bg-surface-muted">
-            <Store size={36} className="text-mono-400 mb-2 stroke-[1.2]" />
-            <span className="text-xs text-text-muted font-medium">Etalase Kios</span>
-          </div>
-        )}
-
+        <img
+          src={imageSource}
+          alt={tenant.name}
+          loading="lazy"
+          decoding="async"
+          onError={(e) => {
+            if (e.currentTarget.src !== fallbackPhoto) {
+              e.currentTarget.src = fallbackPhoto;
+            }
+          }}
+          className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-300"
+        />
       </Link>
 
       {/* Card Info Body */}

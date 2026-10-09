@@ -36,7 +36,7 @@ export const MOCK_TENANTS = [
     opening_time: '09:00:00',
     closing_time: '18:00:00',
     days_open: 'Setiap Hari (Senin - Minggu)',
-    image_url: null,
+    image_url: 'https://images.unsplash.com/photo-1615655406736-b37c4fabf923?auto=format&fit=crop&w=800&q=80',
     is_featured: true,
   },
   {
@@ -54,7 +54,7 @@ export const MOCK_TENANTS = [
     opening_time: '09:30:00',
     closing_time: '17:30:00',
     days_open: 'Setiap Hari (Senin - Minggu)',
-    image_url: null,
+    image_url: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=800&q=80',
     is_featured: true,
   },
   {
@@ -72,7 +72,7 @@ export const MOCK_TENANTS = [
     opening_time: '08:30:00',
     closing_time: '17:00:00',
     days_open: 'Senin - Sabtu',
-    image_url: null,
+    image_url: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=800&q=80',
     is_featured: true,
   },
   {
@@ -90,7 +90,7 @@ export const MOCK_TENANTS = [
     opening_time: '09:00:00',
     closing_time: '18:00:00',
     days_open: 'Setiap Hari (Senin - Minggu)',
-    image_url: null,
+    image_url: 'https://images.unsplash.com/photo-1526434426615-1abe81efcb0b?auto=format&fit=crop&w=800&q=80',
     is_featured: true,
   },
   {
@@ -108,7 +108,7 @@ export const MOCK_TENANTS = [
     opening_time: '09:00:00',
     closing_time: '18:00:00',
     days_open: 'Setiap Hari (Senin - Minggu)',
-    image_url: null,
+    image_url: 'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=800&q=80',
     is_featured: true,
   },
   {
@@ -126,7 +126,7 @@ export const MOCK_TENANTS = [
     opening_time: '08:00:00',
     closing_time: '20:00:00',
     days_open: 'Setiap Hari (Senin - Minggu)',
-    image_url: null,
+    image_url: 'https://images.unsplash.com/photo-1599490659213-e2b9527bd087?auto=format&fit=crop&w=800&q=80',
     is_featured: true,
   },
   {
@@ -144,7 +144,7 @@ export const MOCK_TENANTS = [
     opening_time: '08:00:00',
     closing_time: '18:00:00',
     days_open: 'Setiap Hari (Senin - Minggu)',
-    image_url: null,
+    image_url: 'https://images.unsplash.com/photo-1572656631137-7935297eff55?auto=format&fit=crop&w=800&q=80',
     is_featured: true,
   },
   {
@@ -162,7 +162,7 @@ export const MOCK_TENANTS = [
     opening_time: '08:30:00',
     closing_time: '19:30:00',
     days_open: 'Setiap Hari (Senin - Minggu)',
-    image_url: null,
+    image_url: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80',
     is_featured: true,
   },
 ];

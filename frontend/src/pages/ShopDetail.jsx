@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { MapPin, Clock, MessageCircle, ShieldCheck, Share2, Store } from 'lucide-react';
+import { MapPin, Clock, MessageCircle, ShieldCheck, Share2 } from 'lucide-react';
 import { InstagramIcon } from '../components/ui/InstagramIcon';
 import { Container } from '../components/layout/Container';
 import { Button } from '../components/ui/Button';
 import { fetchTenantBySlug } from '../services/api';
 import { generateWhatsAppLink } from '../utils/whatsapp';
+
+const FALLBACK_SHOP_IMAGE = 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=1200&q=80';
 
 export function ShopDetail() {
   const { slug } = useParams();
@@ -121,18 +123,16 @@ export function ShopDetail() {
         <div className="max-w-4xl mx-auto flex flex-col gap-8">
           {/* Main Photo (Clean, Unobstructed Frame) */}
           <div className="relative w-full aspect-[4/3] md:aspect-[16/9] bg-surface-muted rounded-md overflow-hidden border border-border-subtle shadow-card">
-            {tenant.image_url ? (
-              <img
-                src={tenant.image_url}
-                alt={tenant.name}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center bg-surface-muted text-center p-6">
-                <Store size={44} className="text-mono-400 mb-2 stroke-[1.5]" />
-                <span className="text-xs text-text-secondary font-medium">Foto Etalase Kios Resmi</span>
-              </div>
-            )}
+            <img
+              src={tenant.image_url || FALLBACK_SHOP_IMAGE}
+              alt={tenant.name}
+              onError={(e) => {
+                if (e.currentTarget.src !== FALLBACK_SHOP_IMAGE) {
+                  e.currentTarget.src = FALLBACK_SHOP_IMAGE;
+                }
+              }}
+              className="w-full h-full object-cover"
+            />
           </div>
 
           {/* Info Header */}
