@@ -344,7 +344,7 @@ export function HeroSection() {
                     Waktu Operasional Mall
                   </h4>
                   {/* Live Status Beacon (Design Spell) */}
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide uppercase bg-canvas border border-border-subtle">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold tracking-wide uppercase bg-canvas border border-border-subtle">
                     {isOpenNow ? (
                       <>
                         <span className="relative flex h-2 w-2">
@@ -393,7 +393,7 @@ export function HeroSection() {
                   <button
                     type="button"
                     onClick={handleCopyAddress}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-text-primary hover:text-brand-primary active:bg-surface-muted bg-canvas border border-border-subtle rounded-none transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-text-primary hover:text-brand-primary active:bg-surface-muted bg-canvas border border-border-subtle rounded-none transition-all cursor-pointer"
                     title="Salin alamat lengkap untuk navigasi GPS / ojek online"
                   >
                     {copiedAddress ? (

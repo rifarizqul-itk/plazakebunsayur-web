@@ -237,8 +237,9 @@ export function ShopDetail() {
                 </a>
               )}
 
-              <div className="pt-3 border-t border-border-subtle text-xs text-text-muted leading-relaxed">
-                📍 Balikpapan Barat • Pasar Inpres Kebun Sayur
+              <div className="pt-3 border-t border-border-subtle text-xs text-text-muted leading-relaxed flex items-center gap-1.5">
+                <MapPin size={14} className="shrink-0" />
+                <span>Balikpapan Barat • Pasar Inpres Kebun Sayur</span>
               </div>
             </div>
           </div>

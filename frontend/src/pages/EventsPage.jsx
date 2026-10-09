@@ -86,7 +86,7 @@ export function EventsPage() {
                 >
                   <div className="flex flex-col gap-3">
                     <div className="flex items-center justify-between gap-2">
-                      <Badge variant={item.type === 'event' ? 'brand' : 'accent'} size="sm">
+                      <Badge variant={item.type === 'event' ? 'brand' : 'neutral'} size="sm">
                         {item.type === 'event' ? 'Pameran & Acara' : 'Promo Belanja'}
                       </Badge>
                       <div className="flex items-center gap-1.5 text-xs text-text-muted font-medium">

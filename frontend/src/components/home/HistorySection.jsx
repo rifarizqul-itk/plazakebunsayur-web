@@ -77,7 +77,7 @@ export function HistorySection() {
                 href="https://maps.google.com/?q=Pasar+Inpres+Kebun+Sayur+Balikpapan"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-dark/90 hover:bg-brand-primary active:bg-brand-primary-pressed text-white text-[11px] font-bold uppercase tracking-wider rounded-none backdrop-blur-sm border border-white/20 transition-all shadow-subtle"
+                className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-dark/90 hover:bg-brand-primary active:bg-brand-primary-pressed text-white text-xs font-bold uppercase tracking-wider rounded-none backdrop-blur-sm border border-white/20 transition-all shadow-subtle"
                 title="Buka rute navigasi di Google Maps"
               >
                 <span>Buka di Google Maps</span>

@@ -237,8 +237,9 @@ export function CulinaryDetail() {
                 </a>
               )}
 
-              <div className="pt-3 border-t border-border-subtle text-xs text-text-muted leading-relaxed">
-                🍲 Sentra Kuliner Plaza Kebun Sayur Balikpapan
+              <div className="pt-3 border-t border-border-subtle text-xs text-text-muted leading-relaxed flex items-center gap-1.5">
+                <MapPin size={14} className="shrink-0" />
+                <span>Sentra Kuliner Plaza Kebun Sayur Balikpapan</span>
               </div>
             </div>
           </div>

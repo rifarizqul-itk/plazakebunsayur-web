@@ -73,6 +73,8 @@ typography:
 
 rounded:
   none: "0px"
+  sm: "4px"
+  md: "6px"
   pill: "9999px"
 
 spacing:
@@ -87,7 +89,7 @@ components:
   button-primary:
     backgroundColor: "{colors.brand-primary}"
     textColor: "#ffffff"
-    rounded: "{rounded.none}"
+    rounded: "{rounded.sm}"
     padding: "10px 20px"
   button-primary-hover:
     backgroundColor: "{colors.brand-primary-hover}"
@@ -96,11 +98,11 @@ components:
   button-accent:
     backgroundColor: "{colors.gold-text}"
     textColor: "#ffffff"
-    rounded: "{rounded.none}"
+    rounded: "{rounded.sm}"
     padding: "10px 20px"
   card-tenant:
     backgroundColor: "#ffffff"
-    rounded: "{rounded.none}"
+    rounded: "{rounded.md}"
     padding: "16px"
   badge:
     backgroundColor: "{colors.brand-surface-strong}"
@@ -247,6 +249,7 @@ Plus Jakarta Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-ser
    - Uppercase.
    - Tracking: `0.05em`.
    - Warna mengikuti aturan eyebrow di bagian Colors.
+   - Maksimal satu per halaman, dan hanya bila isinya menambah informasi yang tidak ada di judul. Jangan menaruh eyebrow di setiap H2.
 
 5. **Body**
    
@@ -359,7 +362,8 @@ Detail kios hanya profil singkat. Tidak ada galeri produk, booking, rating, revi
 2. **Hero Beranda**
    
    - Tinggi minimal sekitar 460px di mobile dan 580px di desktop.
-   - Latar foto gedung Plaza Kebun Sayur.
+   - Latar berupa foto slider yang bergerak otomatis (sekitar 5 detik per slide, berhenti saat hover). Slide pertama adalah foto gedung Plaza Kebun Sayur.
+   - Slider punya tombol sebelumnya/berikutnya dan penanda slide, serta berhenti otomatis bila `prefers-reduced-motion` aktif.
    - Overlay memakai `mono-900`, bukan hitam murni.
    - Contoh overlay: dari `mono-900/75` ke `mono-900/40` ke transparan.
    - Gedung harus tetap terlihat.
@@ -370,8 +374,9 @@ Detail kios hanya profil singkat. Tidak ada galeri produk, booking, rating, revi
 
 3. **Trio Action Cards**
    
-   - Grid: `grid-cols-1 md:grid-cols-3`.
-   - Rasio foto: 4:3 atau 16:10 yang konsisten.
+   - Grid bebas selama tiga kartu tidak identik (misalnya satu kartu `md:col-span-2`).
+   - Kartu Belanja dominan (lebih lebar atau lebih tinggi). Dua kartu lain lebih kecil.
+   - Rasio foto konsisten untuk kartu yang sejenis.
    - Setiap kartu harus punya tujuan nyata, misalnya Belanja, Kuliner, atau Panduan Kunjungan.
    - Jangan membuat tiga kartu generik hanya untuk mengisi layout.
 
@@ -451,31 +456,32 @@ Gunakan basis warna `mono-900` atau `rgba(26, 13, 13, ...)`.
 
 Satu aturan bentuk, tanpa pengecualian per halaman.
 
-1. **Siku-siku / `rounded-none`**
+1. **Radius kecil, dua tingkat saja**
    
-   - Dipakai untuk struktur dan aksi:
-     - kartu,
+   - `rounded-sm` (4px) untuk elemen kecil dan aksi:
      - tombol,
      - input,
+     - dropdown,
+     - tag kecil.
+   - `rounded-md` (6px) untuk wadah:
+     - kartu,
      - panel,
      - modal,
      - frame foto,
-     - dropdown,
-     - drawer,
-     - footer panel.
+     - drawer.
+   - Alasan: siku-siku penuh terasa kaku, radius besar terasa seperti hasil AI. Dua nilai kecil menjaga keseimbangan.
 
 2. **Kapsul / `rounded-full`**
    
    - Hanya dipakai untuk:
-     - filter kategori,
-     - badge status,
-     - tag kecil,
-     - ikon pendukung tertentu.
+     - filter kategori dan lantai,
+     - badge status nyata (misalnya buka/tutup), bukan label dekoratif.
 
-3. **Tidak ada radius sedang**
+3. **Radius besar dilarang**
    
-   - Jangan memakai `rounded-md`, `rounded-lg`, `rounded-xl`, atau `rounded-2xl`.
-   - Jika komponen seperti `Button.jsx` masih memakai radius sedang, ubah default-nya menjadi siku-siku.
+   - Jangan memakai `rounded-lg`, `rounded-xl`, `rounded-2xl`, atau `rounded-3xl`.
+   - Dilarang memakai radius yang sama untuk semua elemen. Wadah memakai `rounded-md`, elemen di dalamnya `rounded-sm` atau tanpa radius.
+   - Foto di dalam kartu dipotong mengikuti radius kartu (`overflow-hidden`). Jangan beri radius sendiri.
    - Jangan override per halaman hanya untuk mempertahankan radius lama.
 
 ---
@@ -593,8 +599,8 @@ Ukuran:
 
 Aturan:
 
-- Bentuk siku-siku.
-- Jangan memakai radius sedang atau besar.
+- Radius `rounded-sm` (4px).
+- Jangan memakai radius lebih besar dari `rounded-md`.
 - Jangan memakai gradient.
 - Jangan memakai glow.
 
@@ -617,7 +623,8 @@ Ukuran:
 
 Bentuk:
 
-- kapsul `rounded-full`.
+- kapsul `rounded-full`, hanya untuk status nyata.
+- Jangan memakai badge untuk label dekoratif (misalnya "Pilihan"), kategori, atau tipe agenda. Tampilkan sebagai teks biasa.
 
 ### 5. Footer
 
@@ -653,6 +660,9 @@ Bentuk:
   - jam,
   - kategori placeholder.
 - Jangan memakai ikon generik sebagai hiasan.
+- Jangan membungkus ikon dalam kotak, lingkaran, atau border. Ikon selalu polos.
+- Jangan memakai emoji sebagai ikon.
+- Satu kartu maksimal satu ikon, dan hanya bila ikon itu menjelaskan fungsi.
 - Jangan membuat ikon di dalam lingkaran berwarna untuk feature card generik.
 - Jangan memakai ikon budaya generik tanpa sumber dan persetujuan.
 
@@ -762,6 +772,24 @@ Jangan membuat:
 14. Card atau teaser yang tidak memiliki halaman tujuan.
 15. Section berulang hanya untuk memperpanjang halaman.
 
+### Pola Template yang Harus Dihindari (Tambahan)
+
+Pola berikut sering dipakai sebagai tanda website hasil AI atau template. Berlaku untuk semua halaman dan komponen baru.
+
+1. **Badge atau eyebrow kecil di atas judul hero.** Hero tidak boleh memakai badge di atas H1.
+2. **Blok hero berisi angka besar, label kecil, tiga statistik pendukung, dan aksen gradien.**
+3. **Tiga kartu berjejer dengan radius dan bayangan yang sama di semua elemen**, sehingga hierarki visual tidak terbaca. Beda fungsi harus beda perlakuan (ukuran, bobot, atau posisi).
+4. **Kotak ikon kecil di atas atau di samping heading kartu**, baik membulat maupun siku-siku. Ikon hanya boleh polos dan sebaris dengan teks, tanpa kotak berlatar atau berborder.
+5. **Kartu dengan garis kiri berwarna** dan **langkah bernomor 1-2-3** untuk konten yang tidak berurutan. Penomoran hanya untuk konten yang memang berurutan, misalnya proses atau timeline.
+6. **Kartu bersarang** (kotak berborder di dalam kartu berborder). Satu level wadah saja.
+7. **Label "Live"** atau titik berdenyut. Status buka/tutup boleh tampil sebagai teks biasa. Dilarang memakai `animate-ping` atau `animate-pulse` sebagai hiasan.
+8. **Radius sangat besar** serta pill, badge, dan emoji yang tersebar di mana-mana.
+9. **Eyebrow uppercase di atas hampir setiap H2.** Eyebrow hanya boleh dipakai bila isinya menambah informasi yang tidak ada di judul. Maksimal satu per halaman.
+10. **Template section yang sama diulang** (eyebrow, H2, garis bawah, tautan "Lihat Semua →" di kanan) di semua section. Variasikan struktur sesuai isi.
+11. **Efek hiasan yang sama di semua kartu**, misalnya sheen sweep, `backdrop-blur`, atau zoom gambar saat hover. Pakai paling banyak satu efek interaksi per komponen (lihat Aturan Lapisan Latar).
+12. **Teks uppercase dengan tracking lebar di semua elemen** (tombol, H2, H4, label). Uppercase hanya untuk eyebrow, tombol pendek, dan judul sampai lima kata, sesuai Aturan Huruf Kapital.
+13. **Emoji sebagai ikon** (misalnya 📍, 🍲). Gunakan ikon lucide fungsional atau teks.
+
 ### Ciri Copy yang Harus Dihindari
 
 Hindari kata dan frasa yang terasa seperti AI marketing generik, antara lain:
@@ -803,9 +831,9 @@ Gunakan copy yang konkret:
 
 Agent tidak boleh:
 
-1. Mengarang tenant.
-2. Mengarang nama kios.
-3. Mengarang nama pedagang.
+1. Mengarang tenant di luar data placeholder demo.
+2. Mengarang nama kios di luar data placeholder demo.
+3. Mengarang nama pedagang di luar data placeholder demo.
 4. Mengarang foto.
 5. Mengarang testimoni.
 6. Mengarang statistik.
@@ -821,7 +849,7 @@ Agent tidak boleh:
 Jika data kosong:
 
 - tampilkan empty state,
-- jangan membuat konten palsu.
+- jangan membuat konten palsu di luar data placeholder demo.
 
 Jika foto kosong:
 
@@ -831,6 +859,14 @@ Jika foto kosong:
 Jika fitur belum disepakati:
 
 - jangan menambahkan form, booking, galeri, rating, review, sewa kios, atau marketplace.
+
+### Aturan Data Demo
+
+- Versi ini adalah demo internal. Data lengkap kios belum tersedia, jadi data placeholder (nama kios, kategori, lantai, unit, nomor WhatsApp contoh) diizinkan.
+- Placeholder hanya di lapisan data (`mockData.js` dan seed backend), tidak ditulis langsung di komponen.
+- Placeholder harus wajar sebagai contoh. Jangan memakai nama pedagang atau merek asli tanpa izin.
+- Tetap dilarang, termasuk di demo: testimoni, statistik, logo partner, dan sejarah karangan.
+- Sebelum dipublikasikan: semua placeholder diganti data nyata, dan foto stok diganti foto lapangan. Penyetuju: tim Inovasi Sosial.
 
 ### Checklist Sebelum Hasil Diterima
 
@@ -846,6 +882,13 @@ Sebelum hasil desain atau kode diterima, cek:
 - [ ] Semua state kosong, loading, dan error mengikuti aturan desain.
 - [ ] Tidak ada fitur baru yang belum disepakati.
 - [ ] Situs tetap terasa sebagai direktori Pasar Inpres Kebun Sayur, bukan landing page startup generik.
+- [ ] Tidak ada kotak ikon di atas atau di samping heading kartu.
+- [ ] Tidak ada emoji di file `.jsx` (cek: `grep -rnP "[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}]" frontend/src`).
+- [ ] Tidak ada `animate-ping` atau `animate-pulse` selain skeleton loading.
+- [ ] Tidak ada kartu bersarang dan tidak ada `border-l-*` berwarna.
+- [ ] Eyebrow hanya dipakai bila menambah informasi, maksimal satu per halaman.
+- [ ] Tiga kartu berjejer tidak identik. Jika berbeda fungsi, ukuran atau bobotnya berbeda.
+- [ ] Semua varian `Badge` yang dipanggil ada di `Badge.jsx`.
 
 ---
 
@@ -883,3 +926,15 @@ Sebelum hasil desain atau kode diterima, cek:
 - Jangan memakai foto di luar konteks budaya/komoditas Kalimantan (gunakan foto asli setelah tim lapangan mengumpulkannya).
 - Jangan menambahkan motif budaya atau ornamen lokal tanpa persetujuan.
 - Jangan membuat situs terasa seperti template AI atau landing page startup generik.
+- Jangan membungkus ikon dalam kotak berlatar atau berborder.
+- Jangan memakai emoji, label "Live", atau titik berdenyut sebagai hiasan.
+- Jangan menaruh eyebrow di atas setiap H2.
+- Jangan memakai kartu bersarang atau garis kiri berwarna.
+- Jangan memakai penomoran untuk konten yang tidak berurutan.
+
+---
+
+## Riwayat perubahan
+
+- 2026-10-10: Menambah bagian "Pola Template yang Harus Dihindari (Tambahan)" dari daftar tim. Menyelaraskan aturan Shapes, Badge, Eyebrow, dan Trio Action Cards dengan daftar itu. Backup versi sebelumnya: `docs/archive/DESIGN.md.bak-2026-10-10`.
+- 2026-10-10 (2): Radius diubah dari siku-siku penuh menjadi dua tingkat (`rounded-sm` 4px, `rounded-md` 6px) karena hasil implementasi siku-siku penuh dinilai kaku. Hero ditegaskan sebagai slider otomatis. Ditambah "Aturan Data Demo" (placeholder diizinkan untuk demo internal).

@@ -78,7 +78,7 @@ export function EventDetail() {
 
         <article className="max-w-3xl mx-auto flex flex-col gap-6">
           <div className="flex items-center gap-3">
-            <Badge variant={eventItem.type === 'event' ? 'brand' : 'accent'} size="sm">
+            <Badge variant={eventItem.type === 'event' ? 'brand' : 'neutral'} size="sm">
               {eventItem.type === 'event' ? 'Pameran & Acara' : 'Promo Belanja'}
             </Badge>
             <div className="flex items-center gap-1.5 text-xs text-text-muted">
