@@ -60,13 +60,13 @@ Sekarang tiga kartu di `HeroSection.jsx` ~L224-L331 identik 100% (ukuran, foto b
 
 Eyebrow uppercase muncul sekitar 9 kali, sering mengulang judul. Contoh: "Agenda & Kegiatan" di atas "Agenda dan Kegiatan Pasar".
 
-- [ ] **4.1 `Home.jsx` ~L51-L56.** Hapus eyebrow. Judul H2 cukup "Agenda dan kegiatan pasar" (sentence case).
-- [ ] **4.2 `FeaturedSection.jsx` ~L18 dan ~L45.** Hapus eyebrow "Koleksi Pilihan" dan "Sentra Makanan & Minuman". Judul sudah jelas.
-- [ ] **4.3 `HistorySection.jsx` ~L13.** Hapus "Sejarah Pasar" atau jadikan judul dan hapus H2 yang mengulang.
-- [ ] **4.4 `PlanYourVisit.jsx` ~L112 dan ~L156.** Hapus eyebrow "Akses Transportasi" dan "Kenyamanan & Layanan".
-- [ ] **4.5 `PageHeader.jsx`.** Biarkan prop `eyebrow` ada tetapi pastikan halaman yang memakainya hanya menaruh informasi baru, bukan pengulangan judul. Maksimal satu eyebrow per halaman.
-- [ ] **4.6 Variasikan header section.** Pola eyebrow + H2 + garis bawah + "Lihat Semua →" diulang di `FeaturedSection` (2x) dan `Home`. Biarkan pola ini hanya di satu tempat, ubah yang lain: tautan "Lihat semua" jadi teks biasa di bawah grid, tanpa garis bawah dan uppercase.
-- [ ] **4.7 Uppercase.** Judul H2 dan H4 di `PlanYourVisit.jsx` dan `HeroSection.jsx` (mis. "Waktu Operasional Mall") memakai `uppercase tracking-wider`. Ganti ke sentence case sesuai aturan huruf kapital.
+- [x] **4.1 `Home.jsx` ~L51-L56.** Hapus eyebrow. Judul H2 cukup "Agenda dan kegiatan pasar" (sentence case).
+- [x] **4.2 `FeaturedSection.jsx` ~L18 dan ~L45.** Hapus eyebrow "Koleksi Pilihan" dan "Sentra Makanan & Minuman". Judul sudah jelas.
+- [x] **4.3 `HistorySection.jsx` ~L13.** Hapus "Sejarah Pasar" atau jadikan judul dan hapus H2 yang mengulang.
+- [x] **4.4 `PlanYourVisit.jsx` ~L112 dan ~L156.** Hapus eyebrow "Akses Transportasi" dan "Kenyamanan & Layanan".
+- [x] **4.5 `PageHeader.jsx`.** Biarkan prop `eyebrow` ada tetapi pastikan halaman yang memakainya hanya menaruh informasi baru, bukan pengulangan judul. Maksimal satu eyebrow per halaman.
+- [x] **4.6 Variasikan header section.** Pola eyebrow + H2 + garis bawah + "Lihat Semua →" diulang di `FeaturedSection` (2x) dan `Home`. Biarkan pola ini hanya di satu tempat, ubah yang lain: tautan "Lihat semua" jadi teks biasa di bawah grid, tanpa garis bawah dan uppercase.
+- [x] **4.7 Uppercase.** Judul H2 dan H4 di `PlanYourVisit.jsx` dan `HeroSection.jsx` (mis. "Waktu Operasional Mall") memakai `uppercase tracking-wider`. Ganti ke sentence case sesuai aturan huruf kapital.
 
 **Selesai bila:**
 - Jumlah eyebrow: `grep -rn "uppercase tracking-wider text-brand-primary" frontend/src` kurang dari 3.

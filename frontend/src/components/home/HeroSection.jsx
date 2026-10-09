@@ -294,8 +294,8 @@ export function HeroSection() {
             {/* Box 1: Opening Hours with Live Status Beacon */}
             <div className="p-6 bg-surface-subtle border border-border-subtle flex flex-col gap-1.5 hover:border-border-strong transition-colors">
               <div className="flex items-center justify-between flex-wrap gap-2">
-                <h4 className="text-base font-bold uppercase tracking-wider text-text-primary">
-                  Waktu Operasional Mall
+                <h4 className="text-base font-bold text-text-primary">
+                  Waktu operasional mall
                 </h4>
                 {/* Live Status Beacon (Design Spell) */}
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold tracking-wide uppercase bg-canvas border border-border-subtle">
@@ -335,8 +335,8 @@ export function HeroSection() {
             {/* Box 2: Getting Here with Interactive Quick-Copy */}
             <div className="p-6 bg-surface-subtle border border-border-subtle flex flex-col gap-1.5 hover:border-border-strong transition-colors">
               <div className="flex items-center justify-between flex-wrap gap-2">
-                <h4 className="text-base font-bold uppercase tracking-wider text-text-primary">
-                  Petunjuk Lokasi & Akses
+                <h4 className="text-base font-bold text-text-primary">
+                  Petunjuk lokasi dan akses
                 </h4>
                 {/* Interactive Quick-Copy Button (Design Spell) */}
                 <button

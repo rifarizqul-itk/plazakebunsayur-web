@@ -48,11 +48,8 @@ export function Home() {
           <Container>
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 border-b border-border-subtle pb-4">
               <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-brand-primary block mb-1">
-                  Agenda & Kegiatan
-                </span>
                 <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-text-primary">
-                  Agenda dan Kegiatan Pasar
+                  Agenda dan kegiatan pasar
                 </h2>
               </div>
               <Link

@@ -66,8 +66,8 @@ export function PlanYourVisit() {
             {/* Jam Operasional & Lokasi */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="p-6 sm:p-8 bg-surface-subtle border border-border-subtle flex flex-col gap-3">
-                <h2 className="text-lg font-bold uppercase tracking-wider text-text-primary">
-                  Waktu Operasional Mall
+                <h2 className="text-lg font-bold text-text-primary">
+                  Waktu operasional mall
                 </h2>
                 <div className="text-sm text-text-secondary leading-relaxed space-y-1">
                   <p><strong className="text-text-primary font-semibold">Buka Setiap Hari:</strong> 08.00 – 18.00 WITA</p>
@@ -79,8 +79,8 @@ export function PlanYourVisit() {
               </div>
 
               <div className="p-6 sm:p-8 bg-surface-subtle border border-border-subtle flex flex-col gap-3">
-                <h2 className="text-lg font-bold uppercase tracking-wider text-text-primary">
-                  Alamat & Titik Lokasi
+                <h2 className="text-lg font-bold text-text-primary">
+                  Alamat dan titik lokasi
                 </h2>
                 <div className="text-sm text-text-secondary leading-relaxed space-y-1">
                   <p><strong className="text-text-primary font-semibold">Lokasi:</strong> Jl. Letjen Suprapto, Kebun Sayur, Balikpapan Barat 76131.</p>
@@ -92,11 +92,8 @@ export function PlanYourVisit() {
             {/* Rute Transportasi */}
             <div className="flex flex-col gap-6">
               <div className="border-b border-border-subtle pb-3">
-                <span className="text-xs font-bold uppercase tracking-wider text-brand-primary block mb-1">
-                  Akses Transportasi
-                </span>
-                <h2 className="text-xl sm:text-2xl font-extrabold uppercase tracking-tight text-text-primary">
-                  Panduan Menuju Plaza Kebun Sayur
+                <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-text-primary">
+                  Panduan menuju Plaza Kebun Sayur
                 </h2>
               </div>
 
@@ -136,11 +133,8 @@ export function PlanYourVisit() {
             {/* Fasilitas Gedung Services Grid */}
             <div className="flex flex-col gap-6">
               <div className="border-b border-border-subtle pb-3">
-                <span className="text-xs font-bold uppercase tracking-wider text-brand-primary block mb-1">
-                  Kenyamanan & Layanan
-                </span>
-                <h2 className="text-xl sm:text-2xl font-extrabold uppercase tracking-tight text-text-primary">
-                  Fasilitas Gedung
+                <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-text-primary">
+                  Fasilitas gedung
                 </h2>
               </div>
 
