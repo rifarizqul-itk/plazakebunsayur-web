@@ -116,8 +116,8 @@ Keputusan baru: siku-siku penuh dinilai kaku, radius besar terasa AI. Pakai `rou
 
 Slider otomatis adalah keputusan tim. Jangan dihapus.
 
-- [ ] **8.1** Hentikan auto-play bila `prefers-reduced-motion: reduce` aktif (`HeroSection.jsx`, efek `setInterval` ~L71-L75).
-- [ ] **8.2** Jeda auto-play juga saat fokus keyboard berada di slider, bukan hanya hover.
+- [x] **8.1** Hentikan auto-play bila `prefers-reduced-motion: reduce` aktif (`HeroSection.jsx`, efek `setInterval` ~L71-L75).
+- [x] **8.2** Jeda auto-play juga saat fokus keyboard berada di slider, bukan hanya hover.
 
 ## Catatan
 

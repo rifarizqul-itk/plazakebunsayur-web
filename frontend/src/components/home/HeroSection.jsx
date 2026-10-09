@@ -95,9 +95,14 @@ export function HeroSection() {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
   }, []);
 
-  // Auto-slide 5s with pause on hover
+  // Auto-slide 5s with pause on hover, focus, and prefers-reduced-motion
   useEffect(() => {
-    if (isPaused) return;
+    const mediaQuery = typeof window !== 'undefined'
+      ? window.matchMedia('(prefers-reduced-motion: reduce)')
+      : null;
+
+    if (isPaused || (mediaQuery && mediaQuery.matches)) return;
+
     const interval = setInterval(nextSlide, 5000);
     return () => clearInterval(interval);
   }, [isPaused, nextSlide]);
@@ -142,6 +147,12 @@ export function HeroSection() {
         className="relative w-full aspect-[16/9] sm:aspect-[21/9] lg:aspect-[24/9] min-h-[420px] sm:min-h-[480px] lg:min-h-[520px] max-h-[580px] bg-surface-dark overflow-hidden group select-none"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
+        onFocus={() => setIsPaused(true)}
+        onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget)) {
+            setIsPaused(false);
+          }
+        }}
         aria-label="Galeri Sorotan Plaza Kebun Sayur"
       >
         {/* Slides */}
