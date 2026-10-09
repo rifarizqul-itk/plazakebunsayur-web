@@ -5,7 +5,6 @@ import { HeroSection } from '../components/home/HeroSection';
 import { FeaturedSection } from '../components/home/FeaturedSection';
 import { HistorySection } from '../components/home/HistorySection';
 import { Container } from '../components/layout/Container';
-import { Badge } from '../components/ui/Badge';
 import { fetchTenants, fetchWhatsOn } from '../services/api';
 
 export function Home() {
@@ -69,9 +68,9 @@ export function Home() {
                 >
                   <div className="flex flex-col gap-3">
                     <div className="flex items-center justify-between gap-2">
-                      <Badge variant={evt.type === 'event' ? 'brand' : 'neutral'} size="xs">
+                      <span className="text-xs font-semibold text-text-muted">
                         {evt.type === 'event' ? 'Pameran & Acara' : 'Promo Kios'}
-                      </Badge>
+                      </span>
                       <div className="flex items-center gap-1.5 text-xs text-text-muted">
                         <Calendar size={14} />
                         <span>{evt.start_date}</span>

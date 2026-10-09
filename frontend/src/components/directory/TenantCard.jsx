@@ -34,21 +34,22 @@ export function TenantCard({ tenant, basePath = '/belanja' }) {
           </div>
         )}
 
-        {/* Quiet Featured Indicator */}
-        {tenant.is_featured && (
-          <div className="absolute top-2.5 right-2.5 px-2.5 py-0.5 bg-surface-dark/90 text-gold text-xs font-bold uppercase tracking-wider rounded-full">
-            Pilihan
-          </div>
-        )}
       </Link>
 
       {/* Card Info Body */}
       <div className="p-4 flex flex-col flex-1 justify-between gap-3 text-left">
         <div className="flex flex-col gap-1">
-          {/* Category Tag */}
-          <span className="text-xs font-semibold uppercase tracking-wider text-text-muted block truncate">
-            {tenant.category?.name || 'Direktori Kios'}
-          </span>
+          {/* Category Tag & Featured Indicator */}
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-text-muted block truncate">
+              {tenant.category?.name || 'Direktori Kios'}
+            </span>
+            {tenant.is_featured && (
+              <span className="text-xs font-bold uppercase tracking-wider text-gold shrink-0">
+                Pilihan
+              </span>
+            )}
+          </div>
 
           {/* Store Name (Max 2 baris line-clamp-2) */}
           <Link

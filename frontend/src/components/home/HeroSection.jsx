@@ -297,23 +297,10 @@ export function HeroSection() {
                 <h4 className="text-base font-bold text-text-primary">
                   Waktu operasional mall
                 </h4>
-                {/* Live Status Beacon (Design Spell) */}
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold tracking-wide uppercase bg-canvas border border-border-subtle">
-                  {isOpenNow ? (
-                    <>
-                      <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-                      </span>
-                      <span className="text-emerald-700">Buka Sekarang</span>
-                    </>
-                  ) : (
-                    <>
-                      <span className="h-2 w-2 rounded-full bg-mono-400" />
-                      <span className="text-text-muted">Tutup Sekarang</span>
-                    </>
-                  )}
-                </div>
+                {/* Status operasional */}
+                <span className={`text-xs font-semibold ${isOpenNow ? 'text-emerald-700' : 'text-text-muted'}`}>
+                  {isOpenNow ? 'Buka sekarang' : 'Tutup sekarang'}
+                </span>
               </div>
               <p className="text-sm font-semibold text-text-primary">
                 08.00 – 18.00 WITA (Buka Setiap Hari)

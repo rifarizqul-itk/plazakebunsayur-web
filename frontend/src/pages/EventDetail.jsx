@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Calendar, ArrowLeft } from 'lucide-react';
 import { Container } from '../components/layout/Container';
-import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { fetchWhatsOnBySlug } from '../services/api';
 
@@ -78,9 +77,9 @@ export function EventDetail() {
 
         <article className="max-w-3xl mx-auto flex flex-col gap-6">
           <div className="flex items-center gap-3">
-            <Badge variant={eventItem.type === 'event' ? 'brand' : 'neutral'} size="sm">
+            <span className="text-xs font-semibold text-text-muted">
               {eventItem.type === 'event' ? 'Pameran & Acara' : 'Promo Belanja'}
-            </Badge>
+            </span>
             <div className="flex items-center gap-1.5 text-xs text-text-muted">
               <Calendar size={14} />
               <span className="tabular-nums">

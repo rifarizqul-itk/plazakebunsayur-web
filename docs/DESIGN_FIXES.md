@@ -74,9 +74,9 @@ Eyebrow uppercase muncul sekitar 9 kali, sering mengulang judul. Contoh: "Agenda
 
 ## Fase 5 — Label Live dan pill (P2)
 
-- [ ] **5.1 `HeroSection.jsx` ~L346-L362.** Hapus `animate-ping` dan pill berlatar. Ganti dengan teks biasa: "Buka sekarang" atau "Tutup sekarang" (warna teks `emerald-700` atau `text-muted`), tanpa titik berdenyut. Logika jam operasional tetap dipakai.
-- [ ] **5.2 Kurangi pill.** Pill (`rounded-full`) hanya untuk filter kategori/lantai dan status nyata (buka/tutup). Label "Pilihan" di `TenantCard.jsx` ~L44 dan `Badge` untuk tipe agenda (`Home.jsx`, `EventsPage.jsx`, `EventDetail.jsx`) jadikan teks biasa tanpa latar dan border. Komponen `Badge` boleh tetap ada untuk status nyata.
-- [ ] **5.3 Filter di `EventsPage.jsx` ~L45-L67** memakai pill mirip `CategoryFilter`. Biarkan, tapi pakai komponen filter bersama agar tidak ada duplikasi.
+- [x] **5.1 `HeroSection.jsx` ~L346-L362.** Hapus `animate-ping` dan pill berlatar. Ganti dengan teks biasa: "Buka sekarang" atau "Tutup sekarang" (warna teks `emerald-700` atau `text-muted`), tanpa titik berdenyut. Logika jam operasional tetap dipakai.
+- [x] **5.2 Kurangi pill.** Pill (`rounded-full`) hanya untuk filter kategori/lantai dan status nyata (buka/tutup). Label "Pilihan" di `TenantCard.jsx` ~L44 dan `Badge` untuk tipe agenda (`Home.jsx`, `EventsPage.jsx`, `EventDetail.jsx`) jadikan teks biasa tanpa latar dan border. Komponen `Badge` boleh tetap ada untuk status nyata.
+- [x] **5.3 Filter di `EventsPage.jsx` ~L45-L67** memakai pill mirip `CategoryFilter`. Biarkan, tapi pakai komponen filter bersama agar tidak ada duplikasi.
 
 **Selesai bila:**
 - `grep -rn "animate-ping" frontend/src` kosong.

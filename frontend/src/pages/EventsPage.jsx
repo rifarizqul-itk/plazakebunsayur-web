@@ -3,8 +3,14 @@ import { Link } from 'react-router-dom';
 import { Calendar, ArrowRight } from 'lucide-react';
 import { PageHeader } from '../components/layout/PageHeader';
 import { Container } from '../components/layout/Container';
-import { Badge } from '../components/ui/Badge';
+import { FilterPills } from '../components/ui/FilterPills';
 import { fetchWhatsOn } from '../services/api';
+
+const EVENT_FILTER_OPTIONS = [
+  { value: 'all', label: 'Semua Agenda' },
+  { value: 'event', label: 'Pameran & Acara' },
+  { value: 'promo', label: 'Promo Kios' },
+];
 
 export function EventsPage() {
   const [events, setEvents] = useState([]);
@@ -38,40 +44,12 @@ export function EventsPage() {
       <section className="py-8 bg-canvas flex-1">
         <Container>
           {/* Filter Pills */}
-          <div className="flex flex-wrap items-center gap-2 pb-6 border-b border-border-subtle">
-            <button
-              type="button"
-              onClick={() => setFilterType('all')}
-              className={`px-4 py-2 min-h-[44px] text-xs font-semibold rounded-full transition-all cursor-pointer flex items-center justify-center ${
-                filterType === 'all'
-                  ? 'bg-brand-primary text-white'
-                  : 'bg-canvas text-text-secondary border border-border-subtle hover:bg-surface-subtle hover:text-text-primary'
-              }`}
-            >
-              Semua Agenda
-            </button>
-            <button
-              type="button"
-              onClick={() => setFilterType('event')}
-              className={`px-4 py-2 min-h-[44px] text-xs font-semibold rounded-full transition-all cursor-pointer flex items-center justify-center ${
-                filterType === 'event'
-                  ? 'bg-brand-primary text-white'
-                  : 'bg-canvas text-text-secondary border border-border-subtle hover:bg-surface-subtle hover:text-text-primary'
-              }`}
-            >
-              Pameran & Acara
-            </button>
-            <button
-              type="button"
-              onClick={() => setFilterType('promo')}
-              className={`px-4 py-2 min-h-[44px] text-xs font-semibold rounded-full transition-all cursor-pointer flex items-center justify-center ${
-                filterType === 'promo'
-                  ? 'bg-brand-primary text-white'
-                  : 'bg-canvas text-text-secondary border border-border-subtle hover:bg-surface-subtle hover:text-text-primary'
-              }`}
-            >
-              Promo Kios
-            </button>
+          <div className="pb-6 border-b border-border-subtle">
+            <FilterPills
+              options={EVENT_FILTER_OPTIONS}
+              selectedValue={filterType}
+              onSelect={setFilterType}
+            />
           </div>
 
           {/* List of Events */}
@@ -86,9 +64,9 @@ export function EventsPage() {
                 >
                   <div className="flex flex-col gap-3">
                     <div className="flex items-center justify-between gap-2">
-                      <Badge variant={item.type === 'event' ? 'brand' : 'neutral'} size="sm">
+                      <span className="text-xs font-semibold text-text-muted">
                         {item.type === 'event' ? 'Pameran & Acara' : 'Promo Belanja'}
-                      </Badge>
+                      </span>
                       <div className="flex items-center gap-1.5 text-xs text-text-muted font-medium">
                         <Calendar size={14} />
                         <span className="tabular-nums">
