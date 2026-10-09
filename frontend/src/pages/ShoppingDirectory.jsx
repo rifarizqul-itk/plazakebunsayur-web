@@ -119,7 +119,7 @@ export function ShoppingDirectory() {
       <section className="py-8 sm:py-12 flex-1">
         <Container>
           {/* 2. YasMall-Style Integrated Search & Filter Block */}
-          <div className="p-6 sm:p-8 bg-surface-subtle border border-border-subtle mb-8 shadow-subtle">
+          <div className="p-6 sm:p-8 bg-surface-subtle border border-border-subtle mb-8">
             <h1 className="text-xl sm:text-2xl font-bold uppercase tracking-tight text-text-primary mb-6">
               Pencarian Kios & Toko Belanja
             </h1>
@@ -193,7 +193,7 @@ export function ShoppingDirectory() {
               <div className="md:col-span-3 flex items-center gap-2">
                 <Link
                   to="/panduan-kunjungan"
-                  className="flex-1 py-2.5 px-3 min-h-[44px] bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white font-bold text-xs uppercase tracking-wider text-center transition-colors rounded-none inline-flex items-center justify-center gap-1.5 shadow-subtle"
+                  className="flex-1 py-2.5 px-3 min-h-[44px] bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white font-bold text-xs uppercase tracking-wider text-center transition-colors rounded-none inline-flex items-center justify-center gap-1.5"
                 >
                   <BookOpen size={13} />
                   <span>Panduan Mall</span>
@@ -254,7 +254,7 @@ export function ShoppingDirectory() {
               <button
                 type="button"
                 onClick={handleResetFilters}
-                className="mt-4 inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] text-xs font-bold uppercase tracking-wider text-text-primary bg-canvas border border-border-subtle hover:border-border-strong transition-colors rounded-none shadow-subtle"
+                className="mt-4 inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] text-xs font-bold uppercase tracking-wider text-text-primary bg-canvas border border-border-subtle hover:border-border-strong transition-colors rounded-none"
               >
                 Reset Semua Filter
               </button>

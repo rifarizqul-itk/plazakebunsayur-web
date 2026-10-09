@@ -44,7 +44,7 @@ export function EventsPage() {
               onClick={() => setFilterType('all')}
               className={`px-4 py-2 min-h-[44px] text-xs font-semibold rounded-full transition-all cursor-pointer flex items-center justify-center ${
                 filterType === 'all'
-                  ? 'bg-brand-primary text-white shadow-subtle'
+                  ? 'bg-brand-primary text-white'
                   : 'bg-canvas text-text-secondary border border-border-subtle hover:bg-surface-subtle hover:text-text-primary'
               }`}
             >
@@ -55,7 +55,7 @@ export function EventsPage() {
               onClick={() => setFilterType('event')}
               className={`px-4 py-2 min-h-[44px] text-xs font-semibold rounded-full transition-all cursor-pointer flex items-center justify-center ${
                 filterType === 'event'
-                  ? 'bg-brand-primary text-white shadow-subtle'
+                  ? 'bg-brand-primary text-white'
                   : 'bg-canvas text-text-secondary border border-border-subtle hover:bg-surface-subtle hover:text-text-primary'
               }`}
             >
@@ -66,7 +66,7 @@ export function EventsPage() {
               onClick={() => setFilterType('promo')}
               className={`px-4 py-2 min-h-[44px] text-xs font-semibold rounded-full transition-all cursor-pointer flex items-center justify-center ${
                 filterType === 'promo'
-                  ? 'bg-brand-primary text-white shadow-subtle'
+                  ? 'bg-brand-primary text-white'
                   : 'bg-canvas text-text-secondary border border-border-subtle hover:bg-surface-subtle hover:text-text-primary'
               }`}
             >
@@ -82,7 +82,7 @@ export function EventsPage() {
               {events.map((item) => (
                 <article
                   key={item.id}
-                  className="p-5 sm:p-6 bg-surface-subtle border border-border-subtle hover:border-border-strong rounded-none flex flex-col justify-between gap-4 transition-all shadow-subtle"
+                  className="p-5 sm:p-6 bg-surface-subtle border border-border-subtle hover:border-border-strong rounded-none flex flex-col justify-between gap-4 transition-all"
                 >
                   <div className="flex flex-col gap-3">
                     <div className="flex items-center justify-between gap-2">

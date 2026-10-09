@@ -65,7 +65,7 @@ export function PlanYourVisit() {
           <div className="flex flex-col gap-14 max-w-5xl mx-auto">
             {/* Jam Operasional & Lokasi */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-6 sm:p-8 bg-surface-subtle border border-border-subtle flex flex-col gap-3 shadow-subtle">
+              <div className="p-6 sm:p-8 bg-surface-subtle border border-border-subtle flex flex-col gap-3">
                 <h2 className="text-lg font-bold uppercase tracking-wider text-text-primary">
                   Waktu Operasional Mall
                 </h2>
@@ -78,7 +78,7 @@ export function PlanYourVisit() {
                 </div>
               </div>
 
-              <div className="p-6 sm:p-8 bg-surface-subtle border border-border-subtle flex flex-col gap-3 shadow-subtle">
+              <div className="p-6 sm:p-8 bg-surface-subtle border border-border-subtle flex flex-col gap-3">
                 <h2 className="text-lg font-bold uppercase tracking-wider text-text-primary">
                   Alamat & Titik Lokasi
                 </h2>
@@ -101,7 +101,7 @@ export function PlanYourVisit() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="p-6 border border-border-subtle bg-canvas flex flex-col gap-2.5 shadow-subtle">
+                <div className="p-6 border border-border-subtle bg-canvas flex flex-col gap-2.5">
                   <div className="flex items-center gap-2 text-text-primary font-bold text-sm uppercase tracking-wide">
                     <Plane size={18} className="text-brand-primary" />
                     <span>Dari Bandara Sepinggan</span>
@@ -111,7 +111,7 @@ export function PlanYourVisit() {
                   </p>
                 </div>
 
-                <div className="p-6 border border-border-subtle bg-canvas flex flex-col gap-2.5 shadow-subtle">
+                <div className="p-6 border border-border-subtle bg-canvas flex flex-col gap-2.5">
                   <div className="flex items-center gap-2 text-text-primary font-bold text-sm uppercase tracking-wide">
                     <Anchor size={18} className="text-brand-primary" />
                     <span>Dari Pelabuhan Semayang</span>
@@ -121,7 +121,7 @@ export function PlanYourVisit() {
                   </p>
                 </div>
 
-                <div className="p-6 border border-border-subtle bg-canvas flex flex-col gap-2.5 shadow-subtle">
+                <div className="p-6 border border-border-subtle bg-canvas flex flex-col gap-2.5">
                   <div className="flex items-center gap-2 text-text-primary font-bold text-sm uppercase tracking-wide">
                     <Car size={18} className="text-brand-primary" />
                     <span>Transportasi Kota</span>
@@ -148,7 +148,7 @@ export function PlanYourVisit() {
                 {facilities.map((fac) => (
                   <div
                     key={fac.id}
-                    className="p-6 bg-surface-subtle border border-border-subtle hover:border-border-strong flex flex-col gap-3 transition-colors shadow-subtle"
+                    className="p-6 bg-surface-subtle border border-border-subtle hover:border-border-strong flex flex-col gap-3 transition-colors"
                   >
                     <div className="text-text-primary font-bold text-sm uppercase tracking-tight">
                       <span>{fac.name}</span>
@@ -165,7 +165,7 @@ export function PlanYourVisit() {
             </div>
 
             {/* Tips Belanja Cerdas */}
-            <div className="p-6 sm:p-8 bg-surface-subtle border border-border-subtle flex flex-col gap-4 shadow-subtle">
+            <div className="p-6 sm:p-8 bg-surface-subtle border border-border-subtle flex flex-col gap-4">
               <div className="flex items-center gap-2.5 text-text-primary font-bold text-base uppercase tracking-wider">
                 <Compass size={20} className="text-brand-primary" />
                 <span>Tips Berbelanja Cerdas di Plaza Kebun Sayur</span>

@@ -13,7 +13,7 @@ export function TenantCard({ tenant, basePath = '/belanja' }) {
   const unitText = tenant.unit_number ? ` • ${tenant.unit_number}` : '';
 
   return (
-    <article className="group flex flex-col bg-canvas border border-border-subtle hover:border-border-strong active:border-border-strong transition-all duration-150 rounded-none shadow-subtle">
+    <article className="group flex flex-col bg-canvas border border-border-subtle hover:border-border-strong active:border-border-strong transition-all duration-150 rounded-none">
       {/* 4:3 Ratio Photographic Frame */}
       <Link
         to={detailLink}
@@ -33,11 +33,6 @@ export function TenantCard({ tenant, basePath = '/belanja' }) {
             <span className="text-xs text-text-muted font-medium">Etalase Kios</span>
           </div>
         )}
-
-        {/* Specular Gemstone Light Sheen Sweep (Design Spell) */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-          <div className="w-[150%] h-full -translate-x-[150%] animate-sheen-sweep bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-25deg]" />
-        </div>
 
         {/* Quiet Featured Indicator */}
         {tenant.is_featured && (

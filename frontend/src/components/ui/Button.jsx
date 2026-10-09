@@ -16,11 +16,11 @@ export function Button({
 
   const variants = {
     primary:
-      'bg-brand-primary text-white hover:bg-brand-primary-hover active:bg-brand-primary-pressed focus-visible:ring-brand-primary shadow-subtle',
+      'bg-brand-primary text-white hover:bg-brand-primary-hover active:bg-brand-primary-pressed focus-visible:ring-brand-primary',
     accent:
-      'bg-gold-text text-white hover:bg-[#73580e] focus-visible:ring-gold-text shadow-subtle',
+      'bg-gold-text text-white hover:bg-[#73580e] focus-visible:ring-gold-text',
     dark:
-      'bg-surface-dark text-white hover:bg-mono-800 focus-visible:ring-surface-dark shadow-subtle',
+      'bg-surface-dark text-white hover:bg-mono-800 focus-visible:ring-surface-dark',
     outline:
       'border border-border-subtle bg-transparent text-text-primary hover:bg-surface-subtle hover:border-border-hover focus-visible:ring-border-strong',
     ghost:

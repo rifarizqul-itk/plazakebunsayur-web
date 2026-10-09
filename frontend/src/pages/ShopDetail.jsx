@@ -205,7 +205,7 @@ export function ShopDetail() {
             </div>
 
             {/* Right Col: Action & Contact Box */}
-            <div className="flex flex-col gap-4 p-5 sm:p-6 bg-surface-subtle border border-border-subtle rounded-none sticky top-24 shadow-subtle">
+            <div className="flex flex-col gap-4 p-5 sm:p-6 bg-surface-subtle border border-border-subtle rounded-none sticky top-24">
               <div>
                 <h3 className="font-bold text-sm text-text-primary tracking-tight">
                   Hubungi Pedagang
@@ -219,7 +219,7 @@ export function ShopDetail() {
                 href={waLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full flex items-center justify-center gap-2 py-3 px-4 text-xs font-bold uppercase tracking-wider text-white bg-whatsapp hover:bg-emerald-700 active:bg-emerald-800 rounded-none shadow-subtle transition-all min-h-[44px]"
+                className="w-full flex items-center justify-center gap-2 py-3 px-4 text-xs font-bold uppercase tracking-wider text-white bg-whatsapp hover:bg-emerald-700 active:bg-emerald-800 rounded-none transition-all min-h-[44px]"
               >
                 <MessageCircle size={16} />
                 <span>Chat via WhatsApp</span>

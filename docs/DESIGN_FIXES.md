@@ -45,11 +45,11 @@ Pola: kotak berbingkai berisi ikon di dekat heading kartu. Ikon boleh tetap ada 
 
 Sekarang tiga kartu di `HeroSection.jsx` ~L224-L331 identik 100% (ukuran, foto buram, tombol penuh). Selain itu `shadow-subtle` dipakai 39 kali.
 
-- [ ] **3.1 Bedakan kartu.** Jadikan **Belanja** kartu dominan (mis. `md:col-span-2` atau lebih tinggi) dan **Kuliner** serta **Panduan Kunjungan** lebih kecil. Rasio foto konsisten untuk kartu yang sejenis.
-- [ ] **3.2 Ekstrak jadi data.** Tiga blok JSX hampir kembar, pindahkan isinya ke array dan `map`. Jangan mengubah teks.
-- [ ] **3.3 Turunkan sheen.** Hapus efek `animate-sheen-sweep` dari tiga kartu aksi. Sisakan paling banyak di `TenantCard`, lalu pertimbangkan hapus juga (aturan: satu efek interaksi per komponen; `TenantCard` sudah punya perubahan border dan zoom foto).
-- [ ] **3.4 Shadow.** Hapus `shadow-subtle` dari elemen yang sudah berborder (kartu, tombol, panel info). Sisakan hanya pada elemen yang mengambang di atas konten lain (mis. tombol overlay di peta). Target: `shadow-subtle` turun dari 39 menjadi kurang dari 10.
-- [ ] **3.5 Hapus kartu bersarang.** Setelah Fase 2 tidak boleh ada kotak berborder di dalam kartu berborder. Periksa panel "Layanan Kios" di `HistorySection.jsx` ~L31-L39. Jika berada langsung di section (bukan di dalam kartu), biarkan.
+- [x] **3.1 Bedakan kartu.** Jadikan **Belanja** kartu dominan (mis. `md:col-span-2` atau lebih tinggi) dan **Kuliner** serta **Panduan Kunjungan** lebih kecil. Rasio foto konsisten untuk kartu yang sejenis.
+- [x] **3.2 Ekstrak jadi data.** Tiga blok JSX hampir kembar, pindahkan isinya ke array dan `map`. Jangan mengubah teks.
+- [x] **3.3 Turunkan sheen.** Hapus efek `animate-sheen-sweep` dari tiga kartu aksi. Sisakan paling banyak di `TenantCard`, lalu pertimbangkan hapus juga (aturan: satu efek interaksi per komponen; `TenantCard` sudah punya perubahan border dan zoom foto).
+- [x] **3.4 Shadow.** Hapus `shadow-subtle` dari elemen yang sudah berborder (kartu, tombol, panel info). Sisakan hanya pada elemen yang mengambang di atas konten lain (mis. tombol overlay di peta). Target: `shadow-subtle` turun dari 39 menjadi kurang dari 10.
+- [x] **3.5 Hapus kartu bersarang.** Setelah Fase 2 tidak boleh ada kotak berborder di dalam kartu berborder. Periksa panel "Layanan Kios" di `HistorySection.jsx` ~L31-L39. Jika berada langsung di section (bukan di dalam kartu), biarkan.
 
 **Selesai bila:**
 - Tiga kartu aksi tidak identik secara ukuran.

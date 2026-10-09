@@ -121,7 +121,7 @@ export function ContactPage() {
                   href={waLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-none bg-whatsapp hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-subtle min-h-[44px]"
+                  className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-none bg-whatsapp hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-bold uppercase tracking-wider transition-colors min-h-[44px]"
                 >
                   <MessageCircle size={18} />
                   <span>Chat WhatsApp Siaga Pengelola</span>
@@ -130,7 +130,7 @@ export function ContactPage() {
             </div>
 
             {/* Right 7 Cols: Public Contact Form */}
-            <div className="lg:col-span-7 bg-surface-subtle border border-border-subtle p-6 sm:p-8 rounded-none shadow-subtle">
+            <div className="lg:col-span-7 bg-surface-subtle border border-border-subtle p-6 sm:p-8 rounded-none">
               <div className="mb-6">
                 <h3 className="text-lg font-bold text-text-primary">Kirim Pesan atau Pertanyaan</h3>
                 <p className="text-xs text-text-secondary mt-1">

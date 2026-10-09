@@ -41,7 +41,7 @@ export function HistorySection() {
             <div className="pt-2">
               <Link
                 to="/panduan-kunjungan"
-                className="group/guide inline-flex items-center gap-2 px-6 py-3 min-h-[44px] bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white font-bold text-xs uppercase tracking-wider transition-colors rounded-none shadow-subtle"
+                className="group/guide inline-flex items-center gap-2 px-6 py-3 min-h-[44px] bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white font-bold text-xs uppercase tracking-wider transition-colors rounded-none"
               >
                 <span>Pelajari Panduan Kunjungan Gedung</span>
                 <ArrowRight size={14} className="transition-transform duration-200 group-hover/guide:translate-x-1" />
@@ -61,7 +61,7 @@ export function HistorySection() {
               Berada strategis di Balikpapan Barat, berjarak sekitar 25 menit berkendara dari Bandara Internasional SAMS Sepinggan dan 10 menit dari Pelabuhan Semayang.
             </p>
 
-            <div className="relative w-full aspect-[4/3] overflow-hidden border border-border-subtle shadow-subtle bg-surface-muted group">
+            <div className="relative w-full aspect-[4/3] overflow-hidden border border-border-subtle bg-surface-muted group">
               <iframe
                 title="Peta Lokasi Plaza Kebun Sayur Balikpapan"
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.852924403164!2d116.82035317496556!3d-1.2604603987275815!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f0!3m3!1m2!1s0x2df147391a6d9d43%3A0xe510c4cce8f01b7a!2sPasar%20Inpres%20Kebun%20Sayur!5e0!3m2!1sid!2sid!4v1727700000000!5m2!1sid!2sid"

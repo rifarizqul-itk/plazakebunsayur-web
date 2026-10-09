@@ -47,6 +47,39 @@ const slides = [
   },
 ];
 
+const actionCards = [
+  {
+    id: 'belanja',
+    category: 'Kios Belanja',
+    title: 'Batu Mulia, Perhiasan & Cinderamata',
+    description: 'Temukan pengrajin batu akik Borneo, perhiasan emas perak, dan cinderamata Dayak.',
+    href: '/belanja',
+    btnText: 'Lihat Kios Belanja',
+    image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80',
+    featured: true,
+  },
+  {
+    id: 'kuliner',
+    category: 'Sentra Kuliner',
+    title: 'Kuliner Tradisional & Oleh-Oleh',
+    description: 'Stan amplang kuku macan, soto banjar, mantau, dan kudapan khas pesisir.',
+    href: '/kuliner',
+    btnText: 'Lihat Stan Kuliner',
+    image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80',
+    featured: false,
+  },
+  {
+    id: 'panduan',
+    category: 'Informasi Gedung',
+    title: 'Panduan Kunjungan & Fasilitas',
+    description: 'Jadwal buka harian, akses dari bandara/pelabuhan, denah lantai, dan fasilitas umum.',
+    href: '/panduan-kunjungan',
+    btnText: 'Buka Panduan',
+    image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80',
+    featured: false,
+  },
+];
+
 export function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -215,118 +248,51 @@ export function HeroSection() {
             </p>
           </div>
 
-          {/* Trio Action Cards (Design Spell: Ambient Depth + Specular Hover Sheen) */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            {/* Card 1: Shopping & Gems */}
-            <div className="group relative aspect-[16/10] sm:aspect-[4/3] rounded-none overflow-hidden bg-surface-dark border border-mono-800 flex flex-col justify-end p-6 shadow-subtle">
-              {/* Background Ambient Image */}
-              <img
-                src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80"
-                alt=""
-                className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-40 group-hover:scale-106 transition-all duration-700 ease-out z-0 pointer-events-none"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-mono-900 via-mono-900/85 to-mono-900/40 z-1 pointer-events-none" />
+          {/* Trio Action Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {actionCards.map((card) => (
+              <div
+                key={card.id}
+                className={`group relative rounded-none overflow-hidden bg-surface-dark border border-mono-800 flex flex-col justify-end p-6 ${
+                  card.featured
+                    ? 'md:col-span-2 lg:col-span-2 aspect-[16/10] sm:aspect-[16/9] lg:aspect-auto min-h-[320px]'
+                    : 'col-span-1 aspect-[16/10] sm:aspect-[4/3]'
+                }`}
+              >
+                {/* Background Ambient Image */}
+                <img
+                  src={card.image}
+                  alt=""
+                  className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-40 group-hover:scale-105 transition-all duration-700 ease-out z-0 pointer-events-none"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-mono-900 via-mono-900/85 to-mono-900/40 z-1 pointer-events-none" />
 
-              {/* Gemstone Sheen Sweep */}
-              <div className="absolute inset-0 pointer-events-none overflow-hidden z-2" aria-hidden="true">
-                <div className="w-[150%] h-full -translate-x-[150%] animate-sheen-sweep bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-[-25deg]" />
+                <div className="relative z-10 flex flex-col gap-2">
+                  <span className="text-xs font-bold uppercase tracking-wider text-gold">
+                    {card.category}
+                  </span>
+                  <h3 className="text-lg sm:text-xl font-bold text-white leading-snug">
+                    {card.title}
+                  </h3>
+                  <p className="text-xs text-mono-300 line-clamp-2">
+                    {card.description}
+                  </p>
+                  <Link
+                    to={card.href}
+                    className="group/btn mt-3 w-full py-2.5 px-4 min-h-[44px] bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white font-bold text-xs uppercase tracking-wider text-center transition-all flex items-center justify-center gap-2 rounded-none"
+                  >
+                    <span>{card.btnText}</span>
+                    <ArrowRight size={14} className="transition-transform duration-200 group-hover/btn:translate-x-1" />
+                  </Link>
+                </div>
               </div>
-
-              <div className="relative z-10 flex flex-col gap-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-gold">
-                  Kios Belanja
-                </span>
-                <h3 className="text-lg sm:text-xl font-bold text-white leading-snug">
-                  Batu Mulia, Perhiasan & Cinderamata
-                </h3>
-                <p className="text-xs text-mono-300 line-clamp-2">
-                  Temukan pengrajin batu akik Borneo, perhiasan emas perak, dan cinderamata Dayak.
-                </p>
-                <Link
-                  to="/belanja"
-                  className="group/btn mt-3 w-full py-2.5 px-4 min-h-[44px] bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white font-bold text-xs uppercase tracking-wider text-center transition-all flex items-center justify-center gap-2 rounded-none"
-                >
-                  <span>Lihat Kios Belanja</span>
-                  <ArrowRight size={14} className="transition-transform duration-200 group-hover/btn:translate-x-1" />
-                </Link>
-              </div>
-            </div>
-
-            {/* Card 2: Culinary */}
-            <div className="group relative aspect-[16/10] sm:aspect-[4/3] rounded-none overflow-hidden bg-surface-dark border border-mono-800 flex flex-col justify-end p-6 shadow-subtle">
-              {/* Background Ambient Image */}
-              <img
-                src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80"
-                alt=""
-                className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-40 group-hover:scale-106 transition-all duration-700 ease-out z-0 pointer-events-none"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-mono-900 via-mono-900/85 to-mono-900/40 z-1 pointer-events-none" />
-
-              {/* Gemstone Sheen Sweep */}
-              <div className="absolute inset-0 pointer-events-none overflow-hidden z-2" aria-hidden="true">
-                <div className="w-[150%] h-full -translate-x-[150%] animate-sheen-sweep bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-[-25deg]" />
-              </div>
-
-              <div className="relative z-10 flex flex-col gap-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-gold">
-                  Sentra Kuliner
-                </span>
-                <h3 className="text-lg sm:text-xl font-bold text-white leading-snug">
-                  Kuliner Tradisional & Oleh-Oleh
-                </h3>
-                <p className="text-xs text-mono-300 line-clamp-2">
-                  Stan amplang kuku macan, soto banjar, mantau, dan kudapan khas pesisir.
-                </p>
-                <Link
-                  to="/kuliner"
-                  className="group/btn mt-3 w-full py-2.5 px-4 min-h-[44px] bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white font-bold text-xs uppercase tracking-wider text-center transition-all flex items-center justify-center gap-2 rounded-none"
-                >
-                  <span>Lihat Stan Kuliner</span>
-                  <ArrowRight size={14} className="transition-transform duration-200 group-hover/btn:translate-x-1" />
-                </Link>
-              </div>
-            </div>
-
-            {/* Card 3: Plan Your Visit */}
-            <div className="group relative aspect-[16/10] sm:aspect-[4/3] rounded-none overflow-hidden bg-surface-dark border border-mono-800 flex flex-col justify-end p-6 shadow-subtle">
-              {/* Background Ambient Image */}
-              <img
-                src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80"
-                alt=""
-                className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-40 group-hover:scale-106 transition-all duration-700 ease-out z-0 pointer-events-none"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-mono-900 via-mono-900/85 to-mono-900/40 z-1 pointer-events-none" />
-
-              {/* Gemstone Sheen Sweep */}
-              <div className="absolute inset-0 pointer-events-none overflow-hidden z-2" aria-hidden="true">
-                <div className="w-[150%] h-full -translate-x-[150%] animate-sheen-sweep bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-[-25deg]" />
-              </div>
-
-              <div className="relative z-10 flex flex-col gap-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-gold">
-                  Informasi Gedung
-                </span>
-                <h3 className="text-lg sm:text-xl font-bold text-white leading-snug">
-                  Panduan Kunjungan & Fasilitas
-                </h3>
-                <p className="text-xs text-mono-300 line-clamp-2">
-                  Jadwal buka harian, akses dari bandara/pelabuhan, denah lantai, dan fasilitas umum.
-                </p>
-                <Link
-                  to="/panduan-kunjungan"
-                  className="group/btn mt-3 w-full py-2.5 px-4 min-h-[44px] bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white font-bold text-xs uppercase tracking-wider text-center transition-all flex items-center justify-center gap-2 rounded-none"
-                >
-                  <span>Buka Panduan</span>
-                  <ArrowRight size={14} className="transition-transform duration-200 group-hover/btn:translate-x-1" />
-                </Link>
-              </div>
-            </div>
+            ))}
           </div>
 
           {/* 3. Quick Info Module: Opening Hours & Getting Here */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
             {/* Box 1: Opening Hours with Live Status Beacon */}
-            <div className="p-6 bg-surface-subtle border border-border-subtle flex flex-col gap-1.5 shadow-subtle hover:border-border-strong transition-colors">
+            <div className="p-6 bg-surface-subtle border border-border-subtle flex flex-col gap-1.5 hover:border-border-strong transition-colors">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <h4 className="text-base font-bold uppercase tracking-wider text-text-primary">
                   Waktu Operasional Mall
@@ -367,7 +333,7 @@ export function HeroSection() {
             </div>
 
             {/* Box 2: Getting Here with Interactive Quick-Copy */}
-            <div className="p-6 bg-surface-subtle border border-border-subtle flex flex-col gap-1.5 shadow-subtle hover:border-border-strong transition-colors">
+            <div className="p-6 bg-surface-subtle border border-border-subtle flex flex-col gap-1.5 hover:border-border-strong transition-colors">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <h4 className="text-base font-bold uppercase tracking-wider text-text-primary">
                   Petunjuk Lokasi & Akses
