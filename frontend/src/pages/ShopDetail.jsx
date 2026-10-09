@@ -52,10 +52,10 @@ export function ShopDetail() {
       <div className="py-16">
         <Container>
           <div className="max-w-4xl mx-auto flex flex-col gap-6 animate-pulse">
-            <div className="w-48 h-5 bg-surface-muted rounded-none" />
-            <div className="w-full aspect-[4/3] md:aspect-[16/9] bg-surface-muted rounded-none" />
-            <div className="w-3/4 h-8 bg-surface-muted rounded-none" />
-            <div className="w-1/2 h-4 bg-surface-muted rounded-none" />
+            <div className="w-48 h-5 bg-surface-muted rounded-sm" />
+            <div className="w-full aspect-[4/3] md:aspect-[16/9] bg-surface-muted rounded-md" />
+            <div className="w-3/4 h-8 bg-surface-muted rounded-sm" />
+            <div className="w-1/2 h-4 bg-surface-muted rounded-sm" />
           </div>
         </Container>
       </div>
@@ -66,7 +66,7 @@ export function ShopDetail() {
     return (
       <div className="py-20 text-center">
         <Container>
-          <div className="max-w-md mx-auto p-8 bg-surface-subtle border border-border-subtle rounded-none">
+          <div className="max-w-md mx-auto p-8 bg-surface-subtle border border-border-subtle rounded-md">
             <h2 className="text-xl font-bold text-text-primary tracking-tight">Kios Tidak Ditemukan</h2>
             <p className="text-sm text-text-secondary mt-2">
               Kios yang Anda cari mungkin telah pindah unit atau alamat URL salah.
@@ -120,7 +120,7 @@ export function ShopDetail() {
 
         <div className="max-w-4xl mx-auto flex flex-col gap-8">
           {/* Main Photo (Clean, Unobstructed Frame) */}
-          <div className="relative w-full aspect-[4/3] md:aspect-[16/9] bg-surface-muted rounded-none overflow-hidden border border-border-subtle shadow-card">
+          <div className="relative w-full aspect-[4/3] md:aspect-[16/9] bg-surface-muted rounded-md overflow-hidden border border-border-subtle shadow-card">
             {tenant.image_url ? (
               <img
                 src={tenant.image_url}
@@ -173,7 +173,7 @@ export function ShopDetail() {
             <button
               type="button"
               onClick={handleShare}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[44px] text-xs font-medium text-text-secondary border border-border-subtle rounded-none hover:bg-surface-subtle hover:text-text-primary transition-all cursor-pointer self-start active:bg-surface-muted"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[44px] text-xs font-medium text-text-secondary border border-border-subtle rounded-sm hover:bg-surface-subtle hover:text-text-primary transition-all cursor-pointer self-start active:bg-surface-muted"
             >
               <Share2 size={14} />
               <span>{copied ? 'Tautan Disalin' : 'Bagikan Kios'}</span>
@@ -195,7 +195,7 @@ export function ShopDetail() {
               </div>
 
               {/* Guarantees Box */}
-              <div className="p-4 bg-surface-subtle border border-border-subtle rounded-none flex items-start gap-3">
+              <div className="p-4 bg-surface-subtle border border-border-subtle rounded-md flex items-start gap-3">
                 <ShieldCheck size={18} className="text-brand-primary shrink-0 mt-0.5" />
                 <div className="text-xs text-text-secondary leading-relaxed">
                   <span className="font-semibold block text-text-primary mb-0.5">Pedagang Terdaftar Plaza Kebun Sayur</span>
@@ -205,7 +205,7 @@ export function ShopDetail() {
             </div>
 
             {/* Right Col: Action & Contact Box */}
-            <div className="flex flex-col gap-4 p-5 sm:p-6 bg-surface-subtle border border-border-subtle rounded-none sticky top-24">
+            <div className="flex flex-col gap-4 p-5 sm:p-6 bg-surface-subtle border border-border-subtle rounded-md sticky top-24">
               <div>
                 <h3 className="font-bold text-sm text-text-primary tracking-tight">
                   Hubungi Pedagang
@@ -219,7 +219,7 @@ export function ShopDetail() {
                 href={waLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full flex items-center justify-center gap-2 py-3 px-4 text-xs font-bold uppercase tracking-wider text-white bg-whatsapp hover:bg-emerald-700 active:bg-emerald-800 rounded-none transition-all min-h-[44px]"
+                className="w-full flex items-center justify-center gap-2 py-3 px-4 text-xs font-bold uppercase tracking-wider text-white bg-whatsapp hover:bg-emerald-700 active:bg-emerald-800 rounded-sm transition-all min-h-[44px]"
               >
                 <MessageCircle size={16} />
                 <span>Chat via WhatsApp</span>
@@ -230,7 +230,7 @@ export function ShopDetail() {
                   href={`https://instagram.com/${tenant.instagram.replace('@', '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2 py-2.5 px-4 text-xs font-semibold text-text-primary bg-canvas border border-border-subtle hover:bg-surface-subtle rounded-none transition-all min-h-[44px]"
+                  className="w-full flex items-center justify-center gap-2 py-2.5 px-4 text-xs font-semibold text-text-primary bg-canvas border border-border-subtle hover:bg-surface-subtle rounded-sm transition-all min-h-[44px]"
                 >
                   <InstagramIcon size={14} />
                   <span>{tenant.instagram}</span>

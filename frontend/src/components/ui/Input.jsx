@@ -23,7 +23,7 @@ export function Input({
         id={inputId}
         className={twMerge(
           clsx(
-            'w-full px-3.5 py-2.5 min-h-[44px] text-sm bg-canvas border rounded-none transition-all duration-150',
+            'w-full px-3.5 py-2.5 min-h-[44px] text-sm bg-canvas border rounded-sm transition-all duration-150',
             'placeholder:text-text-muted text-text-primary focus:outline-none focus:ring-2',
             error
               ? 'border-red-500 focus:ring-red-200 focus:border-red-500'
@@ -62,7 +62,7 @@ export function Textarea({
         rows={rows}
         className={twMerge(
           clsx(
-            'w-full px-3.5 py-2.5 text-sm bg-canvas border rounded-none transition-all duration-150',
+            'w-full px-3.5 py-2.5 text-sm bg-canvas border rounded-sm transition-all duration-150',
             'placeholder:text-text-muted text-text-primary focus:outline-none focus:ring-2 resize-y',
             error
               ? 'border-red-500 focus:ring-red-200 focus:border-red-500'

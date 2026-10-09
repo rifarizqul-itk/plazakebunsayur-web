@@ -64,7 +64,7 @@ export function Home() {
               {latestEvents.map((evt) => (
                 <article
                   key={evt.id}
-                  className="p-6 sm:p-8 bg-surface-subtle border border-border-subtle hover:border-border-strong active:border-border-strong flex flex-col justify-between gap-6 transition-all rounded-none"
+                  className="p-6 sm:p-8 bg-surface-subtle border border-border-subtle hover:border-border-strong active:border-border-strong flex flex-col justify-between gap-6 transition-all rounded-md"
                 >
                   <div className="flex flex-col gap-3">
                     <div className="flex items-center justify-between gap-2">
@@ -88,7 +88,7 @@ export function Home() {
 
                   <Link
                     to={`/agenda/${evt.slug}`}
-                    className="inline-flex items-center justify-center gap-2 py-2.5 px-4 min-h-[44px] bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white text-xs font-bold uppercase tracking-wider self-start transition-colors rounded-none"
+                    className="inline-flex items-center justify-center gap-2 py-2.5 px-4 min-h-[44px] bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white text-xs font-bold uppercase tracking-wider self-start transition-colors rounded-sm"
                   >
                     <span>Baca Selengkapnya</span>
                     <ArrowRight size={13} />

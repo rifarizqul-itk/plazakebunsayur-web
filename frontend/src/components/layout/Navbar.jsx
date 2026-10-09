@@ -61,7 +61,7 @@ export function Navbar() {
             {/* Logo & Mall Title */}
             <Link
               to="/"
-              className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-none p-1 shrink-0"
+              className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-sm p-1 shrink-0"
             >
               <img
                 src="/assets/main_logo_transparent_for_light_bg.webp"
@@ -131,7 +131,7 @@ export function Navbar() {
                           <Link
                             to="/belanja"
                             onClick={() => setActiveDropdown(null)}
-                            className="inline-flex items-center gap-2 px-4 py-2 border border-gold text-gold hover:bg-gold hover:text-surface-dark text-xs font-bold uppercase tracking-wider rounded-none transition-all"
+                            className="inline-flex items-center gap-2 px-4 py-2 border border-gold text-gold hover:bg-gold hover:text-surface-dark text-xs font-bold uppercase tracking-wider rounded-sm transition-all"
                           >
                             <span>Lihat Semua Kios Belanja</span>
                             <ArrowRight size={14} />
@@ -144,7 +144,7 @@ export function Navbar() {
                               key={cat.name}
                               to={`/belanja`}
                               onClick={() => setActiveDropdown(null)}
-                              className="group block p-3 rounded-none hover:bg-mono-800 border border-transparent hover:border-mono-700 transition-all"
+                              className="group block p-3 rounded-sm hover:bg-mono-800 border border-transparent hover:border-mono-700 transition-all"
                             >
                               <strong className="block text-sm text-mono-100 group-hover:text-gold transition-colors font-semibold">
                                 {cat.name}
@@ -198,7 +198,7 @@ export function Navbar() {
                           <Link
                             to="/kuliner"
                             onClick={() => setActiveDropdown(null)}
-                            className="inline-flex items-center gap-2 px-4 py-2 border border-gold text-gold hover:bg-gold hover:text-surface-dark text-xs font-bold uppercase tracking-wider rounded-none transition-all"
+                            className="inline-flex items-center gap-2 px-4 py-2 border border-gold text-gold hover:bg-gold hover:text-surface-dark text-xs font-bold uppercase tracking-wider rounded-sm transition-all"
                           >
                             <span>Lihat Semua Stan Kuliner</span>
                             <ArrowRight size={14} />
@@ -211,7 +211,7 @@ export function Navbar() {
                               key={cat.name}
                               to={`/kuliner`}
                               onClick={() => setActiveDropdown(null)}
-                              className="group block p-4 rounded-none hover:bg-mono-800 border border-transparent hover:border-mono-700 transition-all"
+                              className="group block p-4 rounded-sm hover:bg-mono-800 border border-transparent hover:border-mono-700 transition-all"
                             >
                               <strong className="block text-sm text-mono-100 group-hover:text-gold transition-colors font-semibold">
                                 {cat.name}
@@ -271,12 +271,12 @@ export function Navbar() {
                   placeholder="Cari kios / produk..."
                   value={searchNavInput}
                   onChange={(e) => setSearchNavInput(e.target.value)}
-                  className="w-24 focus:w-44 xl:w-36 2xl:w-48 py-1.5 pl-2 pr-11 text-xs border-b border-border-strong bg-transparent text-text-primary placeholder:text-text-muted focus:outline-none focus:border-brand-primary transition-all duration-200 rounded-none"
+                  className="w-24 focus:w-44 xl:w-36 2xl:w-48 py-1.5 pl-2 pr-11 text-xs border-b border-border-strong bg-transparent text-text-primary placeholder:text-text-muted focus:outline-none focus:border-brand-primary transition-all duration-200 rounded-sm"
                 />
                 <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-1">
                   <kbd
                     aria-hidden="true"
-                    className="hidden xl:inline-flex items-center justify-center px-1.5 py-0.5 text-[9px] font-mono font-semibold text-text-muted bg-surface-muted border border-border-subtle rounded-none select-none pointer-events-none"
+                    className="hidden xl:inline-flex items-center justify-center px-1.5 py-0.5 text-[9px] font-mono font-semibold text-text-muted bg-surface-muted border border-border-subtle rounded-sm select-none pointer-events-none"
                     title="Tekan / untuk fokus pencarian"
                   >
                     /
@@ -295,7 +295,7 @@ export function Navbar() {
                 href={waLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group/wa inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-text-primary bg-surface-subtle hover:bg-surface-muted hover:border-brand-primary border border-border-subtle rounded-none transition-colors min-h-[40px] whitespace-nowrap shrink-0"
+                className="group/wa inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-text-primary bg-surface-subtle hover:bg-surface-muted hover:border-brand-primary border border-border-subtle rounded-sm transition-colors min-h-[40px] whitespace-nowrap shrink-0"
               >
                 <MessageCircle size={14} className="text-whatsapp transition-transform duration-200 group-hover/wa:scale-115 group-hover/wa:-rotate-12" />
                 <span>Hotline Pengelola</span>
@@ -306,7 +306,7 @@ export function Navbar() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden w-11 h-11 flex items-center justify-center rounded-none text-text-primary hover:bg-surface-subtle focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary cursor-pointer"
+              className="lg:hidden w-11 h-11 flex items-center justify-center rounded-sm text-text-primary hover:bg-surface-subtle focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary cursor-pointer"
               aria-label={mobileMenuOpen ? 'Tutup Menu' : 'Buka Menu'}
               aria-expanded={mobileMenuOpen}
             >
@@ -326,7 +326,7 @@ export function Navbar() {
               placeholder="Cari nama kios atau produk..."
               value={searchNavInput}
               onChange={(e) => setSearchNavInput(e.target.value)}
-              className="w-full py-2.5 pl-3 pr-9 min-h-[44px] text-xs border border-mono-700 rounded-none bg-mono-900 text-white placeholder:text-mono-400 focus:outline-none focus:border-gold"
+              className="w-full py-2.5 pl-3 pr-9 min-h-[44px] text-xs border border-mono-700 rounded-sm bg-mono-900 text-white placeholder:text-mono-400 focus:outline-none focus:border-gold"
             />
             <button
               type="submit"
@@ -340,7 +340,7 @@ export function Navbar() {
           <NavLink
             to="/"
             onClick={() => setMobileMenuOpen(false)}
-            className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-none flex items-center"
+            className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-sm flex items-center"
           >
             BERANDA
           </NavLink>
@@ -348,7 +348,7 @@ export function Navbar() {
           <NavLink
             to="/belanja"
             onClick={() => setMobileMenuOpen(false)}
-            className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-none flex items-center justify-between"
+            className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-sm flex items-center justify-between"
           >
             <span>DIREKTORI BELANJA</span>
             <span className="text-xs font-normal text-mono-400">5 Kategori</span>
@@ -357,7 +357,7 @@ export function Navbar() {
           <NavLink
             to="/kuliner"
             onClick={() => setMobileMenuOpen(false)}
-            className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-none flex items-center justify-between"
+            className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-sm flex items-center justify-between"
           >
             <span>SENTRA KULINER</span>
             <span className="text-xs font-normal text-mono-400">3 Kategori</span>
@@ -366,7 +366,7 @@ export function Navbar() {
           <NavLink
             to="/agenda"
             onClick={() => setMobileMenuOpen(false)}
-            className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-none flex items-center"
+            className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-sm flex items-center"
           >
             AGENDA & PROMO
           </NavLink>
@@ -374,7 +374,7 @@ export function Navbar() {
           <NavLink
             to="/panduan-kunjungan"
             onClick={() => setMobileMenuOpen(false)}
-            className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-none flex items-center"
+            className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-sm flex items-center"
           >
             PANDUAN KUNJUNGAN
           </NavLink>
@@ -382,7 +382,7 @@ export function Navbar() {
           <NavLink
             to="/kontak"
             onClick={() => setMobileMenuOpen(false)}
-            className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-none flex items-center"
+            className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-sm flex items-center"
           >
             KONTAK RESMI
           </NavLink>
@@ -393,7 +393,7 @@ export function Navbar() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed rounded-none min-h-[44px]"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed rounded-sm min-h-[44px]"
             >
               <MessageCircle size={16} />
               <span>WhatsApp Hotline Pengelola</span>

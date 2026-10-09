@@ -112,7 +112,7 @@ export function Footer() {
                   href={waLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white font-bold text-xs uppercase tracking-wider rounded-none min-h-[44px] transition-colors"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white font-bold text-xs uppercase tracking-wider rounded-sm min-h-[44px] transition-colors"
                 >
                   <MessageCircle size={15} />
                   <span>WhatsApp Pengelola</span>

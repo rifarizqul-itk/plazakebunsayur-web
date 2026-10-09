@@ -46,7 +46,7 @@ export function EventDetail() {
     return (
       <div className="py-20 text-center">
         <Container>
-          <div className="max-w-md mx-auto p-8 bg-surface-subtle border border-border-subtle rounded-none">
+          <div className="max-w-md mx-auto p-8 bg-surface-subtle border border-border-subtle rounded-md">
             <h2 className="text-xl font-bold text-text-primary tracking-tight">Agenda Tidak Ditemukan</h2>
             <p className="text-sm text-text-secondary mt-2">
               Agenda kegiatan yang Anda tuju mungkin sudah berakhir atau tautan tidak valid.
@@ -95,7 +95,7 @@ export function EventDetail() {
 
           {/* Banner image if available */}
           {eventItem.banner_url && (
-            <div className="w-full aspect-[16/9] rounded-none overflow-hidden border border-border-subtle bg-surface-muted my-2 shadow-card">
+            <div className="w-full aspect-[16/9] rounded-md overflow-hidden border border-border-subtle bg-surface-muted my-2 shadow-card">
               <img
                 src={eventItem.banner_url}
                 alt={eventItem.title}

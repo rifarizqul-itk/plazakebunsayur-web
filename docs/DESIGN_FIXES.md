@@ -97,15 +97,15 @@ Jangan menulis ulang tanpa konfirmasi. Ajukan usulan di PR, jangan langsung diga
 
 Keputusan baru: siku-siku penuh dinilai kaku, radius besar terasa AI. Pakai `rounded-sm` (4px) dan `rounded-md` (6px). Kerjakan setelah Fase 1-6 supaya diff tidak bertabrakan.
 
-- [ ] **7.1 Token** di `index.css`: `--radius-button` jadi `4px`, `--radius-card` jadi `6px`, tambah `--radius-sm: 4px` dan `--radius-md: 6px` bila perlu. Biarkan `--radius-pill`.
-- [ ] **7.2 `Button.jsx`**: default `rounded-sm`.
-- [ ] **7.3 Ganti `rounded-none`** (sekitar 94 tempat di `frontend/src`):
+- [x] **7.1 Token** di `index.css`: `--radius-button` jadi `4px`, `--radius-card` jadi `6px`, tambah `--radius-sm: 4px` dan `--radius-md: 6px` bila perlu. Biarkan `--radius-pill`.
+- [x] **7.2 `Button.jsx`**: default `rounded-sm`.
+- [x] **7.3 Ganti `rounded-none`** (sekitar 94 tempat di `frontend/src`):
   - wadah (kartu, panel, modal, frame foto, drawer, kotak peta) jadi `rounded-md` dan tambahkan `overflow-hidden` bila ada gambar di dalamnya
   - tombol, input, dropdown, tag kecil jadi `rounded-sm`
   - elemen di dalam wadah (mis. tombol di dalam kartu) tetap `rounded-sm`, jangan `rounded-md`
   - overlay penuh (scrim gradient di hero) dan elemen yang menempel ke tepi layar tetap tanpa radius
-- [ ] **7.4** Foto di dalam kartu tidak diberi radius sendiri.
-- [ ] **7.5** Hero slider: tombol panah dan penanda slide `rounded-sm`, hero sendiri tetap tanpa radius (full-bleed).
+- [x] **7.4** Foto di dalam kartu tidak diberi radius sendiri.
+- [x] **7.5** Hero slider: tombol panah dan penanda slide `rounded-sm`, hero sendiri tetap tanpa radius (full-bleed).
 
 **Selesai bila:**
 - `grep -rn "rounded-lg\|rounded-xl\|rounded-2xl\|rounded-3xl" frontend/src` kosong.

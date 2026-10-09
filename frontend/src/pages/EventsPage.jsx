@@ -60,7 +60,7 @@ export function EventsPage() {
               {events.map((item) => (
                 <article
                   key={item.id}
-                  className="p-5 sm:p-6 bg-surface-subtle border border-border-subtle hover:border-border-strong rounded-none flex flex-col justify-between gap-4 transition-all"
+                  className="p-5 sm:p-6 bg-surface-subtle border border-border-subtle hover:border-border-strong rounded-md flex flex-col justify-between gap-4 transition-all"
                 >
                   <div className="flex flex-col gap-3">
                     <div className="flex items-center justify-between gap-2">
@@ -98,7 +98,7 @@ export function EventsPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-16 bg-surface-subtle rounded-none border border-dashed border-border-subtle my-6">
+            <div className="text-center py-16 bg-surface-subtle rounded-md border border-dashed border-border-subtle my-6">
               <h3 className="font-bold text-base text-text-primary">Belum Ada Agenda Aktif</h3>
               <p className="text-sm text-text-secondary mt-1">
                 Kunjungi kembali halaman ini untuk pembaruan jadwal event dan promo mendatang.

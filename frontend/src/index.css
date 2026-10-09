@@ -44,10 +44,12 @@
   /* 6. Tipografi */
   --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   
-  /* 7. Radius Sudut (Siku-siku struktural, kapsul hanya untuk badge/filter) */
+  /* 7. Radius Sudut (Dua tingkat: 4px interaktif, 6px wadah) */
   --radius-none: 0px;
-  --radius-card: 0px;
-  --radius-button: 0px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-button: 4px;
+  --radius-card: 6px;
   --radius-pill: 9999px;
 
   /* 8. Bayangan Bersih Berbasis mono-900 */

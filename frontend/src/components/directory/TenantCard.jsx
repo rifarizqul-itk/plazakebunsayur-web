@@ -13,7 +13,7 @@ export function TenantCard({ tenant, basePath = '/belanja' }) {
   const unitText = tenant.unit_number ? ` • ${tenant.unit_number}` : '';
 
   return (
-    <article className="group flex flex-col bg-canvas border border-border-subtle hover:border-border-strong active:border-border-strong transition-all duration-150 rounded-none">
+    <article className="group flex flex-col bg-canvas border border-border-subtle hover:border-border-strong active:border-border-strong transition-all duration-150 rounded-md overflow-hidden">
       {/* 4:3 Ratio Photographic Frame */}
       <Link
         to={detailLink}
@@ -74,7 +74,7 @@ export function TenantCard({ tenant, basePath = '/belanja' }) {
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="group/wa w-full min-h-[44px] flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold text-text-primary hover:text-brand-primary hover:border-brand-primary active:bg-surface-muted bg-surface-subtle border border-border-subtle rounded-none transition-colors"
+            className="group/wa w-full min-h-[44px] flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold text-text-primary hover:text-brand-primary hover:border-brand-primary active:bg-surface-muted bg-surface-subtle border border-border-subtle rounded-sm transition-colors"
             title={`Chat WhatsApp dengan ${tenant.name}`}
           >
             <MessageCircle size={15} className="text-whatsapp transition-transform duration-200 group-hover/wa:scale-115 group-hover/wa:-rotate-12" />

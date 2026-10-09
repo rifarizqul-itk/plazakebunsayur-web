@@ -12,7 +12,7 @@ export function Button({
   ...props
 }) {
   const baseClasses =
-    'inline-flex items-center justify-center font-medium rounded-none select-none transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none cursor-pointer';
+    'inline-flex items-center justify-center font-medium rounded-sm select-none transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none cursor-pointer';
 
   const variants = {
     primary:

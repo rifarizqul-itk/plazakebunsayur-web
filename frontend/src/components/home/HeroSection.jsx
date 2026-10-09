@@ -186,7 +186,7 @@ export function HeroSection() {
         <button
           type="button"
           onClick={prevSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 flex items-center justify-center bg-surface-dark/70 hover:bg-brand-primary active:bg-brand-primary-pressed text-white border border-white/20 transition-all rounded-none cursor-pointer opacity-80 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100"
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 flex items-center justify-center bg-surface-dark/70 hover:bg-brand-primary active:bg-brand-primary-pressed text-white border border-white/20 transition-all rounded-sm cursor-pointer opacity-80 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100"
           aria-label="Slide sebelumnya"
         >
           <ChevronLeft size={22} />
@@ -195,14 +195,14 @@ export function HeroSection() {
         <button
           type="button"
           onClick={nextSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 flex items-center justify-center bg-surface-dark/70 hover:bg-brand-primary active:bg-brand-primary-pressed text-white border border-white/20 transition-all rounded-none cursor-pointer opacity-80 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100"
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 flex items-center justify-center bg-surface-dark/70 hover:bg-brand-primary active:bg-brand-primary-pressed text-white border border-white/20 transition-all rounded-sm cursor-pointer opacity-80 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100"
           aria-label="Slide berikutnya"
         >
           <ChevronRight size={22} />
         </button>
 
         {/* Slide Counter & Progress Countdown Indicator (Design Spell) */}
-        <div className="absolute bottom-8 sm:bottom-12 right-4 sm:right-8 z-30 flex items-center gap-3 bg-surface-dark/80 backdrop-blur-sm px-3.5 py-2 border border-white/10 rounded-none shadow-subtle">
+        <div className="absolute bottom-8 sm:bottom-12 right-4 sm:right-8 z-30 flex items-center gap-3 bg-surface-dark/80 backdrop-blur-sm px-3.5 py-2 border border-white/10 rounded-sm shadow-subtle">
           <span className="text-xs font-mono font-bold text-white tracking-widest tabular-nums">
             0{currentSlide + 1} / 0{slides.length}
           </span>
@@ -212,7 +212,7 @@ export function HeroSection() {
                 key={idx}
                 type="button"
                 onClick={() => setCurrentSlide(idx)}
-                className={`h-1.5 overflow-hidden transition-all rounded-none cursor-pointer relative ${
+                className={`h-1.5 overflow-hidden transition-all rounded-sm cursor-pointer relative ${
                   idx === currentSlide
                     ? 'w-8 bg-white/20'
                     : 'w-2.5 bg-white/40 hover:bg-white/80'
@@ -253,7 +253,7 @@ export function HeroSection() {
             {actionCards.map((card) => (
               <div
                 key={card.id}
-                className={`group relative rounded-none overflow-hidden bg-surface-dark border border-mono-800 flex flex-col justify-end p-6 ${
+                className={`group relative rounded-md overflow-hidden bg-surface-dark border border-mono-800 flex flex-col justify-end p-6 ${
                   card.featured
                     ? 'md:col-span-2 lg:col-span-2 aspect-[16/10] sm:aspect-[16/9] lg:aspect-auto min-h-[320px]'
                     : 'col-span-1 aspect-[16/10] sm:aspect-[4/3]'
@@ -279,7 +279,7 @@ export function HeroSection() {
                   </p>
                   <Link
                     to={card.href}
-                    className="group/btn mt-3 w-full py-2.5 px-4 min-h-[44px] bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white font-bold text-xs uppercase tracking-wider text-center transition-all flex items-center justify-center gap-2 rounded-none"
+                    className="group/btn mt-3 w-full py-2.5 px-4 min-h-[44px] bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white font-bold text-xs uppercase tracking-wider text-center transition-all flex items-center justify-center gap-2 rounded-sm"
                   >
                     <span>{card.btnText}</span>
                     <ArrowRight size={14} className="transition-transform duration-200 group-hover/btn:translate-x-1" />
@@ -292,7 +292,7 @@ export function HeroSection() {
           {/* 3. Quick Info Module: Opening Hours & Getting Here */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
             {/* Box 1: Opening Hours with Live Status Beacon */}
-            <div className="p-6 bg-surface-subtle border border-border-subtle flex flex-col gap-1.5 hover:border-border-strong transition-colors">
+            <div className="p-6 bg-surface-subtle border border-border-subtle rounded-md flex flex-col gap-1.5 hover:border-border-strong transition-colors">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <h4 className="text-base font-bold text-text-primary">
                   Waktu operasional mall
@@ -320,7 +320,7 @@ export function HeroSection() {
             </div>
 
             {/* Box 2: Getting Here with Interactive Quick-Copy */}
-            <div className="p-6 bg-surface-subtle border border-border-subtle flex flex-col gap-1.5 hover:border-border-strong transition-colors">
+            <div className="p-6 bg-surface-subtle border border-border-subtle rounded-md flex flex-col gap-1.5 hover:border-border-strong transition-colors">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <h4 className="text-base font-bold text-text-primary">
                   Petunjuk lokasi dan akses
@@ -329,7 +329,7 @@ export function HeroSection() {
                 <button
                   type="button"
                   onClick={handleCopyAddress}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-text-primary hover:text-brand-primary active:bg-surface-muted bg-canvas border border-border-subtle rounded-none transition-all cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-text-primary hover:text-brand-primary active:bg-surface-muted bg-canvas border border-border-subtle rounded-sm transition-all cursor-pointer"
                   title="Salin alamat lengkap untuk navigasi GPS / ojek online"
                 >
                   {copiedAddress ? (

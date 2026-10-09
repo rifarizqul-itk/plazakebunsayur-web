@@ -12,7 +12,7 @@ export function SearchBar({ value = '', onChange, placeholder = 'Cari toko, batu
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full pl-10 pr-10 py-2.5 min-h-[44px] text-sm bg-surface-subtle border border-border-subtle rounded-none text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-canvas transition-all"
+        className="w-full pl-10 pr-10 py-2.5 min-h-[44px] text-sm bg-surface-subtle border border-border-subtle rounded-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-canvas transition-all"
       />
       {value && (
         <button

@@ -78,7 +78,7 @@ export function ContactPage() {
               </div>
 
               <div className="flex flex-col gap-3 text-xs sm:text-sm">
-                <div className="p-4 bg-surface-subtle border border-border-subtle rounded-none flex items-start gap-3.5">
+                <div className="p-4 bg-surface-subtle border border-border-subtle rounded-md flex items-start gap-3.5">
                   <MapPin size={18} className="text-brand-primary shrink-0 mt-0.5" />
                   <div>
                     <strong className="block text-text-primary text-sm font-semibold">Kantor Pengelola Gedung</strong>
@@ -88,7 +88,7 @@ export function ContactPage() {
                   </div>
                 </div>
 
-                <div className="p-4 bg-surface-subtle border border-border-subtle rounded-none flex items-start gap-3.5">
+                <div className="p-4 bg-surface-subtle border border-border-subtle rounded-md flex items-start gap-3.5">
                   <Clock size={18} className="text-brand-primary shrink-0 mt-0.5" />
                   <div>
                     <strong className="block text-text-primary text-sm font-semibold">Jam Kerja Kantor Pengelola</strong>
@@ -98,7 +98,7 @@ export function ContactPage() {
                   </div>
                 </div>
 
-                <div className="p-4 bg-surface-subtle border border-border-subtle rounded-none flex items-start gap-3.5">
+                <div className="p-4 bg-surface-subtle border border-border-subtle rounded-md flex items-start gap-3.5">
                   <Phone size={18} className="text-brand-primary shrink-0 mt-0.5" />
                   <div>
                     <strong className="block text-text-primary text-sm font-semibold">Telepon Darurat / Pos Keamanan</strong>
@@ -106,7 +106,7 @@ export function ContactPage() {
                   </div>
                 </div>
 
-                <div className="p-4 bg-surface-subtle border border-border-subtle rounded-none flex items-start gap-3.5">
+                <div className="p-4 bg-surface-subtle border border-border-subtle rounded-md flex items-start gap-3.5">
                   <Mail size={18} className="text-brand-primary shrink-0 mt-0.5" />
                   <div>
                     <strong className="block text-text-primary text-sm font-semibold">Email Resmi Pengelola</strong>
@@ -121,7 +121,7 @@ export function ContactPage() {
                   href={waLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-none bg-whatsapp hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-bold uppercase tracking-wider transition-colors min-h-[44px]"
+                  className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-sm bg-whatsapp hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-bold uppercase tracking-wider transition-colors min-h-[44px]"
                 >
                   <MessageCircle size={18} />
                   <span>Chat WhatsApp Siaga Pengelola</span>
@@ -130,7 +130,7 @@ export function ContactPage() {
             </div>
 
             {/* Right 7 Cols: Public Contact Form */}
-            <div className="lg:col-span-7 bg-surface-subtle border border-border-subtle p-6 sm:p-8 rounded-none">
+            <div className="lg:col-span-7 bg-surface-subtle border border-border-subtle p-6 sm:p-8 rounded-md">
               <div className="mb-6">
                 <h3 className="text-lg font-bold text-text-primary">Kirim Pesan atau Pertanyaan</h3>
                 <p className="text-xs text-text-secondary mt-1">
@@ -139,7 +139,7 @@ export function ContactPage() {
               </div>
 
               {success && (
-                <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-none flex items-start gap-3 text-xs sm:text-sm">
+                <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-md flex items-start gap-3 text-xs sm:text-sm">
                   <CheckCircle2 size={18} className="shrink-0 mt-0.5" />
                   <div>
                     <span className="font-bold block">Pesan Berhasil Terkirim!</span>
@@ -149,7 +149,7 @@ export function ContactPage() {
               )}
 
               {errorMsg && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-none flex items-start gap-3 text-xs sm:text-sm">
+                <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-md flex items-start gap-3 text-xs sm:text-sm">
                   <AlertCircle size={18} className="shrink-0 mt-0.5" />
                   <div>
                     <span className="font-bold block">Terjadi Kendala</span>
