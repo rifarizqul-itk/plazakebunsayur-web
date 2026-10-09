@@ -89,7 +89,7 @@ Jangan menulis ulang tanpa konfirmasi. Ajukan usulan di PR, jangan langsung diga
 - [ ] **6.1** "Layanan dan Komoditas Pasar" (`HeroSection.jsx` ~L216) terlalu umum. Usul: "Apa yang ada di Plaza Kebun Sayur".
 - [ ] **6.2** Deskripsi di bawahnya ("... dalam satu kawasan terpadu") memakai frasa generik. Usul: sebut kategori kios yang benar-benar ada.
 - [ ] **6.3** Tombol "Baca Selengkapnya" di agenda. Usul: "Lihat detail agenda".
-- [ ] **6.4** Periksa kata terlarang di `DESIGN.md` (heritage, explore, discover, dll.): `grep -rniE "heritage|landmark|iconic|seamless|discover|explore|vibrant" frontend/src` harus kosong.
+- [x] **6.4** Periksa kata terlarang di `DESIGN.md` (heritage, explore, discover, dll.): `grep -rniE "heritage|landmark|iconic|seamless|discover|explore|vibrant" frontend/src` harus kosong.
 
 ---
 
