@@ -6,8 +6,16 @@ import { FeaturedSection } from '../components/home/FeaturedSection';
 import { HistorySection } from '../components/home/HistorySection';
 import { Container } from '../components/layout/Container';
 import { fetchTenants, fetchWhatsOn } from '../services/api';
+import { useContent } from '../hooks/useContent';
+import { useDocumentMeta } from '../hooks/useDocumentMeta';
+import { formatDateRange } from '../utils/date';
 
 export function Home() {
+  const metaTitle = useContent('seo.home.title', 'Plaza Kebun Sayur Balikpapan | Sentra Kerajinan & Batu Mulia Borneo');
+  const metaDesc = useContent('seo.home.description', 'Situs resmi direktori kios Plaza Kebun Sayur Balikpapan. Sentra batu akik, kerajinan etnik Dayak, kain batik, dan kuliner khas Kalimantan Timur.');
+  useDocumentMeta(metaTitle, metaDesc);
+
+  const eventsTitle = useContent('home.events.title', 'Agenda dan kegiatan pasar');
   const [retailTenants, setRetailTenants] = useState([]);
   const [culinaryTenants, setCulinaryTenants] = useState([]);
   const [latestEvents, setLatestEvents] = useState([]);
@@ -45,10 +53,10 @@ export function Home() {
       {latestEvents.length > 0 && (
         <section className="py-16 sm:py-20 bg-canvas border-b border-border-subtle">
           <Container>
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 border-b border-border-subtle pb-4">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
               <div>
-                <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-text-primary">
-                  Agenda dan kegiatan pasar
+                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">
+                  {eventsTitle}
                 </h2>
               </div>
               <Link
@@ -60,40 +68,44 @@ export function Home() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="divide-y divide-border-subtle border-y border-border-subtle">
               {latestEvents.map((evt) => (
-                <article
+                <div
                   key={evt.id}
-                  className="p-6 sm:p-8 bg-surface-subtle border border-border-subtle hover:border-border-strong active:border-border-strong flex flex-col justify-between gap-6 transition-all rounded-md"
+                  className="py-6 sm:py-8 flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-8 group"
                 >
-                  <div className="flex flex-col gap-3">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs font-semibold text-text-muted">
-                        {evt.type === 'event' ? 'Pameran & Acara' : 'Promo Kios'}
-                      </span>
-                      <div className="flex items-center gap-1.5 text-xs text-text-muted">
-                        <Calendar size={14} />
-                        <span>{evt.start_date}</span>
-                      </div>
+                  {/* Left: Date & Type Column */}
+                  <div className="w-full sm:w-48 shrink-0 flex sm:flex-col items-center sm:items-start justify-between sm:justify-start gap-1">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-text-muted">
+                      {evt.type === 'event' ? 'Pameran & Acara' : 'Promo Kios'}
+                    </span>
+                    <div className="flex items-center gap-1.5 text-xs font-medium text-text-primary tabular-nums">
+                      <Calendar size={13} className="text-brand-primary" />
+                      <span>{formatDateRange(evt.start_date, evt.end_date)}</span>
                     </div>
+                  </div>
+
+                  {/* Right: Title, Summary & Action */}
+                  <div className="flex-1 flex flex-col gap-2">
                     <Link to={`/agenda/${evt.slug}`}>
-                      <h3 className="font-bold text-lg sm:text-xl text-text-primary group-hover:text-brand-primary transition-colors tracking-tight">
+                      <h3 className="font-semibold text-lg text-text-primary group-hover:text-brand-primary transition-colors">
                         {evt.title}
                       </h3>
                     </Link>
-                    <p className="text-xs sm:text-sm text-text-secondary line-clamp-3 leading-relaxed">
+                    <p className="text-sm text-text-secondary line-clamp-2 leading-relaxed max-w-[68ch]">
                       {evt.summary}
                     </p>
+                    <div className="pt-1">
+                      <Link
+                        to={`/agenda/${evt.slug}`}
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-primary hover:underline"
+                      >
+                        <span>Lihat detail agenda</span>
+                        <ArrowRight size={13} />
+                      </Link>
+                    </div>
                   </div>
-
-                  <Link
-                    to={`/agenda/${evt.slug}`}
-                    className="inline-flex items-center justify-center gap-2 py-2.5 px-4 min-h-[44px] bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white text-xs font-bold uppercase tracking-wider self-start transition-colors rounded-sm"
-                  >
-                    <span>Lihat Detail Agenda</span>
-                    <ArrowRight size={13} />
-                  </Link>
-                </article>
+                </div>
               ))}
             </div>
           </Container>

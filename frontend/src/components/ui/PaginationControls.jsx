@@ -14,7 +14,7 @@ export function PaginationControls({
     <div className={`flex items-center justify-center gap-2 pt-6 ${className}`}>
       <Button
         variant="outline"
-        size="sm"
+        size="md"
         disabled={currentPage <= 1}
         onClick={() => onPageChange(currentPage - 1)}
         aria-label="Halaman sebelumnya"
@@ -29,7 +29,7 @@ export function PaginationControls({
 
       <Button
         variant="outline"
-        size="sm"
+        size="md"
         disabled={currentPage >= lastPage}
         onClick={() => onPageChange(currentPage + 1)}
         aria-label="Halaman selanjutnya"

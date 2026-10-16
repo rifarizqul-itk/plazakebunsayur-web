@@ -1,17 +1,45 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
-import { Menu, X, ChevronDown, Search, ArrowRight, MessageCircle } from 'lucide-react';
+import { Menu, X, Search, MessageCircle } from 'lucide-react';
 import { Container } from './Container';
 import { generateManagementWhatsAppLink } from '../../utils/whatsapp';
+import { fetchSiteSettings } from '../../services/api';
+import { useContentImage, useNavItems } from '../../hooks/useContent';
+
+const DEFAULT_HEADER_NAV = [
+  { id: 1, label: 'BERANDA', path: '/', is_external: false },
+  { id: 2, label: 'BELANJA', path: '/belanja', is_external: false },
+  { id: 3, label: 'KULINER', path: '/kuliner', is_external: false },
+  { id: 4, label: 'AGENDA', path: '/agenda', is_external: false },
+  { id: 5, label: 'PANDUAN', path: '/panduan-kunjungan', is_external: false },
+  { id: 6, label: 'KONTAK', path: '/kontak', is_external: false },
+];
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState(null); // 'belanja' | 'kuliner' | null
   const [searchNavInput, setSearchNavInput] = useState('');
+  const [waNumber, setWaNumber] = useState('080000000000');
   const searchInputRef = useRef(null);
   const navigate = useNavigate();
 
-  const waLink = generateManagementWhatsAppLink('081234567890');
+  const logoUrl = useContentImage('brand.logo', '/assets/main_logo_transparent_for_light_bg.webp');
+  const waLink = generateManagementWhatsAppLink(waNumber);
+  const headerNavItems = useNavItems('header');
+  const navItems = headerNavItems?.length > 0 ? headerNavItems : DEFAULT_HEADER_NAV;
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchSiteSettings()
+      .then((settings) => {
+        if (isMounted && settings?.management_whatsapp) {
+          setWaNumber(settings.management_whatsapp);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -34,37 +62,22 @@ export function Navbar() {
     if (searchNavInput.trim()) {
       navigate(`/belanja?q=${encodeURIComponent(searchNavInput.trim())}`);
       setSearchNavInput('');
-      setActiveDropdown(null);
     }
   };
-
-  const retailCategories = [
-    { name: 'Batu Mulia & Akik', desc: 'Permata, Red Borneo, Kecubung, Ikat Cincin' },
-    { name: 'Perhiasan Emas & Perak', desc: 'Toko Emas Kadar Resmi, Perak Bakar 925' },
-    { name: 'Kerajinan Dayak & Souvenir', desc: 'Mandau Asli, Rompi Manik Kenyah, Kayu Ulin' },
-    { name: 'Batik & Songket Kaltim', desc: 'Batik Mangrove, Sarung Tenun Samarinda' },
-    { name: 'Cinderamata & Aksesoris', desc: 'Miniatur Rumah Betang, Kaos Balikpapan' },
-  ];
-
-  const culinaryCategories = [
-    { name: 'Oleh-Oleh Khas Kaltim', desc: 'Amplang Kuku Macan, Mantau Sapi, Lempok Durian' },
-    { name: 'Makanan Berat & Soto', desc: 'Soto Banjar H. Ridwan, Nasi Kuning Habang' },
-    { name: 'Kudapan & Minuman Tradisional', desc: 'Bingka Kentang Bakar, Es Kelapa, Kopi Paser' },
-  ];
 
   return (
     <header className="sticky top-0 z-50 bg-canvas transition-colors shadow-sm">
       {/* Main Navigation Bar */}
       <div className="relative border-b border-border-subtle bg-canvas">
         <Container>
-          <div className="flex items-center justify-between h-20 sm:h-22">
+          <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Logo & Mall Title */}
             <Link
               to="/"
               className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-sm p-1 shrink-0"
             >
               <img
-                src="/assets/main_logo_transparent_for_light_bg.webp"
+                src={logoUrl}
                 alt="Logo Plaza Kebun Sayur"
                 className="h-10 sm:h-12 w-auto object-contain transition-transform group-hover:scale-102"
                 onError={(e) => {
@@ -81,185 +94,33 @@ export function Navbar() {
               </div>
             </Link>
 
-            {/* Desktop Navigation Links with Mega Menu Triggers */}
+            {/* Desktop Navigation Links (Flat Navigation) */}
             <nav className="hidden lg:flex items-center gap-1 xl:gap-3 2xl:gap-5 h-full" aria-label="Navigasi Utama">
-              <NavLink
-                to="/"
-                className={({ isActive }) =>
-                  `px-2.5 xl:px-3.5 py-2 text-xs xl:text-sm font-semibold tracking-wide transition-colors whitespace-nowrap ${
-                    isActive ? 'text-brand-primary' : 'text-text-primary hover:text-brand-primary'
-                  }`
-                }
-              >
-                BERANDA
-              </NavLink>
-
-              {/* Belanja Dropdown Trigger */}
-              <div
-                className="relative h-full flex items-center"
-                onMouseEnter={() => setActiveDropdown('belanja')}
-                onMouseLeave={() => setActiveDropdown(null)}
-              >
-                <NavLink
-                  to="/belanja"
-                  className={({ isActive }) =>
-                    `inline-flex items-center gap-1 px-2.5 xl:px-3.5 py-2 text-xs xl:text-sm font-semibold tracking-wide transition-colors whitespace-nowrap ${
-                      isActive || activeDropdown === 'belanja'
-                        ? 'text-brand-primary'
-                        : 'text-text-primary hover:text-brand-primary'
-                    }`
-                  }
-                >
-                  <span>BELANJA</span>
-                  <ChevronDown size={14} className={`transition-transform duration-200 ${activeDropdown === 'belanja' ? 'rotate-180' : ''}`} />
-                </NavLink>
-
-                {/* Dark Mega Menu */}
-                {activeDropdown === 'belanja' && (
-                  <div className="fixed left-0 right-0 top-20 sm:top-22 w-full bg-surface-dark text-white border-y border-mono-800 shadow-2xl z-50 animate-fadeIn">
-                    <Container>
-                      <div className="py-8">
-                        <div className="flex items-center justify-between border-b border-mono-800 pb-4 mb-6">
-                          <div>
-                            <h3 className="text-lg font-bold tracking-wider text-white uppercase">
-                              Sentra Kios Belanja & Cinderamata
-                            </h3>
-                            <p className="text-xs text-mono-300 mt-0.5">
-                              Pusat perhiasan, batu mulia Kalimantan, kerajinan Dayak, dan kain tenun.
-                            </p>
-                          </div>
-                          <Link
-                            to="/belanja"
-                            onClick={() => setActiveDropdown(null)}
-                            className="inline-flex items-center gap-2 px-4 py-2 border border-gold text-gold hover:bg-gold hover:text-surface-dark text-xs font-bold uppercase tracking-wider rounded-sm transition-all"
-                          >
-                            <span>Lihat Semua Kios Belanja</span>
-                            <ArrowRight size={14} />
-                          </Link>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
-                          {retailCategories.map((cat) => (
-                            <Link
-                              key={cat.name}
-                              to={`/belanja`}
-                              onClick={() => setActiveDropdown(null)}
-                              className="group block p-3 rounded-sm hover:bg-mono-800 border border-transparent hover:border-mono-700 transition-all"
-                            >
-                              <strong className="block text-sm text-mono-100 group-hover:text-gold transition-colors font-semibold">
-                                {cat.name}
-                              </strong>
-                              <span className="block text-xs text-mono-300 mt-1 leading-relaxed">
-                                {cat.desc}
-                              </span>
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                    </Container>
-                  </div>
-                )}
-              </div>
-
-              {/* Kuliner Dropdown Trigger */}
-              <div
-                className="relative h-full flex items-center"
-                onMouseEnter={() => setActiveDropdown('kuliner')}
-                onMouseLeave={() => setActiveDropdown(null)}
-              >
-                <NavLink
-                  to="/kuliner"
-                  className={({ isActive }) =>
-                    `inline-flex items-center gap-1 px-2.5 xl:px-3.5 py-2 text-xs xl:text-sm font-semibold tracking-wide transition-colors whitespace-nowrap ${
-                      isActive || activeDropdown === 'kuliner'
-                        ? 'text-brand-primary'
-                        : 'text-text-primary hover:text-brand-primary'
-                    }`
-                  }
-                >
-                  <span>KULINER</span>
-                  <ChevronDown size={14} className={`transition-transform duration-200 ${activeDropdown === 'kuliner' ? 'rotate-180' : ''}`} />
-                </NavLink>
-
-                {/* Dark Mega Menu for Culinary */}
-                {activeDropdown === 'kuliner' && (
-                  <div className="fixed left-0 right-0 top-20 sm:top-22 w-full bg-surface-dark text-white border-y border-mono-800 shadow-2xl z-50 animate-fadeIn">
-                    <Container>
-                      <div className="py-8">
-                        <div className="flex items-center justify-between border-b border-mono-800 pb-4 mb-6">
-                          <div>
-                            <h3 className="text-lg font-bold tracking-wider text-white uppercase">
-                              Sentra Kuliner Khas Banjar & Kaltim
-                            </h3>
-                            <p className="text-xs text-mono-300 mt-0.5">
-                              Amplang renyah, soto banjar, nasi kuning habang, dan bingka bakar.
-                            </p>
-                          </div>
-                          <Link
-                            to="/kuliner"
-                            onClick={() => setActiveDropdown(null)}
-                            className="inline-flex items-center gap-2 px-4 py-2 border border-gold text-gold hover:bg-gold hover:text-surface-dark text-xs font-bold uppercase tracking-wider rounded-sm transition-all"
-                          >
-                            <span>Lihat Semua Stan Kuliner</span>
-                            <ArrowRight size={14} />
-                          </Link>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                          {culinaryCategories.map((cat) => (
-                            <Link
-                              key={cat.name}
-                              to={`/kuliner`}
-                              onClick={() => setActiveDropdown(null)}
-                              className="group block p-4 rounded-sm hover:bg-mono-800 border border-transparent hover:border-mono-700 transition-all"
-                            >
-                              <strong className="block text-sm text-mono-100 group-hover:text-gold transition-colors font-semibold">
-                                {cat.name}
-                              </strong>
-                              <span className="block text-xs text-mono-300 mt-1 leading-relaxed">
-                                {cat.desc}
-                              </span>
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                    </Container>
-                  </div>
-                )}
-              </div>
-
-              <NavLink
-                to="/agenda"
-                className={({ isActive }) =>
-                  `px-2.5 xl:px-3.5 py-2 text-xs xl:text-sm font-semibold tracking-wide transition-colors whitespace-nowrap ${
-                    isActive ? 'text-brand-primary' : 'text-text-primary hover:text-brand-primary'
-                  }`
-                }
-              >
-                AGENDA
-              </NavLink>
-
-              <NavLink
-                to="/panduan-kunjungan"
-                className={({ isActive }) =>
-                  `px-2.5 xl:px-3.5 py-2 text-xs xl:text-sm font-semibold tracking-wide transition-colors whitespace-nowrap ${
-                    isActive ? 'text-brand-primary' : 'text-text-primary hover:text-brand-primary'
-                  }`
-                }
-              >
-                PANDUAN
-              </NavLink>
-
-              <NavLink
-                to="/kontak"
-                className={({ isActive }) =>
-                  `px-2.5 xl:px-3.5 py-2 text-xs xl:text-sm font-semibold tracking-wide transition-colors whitespace-nowrap ${
-                    isActive ? 'text-brand-primary' : 'text-text-primary hover:text-brand-primary'
-                  }`
-                }
-              >
-                KONTAK
-              </NavLink>
+              {navItems.map((item) =>
+                item.is_external ? (
+                  <a
+                    key={item.id || item.path}
+                    href={item.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-2.5 xl:px-3.5 py-2 text-xs xl:text-sm font-semibold tracking-wide transition-colors whitespace-nowrap text-text-primary hover:text-brand-primary"
+                  >
+                    {item.label}
+                  </a>
+                ) : (
+                  <NavLink
+                    key={item.id || item.path}
+                    to={item.path}
+                    className={({ isActive }) =>
+                      `px-2.5 xl:px-3.5 py-2 text-xs xl:text-sm font-semibold tracking-wide transition-colors whitespace-nowrap ${
+                        isActive ? 'text-brand-primary' : 'text-text-primary hover:text-brand-primary'
+                      }`
+                    }
+                  >
+                    {item.label}
+                  </NavLink>
+                )
+              )}
             </nav>
 
             {/* Desktop Right Search Field & Hotline Pengelola */}
@@ -295,23 +156,36 @@ export function Navbar() {
                 href={waLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group/wa inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-text-primary bg-surface-subtle hover:bg-surface-muted hover:border-brand-primary border border-border-subtle rounded-sm transition-colors min-h-[40px] whitespace-nowrap shrink-0"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-text-primary bg-surface-subtle hover:bg-surface-muted hover:border-brand-primary border border-border-subtle rounded-sm transition-colors min-h-[44px] whitespace-nowrap shrink-0"
               >
-                <MessageCircle size={14} className="text-whatsapp transition-transform duration-200 group-hover/wa:scale-115 group-hover/wa:-rotate-12" />
+                <MessageCircle size={14} className="text-whatsapp" />
                 <span>Hotline Pengelola</span>
               </a>
             </div>
 
-            {/* Mobile Hamburger Button */}
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden w-11 h-11 flex items-center justify-center rounded-sm text-text-primary hover:bg-surface-subtle focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary cursor-pointer"
-              aria-label={mobileMenuOpen ? 'Tutup Menu' : 'Buka Menu'}
-              aria-expanded={mobileMenuOpen}
-            >
-              {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
+            {/* Mobile Actions: Hotline WhatsApp & Hamburger Button */}
+            <div className="flex lg:hidden items-center gap-1">
+              <a
+                href={waLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-11 h-11 flex items-center justify-center rounded-sm text-whatsapp hover:bg-surface-subtle focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+                aria-label="WhatsApp Hotline Pengelola"
+                title="WhatsApp Hotline Pengelola"
+              >
+                <MessageCircle size={22} />
+              </a>
+
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="w-11 h-11 flex items-center justify-center rounded-sm text-text-primary hover:bg-surface-subtle focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary cursor-pointer"
+                aria-label={mobileMenuOpen ? 'Tutup Menu' : 'Buka Menu'}
+                aria-expanded={mobileMenuOpen}
+              >
+                {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+              </button>
+            </div>
           </div>
         </Container>
       </div>
@@ -337,55 +211,35 @@ export function Navbar() {
             </button>
           </form>
 
-          <NavLink
-            to="/"
-            onClick={() => setMobileMenuOpen(false)}
-            className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-sm flex items-center"
-          >
-            BERANDA
-          </NavLink>
-
-          <NavLink
-            to="/belanja"
-            onClick={() => setMobileMenuOpen(false)}
-            className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-sm flex items-center justify-between"
-          >
-            <span>DIREKTORI BELANJA</span>
-            <span className="text-xs font-normal text-mono-400">5 Kategori</span>
-          </NavLink>
-
-          <NavLink
-            to="/kuliner"
-            onClick={() => setMobileMenuOpen(false)}
-            className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-sm flex items-center justify-between"
-          >
-            <span>SENTRA KULINER</span>
-            <span className="text-xs font-normal text-mono-400">3 Kategori</span>
-          </NavLink>
-
-          <NavLink
-            to="/agenda"
-            onClick={() => setMobileMenuOpen(false)}
-            className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-sm flex items-center"
-          >
-            AGENDA & PROMO
-          </NavLink>
-
-          <NavLink
-            to="/panduan-kunjungan"
-            onClick={() => setMobileMenuOpen(false)}
-            className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-sm flex items-center"
-          >
-            PANDUAN KUNJUNGAN
-          </NavLink>
-
-          <NavLink
-            to="/kontak"
-            onClick={() => setMobileMenuOpen(false)}
-            className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-sm flex items-center"
-          >
-            KONTAK RESMI
-          </NavLink>
+          {navItems.map((item) =>
+            item.is_external ? (
+              <a
+                key={item.id || item.path}
+                href={item.path}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-sm flex items-center"
+              >
+                {item.label}
+              </a>
+            ) : (
+              <NavLink
+                key={item.id || item.path}
+                to={item.path}
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-sm flex items-center justify-between"
+              >
+                <span>{item.label}</span>
+                {item.path === '/belanja' && (
+                  <span className="text-xs font-normal text-mono-400">5 Kategori</span>
+                )}
+                {item.path === '/kuliner' && (
+                  <span className="text-xs font-normal text-mono-400">3 Kategori</span>
+                )}
+              </NavLink>
+            )
+          )}
 
           <div className="pt-3 border-t border-mono-800 mt-2">
             <a

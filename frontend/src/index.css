@@ -24,10 +24,11 @@
   /* 3. Teks & Garis Batas */
   --color-text-primary: #1A0D0D;
   --color-text-secondary: #5A4545;
-  --color-text-muted: #7A6A6A;
+  --color-text-muted: #766666;
   --color-border-subtle: #E8DFDF;
   --color-border-hover: #D8CACA;
   --color-border-strong: #1A0D0D;
+  --color-border-input: #A08686;
 
   /* 4. Marun & Emas */
   --color-brand-primary: #8B1A1A;
@@ -39,7 +40,7 @@
   --color-gold-text: #8A6B13;
 
   /* 5. Komunikasi */
-  --color-whatsapp: #059669;
+  --color-whatsapp: #047857;
 
   /* 6. Tipografi */
   --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -106,15 +107,3 @@ body {
   animation: slideProgress 5000ms linear forwards;
 }
 
-@keyframes gemSheen {
-  from {
-    transform: translateX(-150%) skewX(-25deg);
-  }
-  to {
-    transform: translateX(200%) skewX(-25deg);
-  }
-}
-
-.group:hover .animate-sheen-sweep {
-  animation: gemSheen 900ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}

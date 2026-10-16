@@ -9,7 +9,7 @@ export function NotFound() {
     <div className="py-24 sm:py-32 bg-canvas flex-1 flex items-center justify-center">
       <Container>
         <div className="max-w-md mx-auto text-center flex flex-col items-center gap-4">
-          <span className="text-6xl sm:text-7xl font-extrabold text-brand-primary tracking-tight">
+          <span className="text-6xl sm:text-7xl font-bold text-brand-primary tracking-tight">
             404
           </span>
           <h1 className="text-2xl font-bold tracking-tight text-text-primary">

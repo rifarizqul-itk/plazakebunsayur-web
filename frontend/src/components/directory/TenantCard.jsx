@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MessageCircle } from 'lucide-react';
-import { generateWhatsAppLink } from '../../utils/whatsapp';
+import { Eye } from 'lucide-react';
 
 const FALLBACK_STOCK_PHOTOS = {
   culinary: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80',
@@ -11,7 +10,6 @@ const FALLBACK_STOCK_PHOTOS = {
 export function TenantCard({ tenant, basePath = '/belanja' }) {
   if (!tenant) return null;
 
-  const waLink = generateWhatsAppLink(tenant.phone_whatsapp, tenant.name);
   const detailLink = `${basePath}/${tenant.slug}`;
 
   const floorText = tenant.floor?.name || tenant.floor?.code || 'Lantai Dasar';
@@ -36,31 +34,24 @@ export function TenantCard({ tenant, basePath = '/belanja' }) {
               e.currentTarget.src = fallbackPhoto;
             }
           }}
-          className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-300"
+          className="w-full h-full object-cover"
         />
       </Link>
 
       {/* Card Info Body */}
       <div className="p-4 flex flex-col flex-1 justify-between gap-3 text-left">
         <div className="flex flex-col gap-1">
-          {/* Category Tag & Featured Indicator */}
-          <div className="flex items-center justify-between gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-text-muted block truncate">
-              {tenant.category?.name || 'Direktori Kios'}
-            </span>
-            {tenant.is_featured && (
-              <span className="text-xs font-bold uppercase tracking-wider text-gold shrink-0">
-                Pilihan
-              </span>
-            )}
-          </div>
+          {/* Category Tag */}
+          <span className="text-xs font-semibold uppercase tracking-wider text-text-muted block truncate">
+            {tenant.category?.name || 'Direktori Kios'}
+          </span>
 
-          {/* Store Name (Max 2 baris line-clamp-2) */}
+          {/* Store Name (Max 2 baris line-clamp-2, font-semibold / weight 600) */}
           <Link
             to={detailLink}
             className="focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
           >
-            <h3 className="font-bold text-base text-text-primary group-hover:text-brand-primary transition-colors line-clamp-2 tracking-tight">
+            <h3 className="font-semibold text-base text-text-primary group-hover:text-brand-primary transition-colors line-clamp-2">
               {tenant.name}
             </h3>
           </Link>
@@ -71,19 +62,16 @@ export function TenantCard({ tenant, basePath = '/belanja' }) {
           </span>
         </div>
 
-        {/* WhatsApp Direct Action Bar (Min 44px Touch Target) */}
+        {/* Detail Direct Action Bar (Min 44px Touch Target) */}
         <div className="pt-2 border-t border-border-subtle mt-1">
-          <a
-            href={waLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="group/wa w-full min-h-[44px] flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold text-text-primary hover:text-brand-primary hover:border-brand-primary active:bg-surface-muted bg-surface-subtle border border-border-subtle rounded-sm transition-colors"
-            title={`Chat WhatsApp dengan ${tenant.name}`}
+          <Link
+            to={detailLink}
+            className="w-full min-h-[44px] flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold text-text-primary hover:text-brand-primary hover:border-brand-primary active:bg-surface-muted bg-surface-subtle border border-border-subtle rounded-sm transition-colors group/btn"
+            title={`Lihat detail ${tenant.name}`}
           >
-            <MessageCircle size={15} className="text-whatsapp transition-transform duration-200 group-hover/wa:scale-115 group-hover/wa:-rotate-12" />
-            <span>Chat Penjual</span>
-          </a>
+            <Eye size={15} className="text-text-secondary group-hover/btn:text-brand-primary transition-colors" />
+            <span>Lihat Detail</span>
+          </Link>
         </div>
       </div>
     </article>

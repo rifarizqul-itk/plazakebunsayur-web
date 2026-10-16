@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'frontend' => [
+        'deploy_hook_url' => env('FRONTEND_DEPLOY_HOOK_URL'),
+    ],
+
+
 ];

@@ -3,7 +3,12 @@
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\FacilityController;
+use App\Http\Controllers\Api\LegalPageController;
+use App\Http\Controllers\Api\NavItemController;
+use App\Http\Controllers\Api\PageContentController;
+use App\Http\Controllers\Api\SiteSettingController;
 use App\Http\Controllers\Api\TenantController;
+use App\Http\Controllers\Api\VisitGuideController;
 use App\Http\Controllers\Api\WhatsOnController;
 use App\Models\Floor;
 use Illuminate\Support\Facades\Route;
@@ -47,3 +52,20 @@ Route::get('/whats-on/{slug}', [WhatsOnController::class, 'show']);
 // 7. Public Contact Message Submission (Rate limit 5 requests per 10 minutes per IP)
 Route::post('/contact', [ContactController::class, 'store'])
     ->middleware('throttle:5,10');
+
+// 8. Site Settings (Operational metadata)
+Route::get('/site-settings', [SiteSettingController::class, 'index']);
+
+// 9. Page Contents (All CMS text & imagery)
+Route::get('/page-contents', [PageContentController::class, 'index']);
+
+// 10. Visit Guide (Access routes, shopping tips, building rules)
+Route::get('/visit-guide', [VisitGuideController::class, 'index']);
+
+// 11. Navigation Items (Header & Footer)
+Route::get('/nav-items', [NavItemController::class, 'index']);
+
+// 12. Legal Pages (Rich Text Legal Documents: kebijakan-privasi, syarat-ketentuan)
+Route::get('/legal-pages/{slug}', [LegalPageController::class, 'show']);
+
+

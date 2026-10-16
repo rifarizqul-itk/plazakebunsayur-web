@@ -1,13 +1,53 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Clock, Phone, MessageCircle } from 'lucide-react';
+import { MapPin, Clock, MessageCircle } from 'lucide-react';
 import { Container } from './Container';
 import { generateManagementWhatsAppLink } from '../../utils/whatsapp';
+import { fetchSiteSettings } from '../../services/api';
+import { useContent, useContentImage, useNavItems } from '../../hooks/useContent';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
+const DEFAULT_FOOTER_NAV = [
+  { id: 1, label: 'Direktori Kios Belanja', path: '/belanja', is_external: false },
+  { id: 2, label: 'Sentra Kuliner Tradisional', path: '/kuliner', is_external: false },
+  { id: 3, label: 'Agenda & Promo Pasar', path: '/agenda', is_external: false },
+  { id: 4, label: 'Panduan Kunjungan Gedung', path: '/panduan-kunjungan', is_external: false },
+  { id: 5, label: 'Kontak & Pengaduan', path: '/kontak', is_external: false },
+];
+
 export function Footer() {
-  const waLink = generateManagementWhatsAppLink('081234567890');
+  const [siteSettings, setSiteSettings] = useState(null);
+
+  const mallDesc = useContent(
+    'footer.mall_description',
+    'Pusat perniagaan Pasar Inpres Kebun Sayur di Balikpapan Barat. Sentra batu mulia, perhiasan emas dan perak, kerajinan Dayak, batik, dan kuliner khas.'
+  );
+  const mgmtTitle = useContent('footer.management_title', 'Kantor Pengelola');
+  const mgmtDesc = useContent(
+    'footer.management_description',
+    'Kantor manajemen berlokasi di Lantai Dasar (Pintu Timur). Melayani informasi kios, ketertiban, dan layanan pengunjung.'
+  );
+  const logoUrl = useContentImage('brand.logo', '/assets/main_logo_transparent_for_light_bg.webp');
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchSiteSettings()
+      .then((settings) => {
+        if (isMounted) setSiteSettings(settings);
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const waLink = generateManagementWhatsAppLink(siteSettings?.management_whatsapp || '080000000000');
+  const mallHours = siteSettings?.mall_opening_hours || '08.00 – 18.00 WITA';
+  const mallAddress = siteSettings?.office_address || 'Jl. Letjen Suprapto, Kebun Sayur, Balikpapan Barat 76131';
+
+  const footerNavItems = useNavItems('footer');
+  const navItems = footerNavItems?.length > 0 ? footerNavItems : DEFAULT_FOOTER_NAV;
 
   return (
     <footer className="bg-surface-dark text-white border-t border-mono-800 mt-auto">
@@ -19,7 +59,7 @@ export function Footer() {
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-3">
                 <img
-                  src="/assets/main_logo_transparent_for_light_bg.webp"
+                  src={logoUrl}
                   alt="Logo Plaza Kebun Sayur"
                   className="h-10 w-auto object-contain brightness-0 invert opacity-90"
                   onError={(e) => {
@@ -34,34 +74,37 @@ export function Footer() {
                 </div>
               </div>
               <p className="text-xs text-mono-300 leading-relaxed">
-                Pusat perniagaan Pasar Inpres Kebun Sayur di Balikpapan Barat. Sentra batu mulia, perhiasan emas dan perak, kerajinan Dayak, batik, dan kuliner khas.
+                {mallDesc}
               </p>
             </div>
 
-            {/* Column 2: Direktori Kios & Kuliner */}
+            {/* Column 2: Direktori & Navigasi */}
             <div className="flex flex-col gap-3">
               <h4 className="text-xs font-bold uppercase tracking-wider text-gold">
-                Direktori Kios
+                Direktori & Layanan
               </h4>
               <nav className="flex flex-col gap-2.5 text-xs text-mono-200">
-                <Link to="/belanja" className="hover:text-white transition-colors">
-                  Batu Mulia & Akik Borneo
-                </Link>
-                <Link to="/belanja" className="hover:text-white transition-colors">
-                  Perhiasan Emas & Perak
-                </Link>
-                <Link to="/belanja" className="hover:text-white transition-colors">
-                  Kerajinan Tradisional Dayak
-                </Link>
-                <Link to="/belanja" className="hover:text-white transition-colors">
-                  Batik & Kain Tenun
-                </Link>
-                <Link to="/kuliner" className="hover:text-white transition-colors">
-                  Sentra Oleh-Oleh & Amplang
-                </Link>
-                <Link to="/kuliner" className="hover:text-white transition-colors">
-                  Stan Soto Banjar & Nasi Kuning
-                </Link>
+                {navItems.map((item) =>
+                  item.is_external ? (
+                    <a
+                      key={item.id || item.path}
+                      href={item.path}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-white transition-colors"
+                    >
+                      {item.label}
+                    </a>
+                  ) : (
+                    <Link
+                      key={item.id || item.path}
+                      to={item.path}
+                      className="hover:text-white transition-colors"
+                    >
+                      {item.label}
+                    </Link>
+                  )
+                )}
               </nav>
             </div>
 
@@ -75,7 +118,7 @@ export function Footer() {
                   <Clock size={16} className="text-gold shrink-0 mt-0.5" />
                   <div>
                     <strong className="block text-white">Buka Setiap Hari</strong>
-                    <span className="text-mono-300">08.00 – 18.00 WITA</span>
+                    <span className="text-mono-300">{mallHours}</span>
                   </div>
                 </li>
                 <li className="flex items-start gap-2.5">
@@ -83,7 +126,7 @@ export function Footer() {
                   <div>
                     <strong className="block text-white">Alamat Gedung</strong>
                     <span className="text-mono-300 leading-relaxed block">
-                      Jl. Letjen Suprapto, Kebun Sayur, Balikpapan Barat 76131
+                      {mallAddress}
                     </span>
                   </div>
                 </li>
@@ -101,10 +144,10 @@ export function Footer() {
             {/* Column 4: Pengelola & Hotline */}
             <div className="flex flex-col gap-3">
               <h4 className="text-xs font-bold uppercase tracking-wider text-gold">
-                Kantor Pengelola
+                {mgmtTitle}
               </h4>
               <p className="text-xs text-mono-300 leading-relaxed">
-                Kantor manajemen berlokasi di Lantai Dasar (Pintu Timur). Melayani informasi kios, ketertiban, dan layanan pengunjung.
+                {mgmtDesc}
               </p>
 
               <div className="flex flex-col gap-2.5 mt-2">
@@ -117,10 +160,6 @@ export function Footer() {
                   <MessageCircle size={15} />
                   <span>WhatsApp Pengelola</span>
                 </a>
-                <div className="flex items-center gap-2 text-xs text-mono-300">
-                  <Phone size={13} className="text-mono-400 shrink-0" />
-                  <span>Pos Keamanan: (0542) 734567</span>
-                </div>
               </div>
             </div>
           </div>
@@ -132,15 +171,15 @@ export function Footer() {
         <Container>
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
             <span>
-              © {CURRENT_YEAR} Plaza Kebun Sayur Balikpapan.
+              © {CURRENT_YEAR} Plaza Kebun Sayur Balikpapan
             </span>
             <div className="flex items-center gap-4 text-xs">
-              <Link to="/panduan-kunjungan" className="hover:text-white transition-colors">
-                Panduan Kunjungan
+              <Link to="/kebijakan-privasi" className="hover:text-white transition-colors">
+                Kebijakan Privasi
               </Link>
-              <span>•</span>
-              <Link to="/kontak" className="hover:text-white transition-colors">
-                Kontak Pengelola
+              <span className="text-mono-500" aria-hidden="true">•</span>
+              <Link to="/syarat-ketentuan" className="hover:text-white transition-colors">
+                Syarat & Ketentuan
               </Link>
             </div>
           </div>

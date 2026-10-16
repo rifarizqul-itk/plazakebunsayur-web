@@ -6,8 +6,13 @@ import {
   ChevronRight,
   Copy,
   Check,
+  Play,
+  Pause,
+  ExternalLink,
 } from 'lucide-react';
 import { Container } from '../layout/Container';
+import { fetchSiteSettings } from '../../services/api';
+import { useContent, useContentImage } from '../../hooks/useContent';
 
 const slides = [
   {
@@ -15,7 +20,7 @@ const slides = [
     image: '/assets/Photograph_of_plaza_building.webp',
     tag: 'Fasad Utama Gedung',
     title: 'Gedung Plaza Kebun Sayur Balikpapan',
-    desc: 'Pusat perdagangan cagar budaya dan kerajinan tradisional Kalimantan Timur.',
+    desc: 'Pusat perdagangan batu mulia dan kerajinan tradisional Kalimantan Timur.',
   },
   {
     id: 2,
@@ -50,33 +55,27 @@ const slides = [
 const actionCards = [
   {
     id: 'belanja',
-    category: 'Kios Belanja',
+    category: 'KIOS BELANJA',
     title: 'Batu Mulia, Perhiasan & Cinderamata',
-    description: 'Temukan pengrajin batu akik Borneo, perhiasan emas perak, dan cinderamata Dayak.',
     href: '/belanja',
-    btnText: 'Lihat Kios Belanja',
+    btnText: 'LIHAT KIOS BELANJA',
     image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80',
-    featured: true,
   },
   {
     id: 'kuliner',
-    category: 'Sentra Kuliner',
+    category: 'SENTRA KULINER',
     title: 'Kuliner Tradisional & Oleh-Oleh',
-    description: 'Stan amplang kuku macan, soto banjar, mantau, dan kudapan khas pesisir.',
     href: '/kuliner',
-    btnText: 'Lihat Stan Kuliner',
+    btnText: 'LIHAT STAN KULINER',
     image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80',
-    featured: false,
   },
   {
     id: 'panduan',
-    category: 'Informasi Gedung',
+    category: 'INFORMASI GEDUNG',
     title: 'Panduan Kunjungan & Fasilitas',
-    description: 'Jadwal buka harian, akses dari bandara/pelabuhan, denah lantai, dan fasilitas umum.',
     href: '/panduan-kunjungan',
-    btnText: 'Buka Panduan',
+    btnText: 'BUKA PANDUAN',
     image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80',
-    featured: false,
   },
 ];
 
@@ -84,16 +83,53 @@ export function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [copiedAddress, setCopiedAddress] = useState(false);
-  const [isOpenNow, setIsOpenNow] = useState(false);
   const [witaTime, setWitaTime] = useState('');
+  const [siteSettings, setSiteSettings] = useState(null);
+
+  const heroImage = useContentImage('home.hero.image', '/assets/Photograph_of_plaza_building.webp');
+  const heroTitle = useContent('home.hero.title', 'Gedung Plaza Kebun Sayur Balikpapan');
+  const heroSubtitle = useContent(
+    'home.hero.subtitle',
+    'Pusat perdagangan batu mulia dan kerajinan tradisional Kalimantan Timur.'
+  );
+  const ctaPrimaryText = useContent('home.hero.cta_primary', 'LIHAT KIOS BELANJA');
+  const ctaSecondaryText = useContent('home.hero.cta_secondary', 'JELAJAHI SENTRA KULINER');
+
+  const activeSlides = [
+    {
+      ...slides[0],
+      image: heroImage,
+      title: heroTitle,
+      desc: heroSubtitle,
+    },
+    ...slides.slice(1),
+  ];
+
+  const activeActionCards = [
+    { ...actionCards[0], btnText: ctaPrimaryText },
+    { ...actionCards[1], btnText: ctaSecondaryText },
+    actionCards[2],
+  ];
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchSiteSettings()
+      .then((settings) => {
+        if (isMounted) setSiteSettings(settings);
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
-  }, []);
+    setCurrentSlide((prev) => (prev + 1) % activeSlides.length);
+  }, [activeSlides.length]);
 
   const prevSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-  }, []);
+    setCurrentSlide((prev) => (prev - 1 + activeSlides.length) % activeSlides.length);
+  }, [activeSlides.length]);
 
   // Auto-slide 5s with pause on hover, focus, and prefers-reduced-motion
   useEffect(() => {
@@ -107,16 +143,13 @@ export function HeroSection() {
     return () => clearInterval(interval);
   }, [isPaused, nextSlide]);
 
-  // Real-time WITA Operating Hours Tracker (UTC+8)
+  // Real-time WITA Clock Tracker (UTC+8)
   useEffect(() => {
     const checkOperatingStatus = () => {
       const now = new Date();
       const utcHours = now.getUTCHours();
       const utcMinutes = now.getUTCMinutes();
       const witaHours = (utcHours + 8) % 24;
-
-      const isOpen = witaHours >= 8 && witaHours < 18;
-      setIsOpenNow(isOpen);
 
       const formattedTime = `${String(witaHours).padStart(2, '0')}:${String(utcMinutes).padStart(2, '0')} WITA`;
       setWitaTime(formattedTime);
@@ -127,11 +160,13 @@ export function HeroSection() {
     return () => clearInterval(interval);
   }, []);
 
+  const mallAddress = siteSettings?.office_address || 'Plaza Kebun Sayur, Jl. Letjen Suprapto, Baru Ilir, Kec. Balikpapan Barat, Kota Balikpapan, Kalimantan Timur 76131';
+  const mallHours = siteSettings?.mall_opening_hours || '08.00 – 18.00 WITA (Buka Setiap Hari)';
+  const mapsUrl = siteSettings?.maps_url || 'https://maps.google.com/?q=Plaza+Kebun+Sayur+Balikpapan';
+
   const handleCopyAddress = async () => {
     try {
-      await navigator.clipboard.writeText(
-        'Plaza Kebun Sayur, Jl. Letjen Suprapto, Baru Ilir, Kec. Balikpapan Barat, Kota Balikpapan, Kalimantan Timur 76131'
-      );
+      await navigator.clipboard.writeText(mallAddress);
       setCopiedAddress(true);
       setTimeout(() => setCopiedAddress(false), 2200);
     } catch {
@@ -156,7 +191,7 @@ export function HeroSection() {
         aria-label="Galeri Sorotan Plaza Kebun Sayur"
       >
         {/* Slides */}
-        {slides.map((slide, idx) => (
+        {activeSlides.map((slide, idx) => (
           <div
             key={slide.id}
             className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
@@ -178,10 +213,7 @@ export function HeroSection() {
             <div className="absolute bottom-0 left-0 right-0 z-20 pb-8 sm:pb-12 pt-16">
               <Container>
                 <div className="max-w-xl flex flex-col gap-1.5 text-white">
-                  <span className="text-xs font-bold uppercase tracking-wider text-gold flex items-center gap-1.5">
-                    <span>{slide.tag}</span>
-                  </span>
-                  <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-white leading-tight">
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white leading-tight">
                     {slide.title}
                   </h2>
                   <p className="text-xs sm:text-sm text-mono-200 line-clamp-2 mt-0.5">
@@ -212,13 +244,22 @@ export function HeroSection() {
           <ChevronRight size={22} />
         </button>
 
-        {/* Slide Counter & Progress Countdown Indicator (Design Spell) */}
-        <div className="absolute bottom-8 sm:bottom-12 right-4 sm:right-8 z-30 flex items-center gap-3 bg-surface-dark/80 backdrop-blur-sm px-3.5 py-2 border border-white/10 rounded-sm shadow-subtle">
-          <span className="text-xs font-mono font-bold text-white tracking-widest tabular-nums">
-            0{currentSlide + 1} / 0{slides.length}
+        {/* Slide Controls: Play/Pause, Counter & Progress Indicator */}
+        <div className="absolute bottom-8 sm:bottom-12 right-4 sm:right-8 z-30 flex items-center gap-2.5 bg-surface-dark/85 backdrop-blur-sm px-3 py-1.5 border border-white/10 rounded-sm shadow-subtle">
+          <button
+            type="button"
+            onClick={() => setIsPaused((prev) => !prev)}
+            className="w-7 h-7 flex items-center justify-center text-white hover:text-gold active:text-gold-text transition-colors rounded-sm cursor-pointer"
+            aria-label={isPaused ? 'Putar otomatis slider' : 'Jeda otomatis slider'}
+            title={isPaused ? 'Putar slider' : 'Jeda slider'}
+          >
+            {isPaused ? <Play size={14} className="fill-current" /> : <Pause size={14} className="fill-current" />}
+          </button>
+          <span className="text-xs font-mono font-bold text-white tracking-widest tabular-nums border-l border-white/20 pl-2.5">
+            0{currentSlide + 1} / 0{activeSlides.length}
           </span>
           <div className="flex items-center gap-1.5" role="tablist" aria-label="Navigasi Slide">
-            {slides.map((_, idx) => (
+            {activeSlides.map((_, idx) => (
               <button
                 key={idx}
                 type="button"
@@ -251,46 +292,36 @@ export function HeroSection() {
         <Container>
           {/* Centered Display Header */}
           <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-text-primary">
-              Apa yang Ada di Plaza Kebun Sayur
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-text-primary">
+              Apa Yang Ada Di Plaza Kebun Sayur?
             </h2>
-            <p className="text-xs sm:text-sm text-text-secondary mt-2">
-              Pusat perdagangan batu mulia, kerajinan tradisional, kain tenun, dan kuliner khas Balikpapan dalam satu kawasan terpadu.
-            </p>
           </div>
 
           {/* Trio Action Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
-            {actionCards.map((card) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+            {activeActionCards.map((card) => (
               <div
                 key={card.id}
-                className={`group relative rounded-md overflow-hidden bg-surface-dark border border-mono-800 flex flex-col justify-end p-6 min-h-[300px] sm:min-h-[320px] h-full ${
-                  card.featured
-                    ? 'md:col-span-2 lg:col-span-2'
-                    : 'col-span-1'
-                }`}
+                className="group relative rounded-md overflow-hidden bg-surface-dark border border-mono-800 flex flex-col justify-end p-6 min-h-[300px] sm:min-h-[340px] h-full"
               >
                 {/* Background Ambient Image */}
                 <img
                   src={card.image}
                   alt=""
-                  className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-40 group-hover:scale-105 transition-all duration-700 ease-out z-0 pointer-events-none"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:opacity-45 transition-all duration-700 ease-out z-0 pointer-events-none"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-mono-900 via-mono-900/85 to-mono-900/40 z-1 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-mono-900 via-mono-900/80 to-mono-900/40 z-1 pointer-events-none" />
 
                 <div className="relative z-10 flex flex-col gap-2">
                   <span className="text-xs font-bold uppercase tracking-wider text-gold">
                     {card.category}
                   </span>
-                  <h3 className="text-lg sm:text-xl font-bold text-white leading-snug">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white leading-snug mb-3">
                     {card.title}
                   </h3>
-                  <p className="text-xs text-mono-300 line-clamp-2">
-                    {card.description}
-                  </p>
                   <Link
                     to={card.href}
-                    className="group/btn mt-3 w-full py-2.5 px-4 min-h-[44px] bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white font-bold text-xs uppercase tracking-wider text-center transition-all flex items-center justify-center gap-2 rounded-sm"
+                    className="group/btn w-full py-3 px-4 min-h-[44px] bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white font-bold text-xs uppercase tracking-wider text-center transition-all flex items-center justify-center gap-2 rounded-sm"
                   >
                     <span>{card.btnText}</span>
                     <ArrowRight size={14} className="transition-transform duration-200 group-hover/btn:translate-x-1" />
@@ -302,19 +333,13 @@ export function HeroSection() {
 
           {/* 3. Quick Info Module: Opening Hours & Getting Here */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
-            {/* Box 1: Opening Hours with Live Status Beacon */}
+            {/* Box 1: Opening Hours */}
             <div className="p-6 bg-surface-subtle border border-border-subtle rounded-md flex flex-col gap-1.5 hover:border-border-strong transition-colors">
-              <div className="flex items-center justify-between flex-wrap gap-2">
-                <h4 className="text-base font-bold text-text-primary">
-                  Waktu operasional mall
-                </h4>
-                {/* Status operasional */}
-                <span className={`text-xs font-semibold ${isOpenNow ? 'text-emerald-700' : 'text-text-muted'}`}>
-                  {isOpenNow ? 'Buka sekarang' : 'Tutup sekarang'}
-                </span>
-              </div>
+              <h4 className="text-base font-bold text-text-primary">
+                Waktu operasional mall
+              </h4>
               <p className="text-sm font-semibold text-text-primary">
-                08.00 – 18.00 WITA (Buka Setiap Hari)
+                {mallHours}
               </p>
               {witaTime && (
                 <span className="text-xs text-text-muted">
@@ -336,28 +361,40 @@ export function HeroSection() {
                 <h4 className="text-base font-bold text-text-primary">
                   Petunjuk lokasi dan akses
                 </h4>
-                {/* Interactive Quick-Copy Button (Design Spell) */}
-                <button
-                  type="button"
-                  onClick={handleCopyAddress}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-text-primary hover:text-brand-primary active:bg-surface-muted bg-canvas border border-border-subtle rounded-sm transition-all cursor-pointer"
-                  title="Salin alamat lengkap untuk navigasi GPS / ojek online"
-                >
-                  {copiedAddress ? (
-                    <>
-                      <Check size={12} className="text-emerald-600" />
-                      <span className="text-emerald-700">Tersalin!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy size={12} className="text-text-muted" />
-                      <span>Salin Alamat</span>
-                    </>
-                  )}
-                </button>
+                {/* Interactive Quick Actions (Salin Alamat & Google Maps Navigasi) */}
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleCopyAddress}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-text-primary hover:text-brand-primary active:bg-surface-muted bg-canvas border border-border-subtle rounded-sm transition-all cursor-pointer"
+                    title="Salin alamat lengkap untuk navigasi GPS / ojek online"
+                  >
+                    {copiedAddress ? (
+                      <>
+                        <Check size={12} className="text-emerald-600" />
+                        <span className="text-emerald-700">Tersalin!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy size={12} className="text-text-muted" />
+                        <span>Salin Alamat</span>
+                      </>
+                    )}
+                  </button>
+                  <a
+                    href={mapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-text-primary hover:text-brand-primary active:bg-surface-muted bg-canvas border border-border-subtle rounded-sm transition-all"
+                    title="Buka rute navigasi langsung di Google Maps"
+                  >
+                    <span>Buka Maps</span>
+                    <ExternalLink size={12} />
+                  </a>
+                </div>
               </div>
               <p className="text-sm font-semibold text-text-primary">
-                Jl. Letjen Suprapto, Balikpapan Barat 76131
+                {mallAddress}
               </p>
               <Link
                 to="/panduan-kunjungan"

@@ -22,11 +22,12 @@ colors:
   surface-dark: "#1A0D0D"
   text-primary: "#1A0D0D"
   text-secondary: "#5A4545"
-  text-muted: "#7A6A6A"
+  text-muted: "#766666"
 
   border-subtle: "#E8DFDF"
   border-hover: "#D8CACA"
   border-strong: "#1A0D0D"
+  border-input: "#A08686"
 
   brand-primary: "#8B1A1A"
   brand-primary-hover: "#6E1313"
@@ -37,25 +38,25 @@ colors:
   gold: "#C59B27"
   gold-text: "#8A6B13"
 
-  whatsapp: "#059669"
+  whatsapp: "#047857"
 
 typography:
   display:
     fontFamily: "Plus Jakarta Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif"
     fontSize: "clamp(2rem, 5vw, 3.75rem)"
-    fontWeight: 800
+    fontWeight: 700
     lineHeight: 1.12
     letterSpacing: "0em"
   headline:
     fontFamily: "Plus Jakarta Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif"
     fontSize: "clamp(1.5rem, 3vw, 2.25rem)"
-    fontWeight: 800
+    fontWeight: 700
     lineHeight: 1.2
     letterSpacing: "0em"
   title-sentence-case:
     fontFamily: "Plus Jakarta Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif"
     fontSize: "clamp(1.5rem, 3vw, 2.25rem)"
-    fontWeight: 800
+    fontWeight: 700
     lineHeight: 1.2
     letterSpacing: "-0.02em"
   body:
@@ -114,6 +115,8 @@ components:
 
 Dokumen ini adalah acuan desain target untuk situs `plazakebunsayur-web`. Jika ada bagian yang berbeda dengan kode saat ini, kode yang harus disesuaikan dengan dokumen ini. Jika ada hal yang ambigu, jangan menebak. Ikuti aturan di dokumen ini, terutama bagian Do's and Don'ts.
 
+Untuk semua aspek visual (warna, tipografi, bentuk, komponen, copywriting, tata letak), dokumen ini lebih tinggi daripada `SPECIFICATION.md`. Jika keduanya berbeda, ikuti dokumen ini dan laporkan perbedaannya agar `SPECIFICATION.md` diperbaiki.
+
 ---
 
 ## Overview
@@ -124,11 +127,13 @@ Informasi sejarah atau status cagar budaya hanya ditampilkan sebagai konteks fak
 
 ### Prinsip Visual
 
-1. **Identitas dari Bunsay, struktur dari referensi.**
+1. **Identitas dari Bunsay, struktur dari Yas Mall, disiplin dari Anthropic.**
    
-   - Warna dan karakter merek berasal dari identitas Bunsay, yaitu marun yang sudah dipakai pada web versi pembayaran sebelumnya.
-   - Struktur tata letak boleh mengambil inspirasi dari Yas Mall Abu Dhabi: grid tegas, layout lapang, frame foto 4:3, judul pendek uppercase, dan dark menu.
+   - Warna, nada bahasa, dan foto berasal dari identitas Bunsay, yaitu marun yang sudah dipakai pada web versi pembayaran sebelumnya.
+   - Struktur tata letak direktori (navigasi, kartu, filter, grid) boleh mengambil inspirasi dari Yas Mall Abu Dhabi: grid tegas, layout lapang, frame foto 4:3, judul pendek uppercase, dan dark menu.
+   - Disiplin visual (ritme spasi, hierarki tipografi, kekangan dekorasi), terutama untuk halaman bacaan, boleh mengambil prinsip dari situs anthropic.com. Lihat bagian Disiplin Visual.
    - Warna, nama token, ornamen, dan nuansa Yas Mall tidak boleh diadopsi.
+   - Dari semua referensi, yang diambil hanya prinsip dan keputusan. Jangan pernah menyalin kode, teks, ilustrasi, ikon, font, logo, nama merek, warna, atau komposisi spesifik.
 
 2. **Marun adalah warna utama.**
    
@@ -183,10 +188,11 @@ Jangan memakai `#000000`, `#111111`, `#0c0c0c`, atau `#141414`.
 
 - `text-primary`: `#1A0D0D` — teks utama.
 - `text-secondary`: `#5A4545` — paragraf dan keterangan.
-- `text-muted`: `#7A6A6A` — metadata, breadcrumb, caption kecil.
+- `text-muted`: `#766666` — metadata, breadcrumb, caption kecil. Kontras minimal 4,7:1 di semua permukaan yang dipakai.
 - `border-subtle`: `#E8DFDF` — border default.
 - `border-hover`: `#D8CACA` — border saat hover/focus pada perangkat yang mendukung.
 - `border-strong`: `#1A0D0D` — border aktif/selected dan interaksi utama.
+- `border-input`: `#A08686` — batas input, dropdown, dan kontrol formulir (kontras 3,4:1 di atas putih, memenuhi WCAG 1.4.11). `border-subtle` hanya untuk garis dekoratif dan batas kartu.
 
 Jangan memakai teks lebih terang dari `text-muted` untuk teks yang harus dibaca.
 
@@ -197,14 +203,31 @@ Jangan memakai teks lebih terang dari `text-muted` untuk teks yang harus dibaca.
 - `brand-primary-pressed`: `#4E0E0E` — pressed/active.
 - `gold`: `#C59B27` — hanya dekoratif, terutama di atas latar gelap. Jangan dipakai sebagai teks atau tombol di atas latar terang.
 - `gold-text`: `#8A6B13` — versi emas yang lebih gelap untuk teks atau tombol di atas latar terang bila benar-benar diperlukan.
-- `whatsapp`: `#059669` — ikon dan aksi WhatsApp.
+- `whatsapp`: `#047857` — ikon, teks, dan latar tombol WhatsApp (teks putih di atasnya berkontras 5,5:1).
 
 Aturan eyebrow:
 
 - Di atas latar terang: pakai `brand-primary` atau `gold-text`.
 - Di atas latar gelap: boleh pakai `gold`.
 
-Catatan: perkiraan kontras di dokumen ini perlu diverifikasi ulang dengan alat kontras sebelum implementasi final.
+### 5. Hasil Verifikasi Kontras
+
+Dihitung dengan rumus luminans relatif WCAG 2.x pada 11 Oktober 2026. Hitung ulang bila ada warna yang berubah.
+
+| Pasangan                                                                                    | Rasio                 | Keterangan                                                  |
+| ------------------------------------------------------------------------------------------- | --------------------- | ----------------------------------------------------------- |
+| `text-primary` di atas `canvas`                                                             | 19,0:1                | Lolos                                                       |
+| `text-secondary` di atas `canvas` / `surface-muted`                                         | 8,9:1 / 7,7:1         | Lolos                                                       |
+| `text-muted` di atas `canvas` / `surface-subtle` / `surface-muted` / `brand-surface-strong` | 5,4 / 5,1 / 4,8 / 4,7 | Lolos                                                       |
+| `brand-primary` di atas `canvas` / `brand-surface-strong`                                   | 9,3:1 / 8,0:1         | Lolos                                                       |
+| Teks putih di atas `brand-primary`                                                          | 9,3:1                 | Lolos                                                       |
+| `gold-text` di atas `canvas`                                                                | 5,0:1                 | Lolos                                                       |
+| `gold` di atas `surface-dark`                                                               | 7,3:1                 | Lolos, hanya di latar gelap                                 |
+| `whatsapp` di atas `canvas`, atau teks putih di atasnya                                     | 5,5:1                 | Lolos                                                       |
+| `border-input` di atas `canvas` / `surface-subtle`                                          | 3,4:1 / 3,2:1         | Lolos untuk komponen UI (minimal 3:1)                       |
+| `border-subtle` di atas `canvas`                                                            | 1,3:1                 | Hanya garis dekoratif dan batas kartu, bukan batas input    |
+| `mono-400` di atas `canvas`                                                                 | 2,98:1                | Hanya ikon pasif, state disabled, dan placeholder dekoratif |
+| Outline `brand-primary` di atas `surface-dark`                                              | 2,0:1                 | Dilarang. Pakai outline `gold` (7,3:1)                      |
 
 ---
 
@@ -225,7 +248,7 @@ Plus Jakarta Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-ser
 1. **Display / Hero H1**
    
    - Ukuran: `text-3xl` sampai `text-6xl`.
-   - Weight: 800.
+   - Weight: 700.
    - Line height: `1.12`.
    - Untuk judul pendek boleh uppercase dengan tracking normal.
    - Untuk judul panjang pakai sentence case dengan tracking `-0.02em`.
@@ -233,13 +256,13 @@ Plus Jakarta Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-ser
 2. **Section Heading H2**
    
    - Ukuran: `text-2xl` sampai `text-4xl`.
-   - Weight: 800.
+   - Weight: 700.
    - Gunakan sentence case untuk judul panjang.
 
 3. **Card Title H3**
    
    - Ukuran: `text-base` sampai `text-xl`.
-   - Weight: 700.
+   - Weight: 600.
    - Nama kios boleh maksimal dua baris dengan `line-clamp-2`.
 
 4. **Eyebrow / Kicker**
@@ -249,7 +272,7 @@ Plus Jakarta Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-ser
    - Uppercase.
    - Tracking: `0.05em`.
    - Warna mengikuti aturan eyebrow di bagian Colors.
-   - Maksimal satu per halaman, dan hanya bila isinya menambah informasi yang tidak ada di judul. Jangan menaruh eyebrow di setiap H2.
+   - Maksimal satu per halaman, dan hanya bila isinya menambah informasi yang tidak ada di judul. Jangan menaruh eyebrow di setiap H2. Tag kategori pada TenantCard bukan eyebrow dan tidak dihitung.
 
 5. **Body**
    
@@ -285,13 +308,15 @@ Bahasa situs harus sederhana, konkret, dan informatif. Jangan menulis seperti la
 - Hindari klaim kosong dan kata sifat berlebihan.
 - Hindari istilah pemasaran yang terasa generik.
 - Jangan mengarang sejarah, testimoni, statistik, atau narasi budaya.
+- Setiap tombol menyebut hasil tindakannya ("Chat Penjual", "Kirim pesan", "Reset filter"). Nama aksi yang sama dipakai di seluruh alur.
+- Judul menyatakan sesuatu yang berguna, bukan label kosong.
 
 ### Istilah yang Boleh Dipakai Bila Perlu
 
 - Plaza Kebun Sayur
 - Pasar Inpres Kebun Sayur
 - Balikpapan Barat
-- cagar budaya
+- cagar budaya (hanya setelah status resminya dikonfirmasi pengelola, dan cantumkan sumbernya)
 - sejarah pasar
 - paguyuban pedagang
 - direktori kios
@@ -339,10 +364,16 @@ Cari kios berdasarkan kategori, lantai, atau nama kios. Hubungi pedagang langsun
 
 - `/` — beranda.
 - `/belanja` — direktori belanja.
+- `/belanja/:slug` — detail kios belanja.
 - `/kuliner` — direktori kuliner.
-- `/agenda` — daftar agenda, termasuk halaman detail.
+- `/kuliner/:slug` — detail kios kuliner.
+- `/agenda` — daftar agenda.
+- `/agenda/:slug` — detail agenda.
 - `/panduan-kunjungan` — panduan kunjungan dan fasilitas.
 - `/kontak` — formulir pertanyaan umum dan hotline pengelola.
+- `/kebijakan-privasi` — kebijakan privasi (kepatuhan UU PDP No. 27/2022).
+- `/syarat-ketentuan` — syarat & ketentuan penggunaan portal direktori komersial.
+- `*` — halaman 404 dengan tombol kembali ke Beranda atau Direktori Belanja.
 
 Detail kios hanya profil singkat. Tidak ada galeri produk, booking, rating, review, atau opsi sewa kios.
 
@@ -362,8 +393,11 @@ Detail kios hanya profil singkat. Tidak ada galeri produk, booking, rating, revi
 2. **Hero Beranda**
    
    - Tinggi minimal sekitar 460px di mobile dan 580px di desktop.
-   - Latar berupa foto slider yang bergerak otomatis (sekitar 5 detik per slide, berhenti saat hover). Slide pertama adalah foto gedung Plaza Kebun Sayur.
-   - Slider punya tombol sebelumnya/berikutnya dan penanda slide, serta berhenti otomatis bila `prefers-reduced-motion` aktif.
+   - Latar berupa foto slider yang bergerak otomatis (sekitar 5 detik per slide). Slide pertama adalah foto gedung Plaza Kebun Sayur.
+   - Slider punya tombol sebelumnya/berikutnya, penanda slide, dan tombol jeda/putar yang selalu terlihat. Jeda tidak boleh bergantung pada hover, karena layar sentuh tidak punya hover.
+   - Slider berhenti otomatis bila `prefers-reduced-motion` aktif atau fokus keyboard berada di dalamnya.
+   - Slide pertama dimuat langsung (gambar LCP, tanpa `loading="lazy"`). Slide berikutnya dimuat malas.
+   - Hero tidak punya eyebrow, badge, atau blok statistik.
    - Overlay memakai `mono-900`, bukan hitam murni.
    - Contoh overlay: dari `mono-900/75` ke `mono-900/40` ke transparan.
    - Gedung harus tetap terlihat.
@@ -390,6 +424,7 @@ Detail kios hanya profil singkat. Tidak ada galeri produk, booking, rating, revi
    - Beri petunjuk visual bahwa filter bisa digeser, misalnya kapsul terakhir terpotong atau fade di tepi kanan.
    - Sediakan dropdown lantai dan pencarian kata kunci.
    - Hasil kosong harus menampilkan pesan singkat dan tombol reset filter.
+   - Pagination di bawah grid: tombol Sebelumnya/Berikutnya dan nomor halaman, target sentuh minimal 44px, 12 kios per halaman.
 
 5. **Detail Kios**
    
@@ -401,7 +436,7 @@ Detail kios hanya profil singkat. Tidak ada galeri produk, booking, rating, revi
      - kategori,
      - lantai,
      - nomor unit,
-     - jam buka jika tersedia,
+     - jam buka jika tersedia (status buka/tutup dihitung dengan zona waktu WITA, bukan jam perangkat pengunjung; bila jam belum ada, tampilkan "Jam buka belum tersedia"),
      - tombol “Chat Penjual” ke WhatsApp.
    - Tidak ada galeri produk.
    - Tidak ada booking.
@@ -409,9 +444,79 @@ Detail kios hanya profil singkat. Tidak ada galeri produk, booking, rating, revi
 
 6. **Panduan Kunjungan**
    
-   - Grid informasi dua kolom di desktop.
+   - Halaman bacaan: judul bagian, teks, dan garis pemisah tipis. Bukan grid kartu. Dua kolom di desktop hanya bila isinya memang berpasangan (misalnya jam buka di kiri, rute di kanan).
    - Berisi informasi yang berguna untuk pengunjung.
    - Jangan membuat section dekoratif tanpa isi nyata.
+
+7. **Agenda**
+   
+   - Daftar berupa baris: kolom tanggal di kiri, judul dan ringkasan di kanan, dipisah garis tipis. Bukan grid kartu.
+   - Detail agenda: banner 16:9 bila ada, rentang tanggal, teks lengkap, dan lokasi acara.
+
+8. **Kontak**
+   
+   - Dua kolom di desktop: informasi pengelola di kiri (alamat kantor, hotline WhatsApp, telepon keamanan, jam kerja), formulir pesan di kanan. Satu kolom di mobile, informasi lebih dulu.
+   - Formulir: nama, nomor telepon, email (opsional), subjek, dan pesan. Tombol "Kirim pesan", lalu konfirmasi singkat setelah berhasil.
+
+---
+
+## Disiplin Visual
+
+Bagian ini berisi aturan positif: apa yang dikerjakan, bukan hanya apa yang dihindari. Kesan rapi dan tenang datang dari konsistensi dan kekangan, bukan dari dekorasi.
+
+### Peran Referensi dan Batas Peniruan
+
+| Sumber        | Yang diambil                                                                                | Yang tidak boleh diambil                                                             |
+| ------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Yas Mall      | Pola struktur direktori: navigasi, kartu, filter, grid, frame foto 4:3                      | Warna, nama token, ornamen, teks, aset                                               |
+| anthropic.com | Disiplin visual: ritme spasi, skala tipografi, kekangan dekorasi, tata letak halaman bacaan | Kode, teks, ilustrasi, ikon, font, logo, nama merek, warna aksen, komposisi spesifik |
+| Bunsay        | Warna marun, nada bahasa, foto asli, konteks lokasi                                         | -                                                                                    |
+
+Uji akhir: tanpa logo, halaman Bunsay tidak boleh dikira situs Yas Mall atau Anthropic. Krem hangat dengan serif berkontras tinggi dan aksen terakota juga bukan identitas Bunsay dan menjadi ciri umum hasil generate, jadi jangan dipakai.
+
+### Dua Kepadatan
+
+- **Halaman bacaan** (beranda di luar bagian direktori, Panduan Kunjungan, Agenda, Kontak): lega. Jarak antar-section `py-16 md:py-24`. Struktur dari judul, teks, dan garis pemisah.
+- **Halaman direktori** (`/belanja`, `/kuliner`): padat dan fungsional. Jarak antar-section `py-8 md:py-12`, grid `gap-4 md:gap-6`. Pola struktur mengikuti bagian Direktori di atas.
+
+### Ritme Spasi
+
+- Pakai skala 4, 8, 16, 24, 32, 64, 96 px. Jangan memakai nilai di luar skala (misalnya `mt-[13px]`).
+- Jarak antara judul section dan isinya selalu sama di seluruh situs.
+- Paragraf berurutan memakai `space-y-4`.
+
+### Tipografi
+
+- Bobot: 700 untuk Display dan H2, 600 untuk H3 dan nama kios, 400 untuk isi. Bobot 800 tidak dipakai kecuali ada alasan tertulis.
+- Ukuran dibatasi enam tingkat: 12 (caption, label), 14 (isi kecil), 16 (isi), 20 (H3), 24 sampai 36 (H2), 32 sampai 60 (Display).
+- Lebar baris isi maksimal sekitar 68 karakter (`max-w-[68ch]`). Paragraf panjang tidak pernah selebar container penuh.
+- Teks rata kiri. Rata tengah hanya untuk satu baris pendek, misalnya judul 404 atau empty state.
+- Selisih ukuran dan bobot antara judul dan isi harus terbaca dalam sekali lihat.
+- Jangan menyorot satu kata dalam judul dengan warna atau cetak miring.
+
+### Struktur Visual Adalah Informasi
+
+- Garis pemisah, border, dan label dipakai untuk menyatakan hubungan nyata antar-konten, bukan hiasan.
+- Kartu hanya untuk objek yang bisa dibuka atau dibandingkan satu sama lain: TenantCard dan kartu aksi di beranda. Panduan Kunjungan, Agenda, dan Kontak berupa daftar dengan garis pemisah.
+- Satu level wadah per konten.
+- Penomoran hanya untuk urutan nyata, misalnya langkah atau rute.
+- Tautan teks berwarna `brand-primary`, bergaris bawah saat hover dan fokus. Jangan menambahkan panah "→" pada semua tautan.
+
+### Warna, Fokus, dan Gerak
+
+- Hampir seluruh antarmuka memakai skala netral `mono`. Marun hanya untuk aksi, tautan, dan status aktif, bukan dekorasi.
+- Setiap layar punya satu elemen yang menonjol (beranda: foto gedung di hero; direktori: grid kios). Elemen lain dibiarkan tenang.
+- Satu tindakan utama per layar: hanya satu tombol marun penuh yang terlihat pada satu waktu.
+- Gerak hanya untuk menjawab tindakan pengguna (membuka drawer, mengganti slide, status kirim). Tidak ada animasi masuk di setiap section dan tidak ada transisi hover di setiap kartu. Slider hero adalah satu-satunya gerak otomatis.
+
+### Foto
+
+- Satu perlakuan per jenis foto: rasio tetap (4:3 untuk kios, 16:9 untuk banner agenda), tanpa overlay kecuali di hero, keterangan berupa teks biasa di bawah foto.
+- Foto adalah isi, bukan latar dekoratif di belakang teks kecil.
+
+### Uji Hapus
+
+Sebelum menerima sebuah halaman, coba hapus satu elemen. Jika fungsi halaman tidak berkurang, elemen itu seharusnya tidak ada.
 
 ---
 
@@ -570,7 +675,7 @@ Satu aturan bentuk, tanpa pengecualian per halaman.
   - latar `surface-muted`,
   - ikon kategori `mono-400` di tengah.
   - Ini adalah placeholder yang disengaja, bukan gambar rusak.
-- Badge “Pilihan” boleh muncul di pojok kanan atas foto untuk tenant featured.
+- Tenant featured ditandai teks biasa “Pilihan” pada baris tag kategori (tanpa pill, tanpa latar).
 - Tag kategori kecil uppercase.
 - Nama kios maksimal dua baris: `line-clamp-2`.
 - Tampilkan lantai dan nomor unit.
@@ -638,6 +743,15 @@ Bentuk:
   - informasi paguyuban atau kontak.
 - Bagian bawah berisi hak cipta.
 - Aksen emas hanya dipakai di atas latar gelap.
+
+### 6. Input dan Formulir
+
+- Tinggi minimal 44px, radius `rounded-sm`, border `border-input`, latar putih.
+- Label selalu terlihat di atas kolom, bukan hanya placeholder.
+- Fokus: outline `brand-primary` 2px dengan offset 2px.
+- Pesan error di bawah kolom, teks `brand-primary` 14px, menyebut apa yang salah dan cara memperbaikinya. Warna tidak boleh menjadi satu-satunya penanda error.
+- Kolom honeypot `bot_check` disembunyikan dari pengguna dan pembaca layar (`aria-hidden`, `tabindex="-1"`).
+- Tombol kirim memakai varian `primary` dan menunjukkan status mengirim.
 
 ---
 
@@ -745,7 +859,7 @@ Jangan menambahkan:
 12. Ilustrasi 3D.
 13. Render AI.
 14. Emoji di judul, tombol, atau section penting.
-15. Foto stok.
+15. Foto stok di luar pengecualian demo (lihat bagian Foto dan Aturan Data Demo).
 16. Foto hasil AI.
 17. Pattern budaya generik.
 18. Badge berlebihan tanpa status nyata.
@@ -840,7 +954,7 @@ Agent tidak boleh:
 7. Mengarang narasi sejarah.
 8. Mengarang motif budaya.
 9. Menambah fitur yang belum disepakati.
-10. Memakai foto stok untuk mengisi ruang.
+10. Memakai foto stok untuk mengisi ruang di luar pengecualian demo (lihat bagian Foto).
 11. Membuat section dekoratif tanpa fungsi.
 12. Menyembunyikan data kosong dengan copy pemasaran.
 13. Menambah komponen baru di luar kebutuhan situs.
@@ -854,7 +968,7 @@ Jika data kosong:
 Jika foto kosong:
 
 - pakai placeholder kategori,
-- jangan memakai foto stok.
+- jangan memakai foto stok di luar pengecualian demo.
 
 Jika fitur belum disepakati:
 
@@ -865,6 +979,8 @@ Jika fitur belum disepakati:
 - Versi ini adalah demo internal. Data lengkap kios belum tersedia, jadi data placeholder (nama kios, kategori, lantai, unit, nomor WhatsApp contoh) diizinkan.
 - Placeholder hanya di lapisan data (`mockData.js` dan seed backend), tidak ditulis langsung di komponen.
 - Placeholder harus wajar sebagai contoh. Jangan memakai nama pedagang atau merek asli tanpa izin.
+- Nomor WhatsApp contoh memakai pola yang jelas tidak valid (misalnya `0800-0000-0000`), agar tombol Chat Penjual tidak membuka percakapan dengan orang sungguhan.
+- Data demo di backend hanya masuk lewat `DemoSeeder` yang tidak dipanggil di produksi (lihat `SPECIFICATION.md`).
 - Tetap dilarang, termasuk di demo: testimoni, statistik, logo partner, dan sejarah karangan.
 - Sebelum dipublikasikan: semua placeholder diganti data nyata, dan foto stok diganti foto lapangan. Penyetuju: tim Inovasi Sosial.
 
@@ -889,6 +1005,11 @@ Sebelum hasil desain atau kode diterima, cek:
 - [ ] Eyebrow hanya dipakai bila menambah informasi, maksimal satu per halaman.
 - [ ] Tiga kartu berjejer tidak identik. Jika berbeda fungsi, ukuran atau bobotnya berbeda.
 - [ ] Semua varian `Badge` yang dipanggil ada di `Badge.jsx`.
+- [ ] Slider hero punya tombol jeda yang terlihat dan tidak bergantung pada hover.
+- [ ] Panduan Kunjungan, Agenda, dan Kontak berupa daftar atau baris, bukan grid kartu.
+- [ ] Kolom input memakai `border-input` dan punya label yang terlihat.
+- [ ] Paragraf isi tidak melebihi sekitar 68 karakter per baris.
+- [ ] Uji hapus: tidak ada elemen yang bisa dihapus tanpa mengurangi fungsi halaman.
 
 ---
 
@@ -906,6 +1027,8 @@ Sebelum hasil desain atau kode diterima, cek:
 - Gunakan istilah lokasi dan pasar yang nyata.
 - Tampilkan empty state jika data belum tersedia.
 - Pastikan setiap section memiliki fungsi yang jelas.
+- Pakai `border-input` untuk kolom formulir dan `border-subtle` hanya untuk garis dekoratif.
+- Jaga satu tindakan utama per layar.
 
 ### Don'ts
 
@@ -931,10 +1054,6 @@ Sebelum hasil desain atau kode diterima, cek:
 - Jangan menaruh eyebrow di atas setiap H2.
 - Jangan memakai kartu bersarang atau garis kiri berwarna.
 - Jangan memakai penomoran untuk konten yang tidak berurutan.
-
----
-
-## Riwayat perubahan
-
-- 2026-10-10: Menambah bagian "Pola Template yang Harus Dihindari (Tambahan)" dari daftar tim. Menyelaraskan aturan Shapes, Badge, Eyebrow, dan Trio Action Cards dengan daftar itu. Backup versi sebelumnya: `docs/archive/DESIGN.md.bak-2026-10-10`.
-- 2026-10-10 (2): Radius diubah dari siku-siku penuh menjadi dua tingkat (`rounded-sm` 4px, `rounded-md` 6px) karena hasil implementasi siku-siku penuh dinilai kaku. Hero ditegaskan sebagai slider otomatis. Ditambah "Aturan Data Demo" (placeholder diizinkan untuk demo internal).
+- Jangan memakai bobot 800 untuk judul.
+- Jangan menengahkan paragraf, dan jangan memasukkan seluruh konten ke dalam kartu.
+- Jangan menyalin kode, teks, ilustrasi, ikon, font, warna, atau komposisi spesifik dari situs referensi mana pun.

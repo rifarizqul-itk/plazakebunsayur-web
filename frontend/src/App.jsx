@@ -11,7 +11,11 @@ import { EventsPage } from './pages/EventsPage';
 import { EventDetail } from './pages/EventDetail';
 import { PlanYourVisit } from './pages/PlanYourVisit';
 import { ContactPage } from './pages/ContactPage';
+import { PrivacyPolicy } from './pages/PrivacyPolicy';
+import { TermsConditions } from './pages/TermsConditions';
 import { NotFound } from './pages/NotFound';
+
+import { ContentProvider } from './context/ContentContext';
 
 /**
  * Otomatis mengembalikan posisi scroll ke paling atas saat rute berpindah
@@ -29,10 +33,11 @@ function ScrollToTop() {
 export function App() {
   return (
     <BrowserRouter>
-      <ScrollToTop />
-      <div className="min-h-screen flex flex-col bg-canvas font-sans text-text-primary selection:bg-brand-primary selection:text-white">
-        {/* Sticky Topbar Navbar */}
-        <Navbar />
+      <ContentProvider>
+        <ScrollToTop />
+        <div className="min-h-screen flex flex-col bg-canvas font-sans text-text-primary selection:bg-brand-primary selection:text-white">
+          {/* Sticky Topbar Navbar */}
+          <Navbar />
 
         {/* Dynamic Route Content */}
         <main className="flex-1 flex flex-col">
@@ -46,6 +51,8 @@ export function App() {
             <Route path="/agenda/:slug" element={<EventDetail />} />
             <Route path="/panduan-kunjungan" element={<PlanYourVisit />} />
             <Route path="/kontak" element={<ContactPage />} />
+            <Route path="/kebijakan-privasi" element={<PrivacyPolicy />} />
+            <Route path="/syarat-ketentuan" element={<TermsConditions />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
@@ -53,6 +60,7 @@ export function App() {
         {/* Global Footer */}
         <Footer />
       </div>
+      </ContentProvider>
     </BrowserRouter>
   );
 }

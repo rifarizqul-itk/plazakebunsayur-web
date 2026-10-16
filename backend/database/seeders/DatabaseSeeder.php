@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Facility;
 use App\Models\Floor;
+use App\Models\SiteSetting;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Models\WhatsOn;
@@ -491,8 +492,18 @@ class DatabaseSeeder extends Seeder
             'type' => 'event',
             'start_date' => '2026-10-10',
             'end_date' => '2026-10-15',
+            'time' => '10.00 – 17.30 WITA',
+            'location' => 'Atrium Utama (Lantai Dasar & Koridor Timur)',
+            'admission' => 'Gratis (Terbuka untuk Umum)',
+            'banner_image' => 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=1200&q=80',
             'summary' => 'Pameran akbar koleksi permata nusantara, kontes batu akik Borneo, dan pentas tari tradisional Dayak di Atrium Plaza Kebun Sayur.',
             'content' => 'Sambut semarak Festival Budaya Plaza Kebun Sayur! Dimeriahkan oleh puluhan kolektor batu akik se-Kalimantan, demonstrasi pembuatan ukiran mandau langsung oleh pengrajin pedalaman, serta promo diskon khusus perhiasan emas dan kerajinan.',
+            'highlights' => [
+                'Pameran lebih dari 500 koleksi batu akik & permata alam langka se-Borneo (Red Borneo, Kecubung, Jamrud).',
+                'Kontes dan uji keaslian batu mulia dengan sertifikasi gemologi langsung di tempat.',
+                'Pertunjukan musik petik Sape dan tarian tradisional Dayak Kenyah setiap sore.',
+                'Demonstrasi langsung pembuatan ukiran kayu ulin dan pengrajin ikat cincin perak.',
+            ],
             'is_active' => true,
         ]);
 
@@ -502,9 +513,43 @@ class DatabaseSeeder extends Seeder
             'type' => 'promo',
             'start_date' => '2026-09-01',
             'end_date' => '2026-10-31',
+            'time' => '09.00 – 18.00 WITA (Buka Setiap Hari)',
+            'location' => 'Kios Cinderamata, Batik & Kuliner Berpartisipasi',
+            'admission' => 'Promo Belanja Langsung',
+            'banner_image' => 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80',
             'summary' => 'Dapatkan suvenir gantungan manik khas Dayak gratis untuk setiap pembelian kain batik atau perhiasan minimal Rp 500.000.',
             'content' => 'Menyambut para delegasi dan wisatawan Nusantara ke Kalimantan Timur, puluhan kios cinderamata di Plaza Kebun Sayur memberikan penawaran suvenir spesial selama bulan ini.',
+            'highlights' => [
+                'Gratis suvenir gantungan kunci manik Dayak eksklusif dengan belanja minimal Rp 500.000.',
+                'Diskon spesial hingga 20% untuk pembelian kain tenun dan batik motif mangrove Balikpapan.',
+                'Kemasan khusus dus siap bagasi pesawat untuk produk oleh-oleh khas dan kerajinan.',
+            ],
             'is_active' => true,
+        ]);
+
+        // 7. Site Settings (Informasi Operasional Gedung)
+        $settings = [
+            'mall_opening_hours' => 'Setiap Hari 08.00 - 18.00 WITA',
+            'management_whatsapp' => '080000000000',
+            'security_phone' => '(0542) 734567',
+            'office_address' => 'Lantai Dasar (Pintu Timur), Jl. Letjen Suprapto, Kebun Sayur, Balikpapan Barat 76131',
+            'management_email' => 'pengelola@plazakebunsayur.com',
+            'maps_url' => 'https://maps.google.com/?q=Plaza+Kebun+Sayur+Balikpapan',
+        ];
+
+        foreach ($settings as $key => $value) {
+            SiteSetting::updateOrCreate(
+                ['key' => $key],
+                ['value' => $value]
+            );
+        }
+
+        // 8. Page Contents & Dynamic CMS Lists
+        $this->call([
+            PageContentSeeder::class,
+            VisitGuideSeeder::class,
+            NavItemSeeder::class,
+            LegalPageSeeder::class,
         ]);
     }
 }

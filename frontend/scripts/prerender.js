@@ -54,14 +54,26 @@ function writeHtml(targetPath, content) {
 
 async function fetchTenants() {
   const apiUrl = process.env.VITE_API_URL || 'http://127.0.0.1:8000/api';
+  const allTenants = [];
   try {
-    const res = await fetch(`${apiUrl}/tenants?per_page=500`);
-    if (res.ok) {
+    let page = 1;
+    let lastPage = 1;
+    do {
+      const res = await fetch(`${apiUrl}/tenants?per_page=100&page=${page}`, {
+        headers: { 'ngrok-skip-browser-warning': '1' },
+      });
+      if (!res.ok) break;
       const json = await res.json();
       if (json.data && Array.isArray(json.data) && json.data.length > 0) {
-        console.log(`📡 Berhasil mengambil ${json.data.length} tenant dari backend API`);
-        return json.data;
+        allTenants.push(...json.data);
       }
+      lastPage = json.meta?.last_page || 1;
+      page++;
+    } while (page <= lastPage);
+
+    if (allTenants.length > 0) {
+      console.log(`📡 Berhasil mengambil ${allTenants.length} tenant dari backend API`);
+      return allTenants;
     }
   } catch (err) {
     console.log(`ℹ️ Backend API tidak merespons (${err.message}), beralih ke dataset lokal.`);
@@ -77,45 +89,100 @@ async function fetchTenants() {
   }
 }
 
+async function fetchPageContents() {
+  const apiUrl = process.env.VITE_API_URL || 'http://127.0.0.1:8000/api';
+  try {
+    const res = await fetch(`${apiUrl}/page-contents`, {
+      headers: { 'ngrok-skip-browser-warning': '1' },
+      signal: AbortSignal.timeout(3000),
+    });
+    if (res.ok) {
+      const json = await res.json();
+      if (json.data && Object.keys(json.data).length > 0) {
+        console.log(`📡 Berhasil mengambil CMS page-contents dari backend API`);
+        return json.data;
+      }
+    }
+  } catch {
+    // Fallback quietly to mock data
+  }
+
+  try {
+    const mockModule = await import('../src/data/mockData.js');
+    return mockModule.MOCK_PAGE_CONTENTS || {};
+  } catch {
+    return {};
+  }
+}
+
 async function main() {
   console.log('🚀 Memulai proses Pre-render SSG untuk SEO...');
+
+  const contents = await fetchPageContents();
+  const defaultOgImage = contents['seo.default_og_image'] || 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=1200&q=80';
+
+  // 0. Update Root Home index.html
+  const homeTitle = contents['seo.home.title'] || 'Plaza Kebun Sayur Balikpapan | Sentra Kerajinan & Batu Mulia Borneo';
+  const homeDesc = contents['seo.home.description'] || 'Situs resmi direktori kios Plaza Kebun Sayur Balikpapan. Sentra batu akik, kerajinan etnik Dayak, kain batik, dan kuliner khas Kalimantan Timur.';
+  const homeHtml = injectMeta(template, {
+    title: homeTitle,
+    description: homeDesc,
+    image: defaultOgImage,
+    url: 'https://plazakebunsayur.com/',
+  });
+  writeHtml(templatePath, homeHtml);
+  console.log('  📄 Pre-rendered / (Beranda)');
 
   // 1. Static Pages
   const staticPages = [
     {
       route: 'belanja',
-      title: 'Direktori Belanja & Batu Mulia - Plaza Kebun Sayur Balikpapan',
-      description: 'Temukan koleksi permata, batu akik, perhiasan emas perak, dan kerajinan Dayak khas Kalimantan di Plaza Kebun Sayur.',
-      image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=1200&q=80',
+      title: contents['seo.belanja.title'] || 'Direktori Belanja & Batu Mulia - Plaza Kebun Sayur Balikpapan',
+      description: contents['seo.belanja.description'] || 'Temukan koleksi permata, batu akik, perhiasan emas perak, dan kerajinan Dayak khas Kalimantan di Plaza Kebun Sayur.',
+      image: defaultOgImage,
       url: 'https://plazakebunsayur.com/belanja',
     },
     {
       route: 'kuliner',
-      title: 'Sentra Kuliner Khas Kaltim - Plaza Kebun Sayur Balikpapan',
-      description: 'Nikmati Soto Banjar legendaris, Mantau Sapi, kepiting Dandito, amplang kuku macan, dan kuliner khas Balikpapan di Sentra Kuliner Plaza Bunsay.',
+      title: contents['seo.kuliner.title'] || 'Sentra Kuliner Khas Kaltim - Plaza Kebun Sayur Balikpapan',
+      description: contents['seo.kuliner.description'] || 'Nikmati Soto Banjar legendaris, Mantau Sapi, kepiting Dandito, amplang kuku macan, dan kuliner khas Balikpapan di Sentra Kuliner Plaza Bunsay.',
       image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200&q=80',
       url: 'https://plazakebunsayur.com/kuliner',
     },
     {
       route: 'agenda',
-      title: 'Agenda & Kegiatan Budaya - Plaza Kebun Sayur Balikpapan',
-      description: 'Informasi pameran batu mulia, pentas seni Dayak, festival kuliner, dan kegiatan terbaru di Plaza Kebun Sayur.',
+      title: contents['seo.agenda.title'] || 'Agenda & Kegiatan Budaya - Plaza Kebun Sayur Balikpapan',
+      description: contents['seo.agenda.description'] || 'Informasi pameran batu mulia, pentas seni Dayak, festival kuliner, dan kegiatan terbaru di Plaza Kebun Sayur.',
       image: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=1200&q=80',
       url: 'https://plazakebunsayur.com/agenda',
     },
     {
       route: 'panduan-kunjungan',
-      title: 'Panduan Kunjungan & Fasilitas - Plaza Kebun Sayur Balikpapan',
-      description: 'Rute transportasi, tips menawar ramah, informasi parkir, musholla, dan fasilitas lengkap untuk wisatawan di Plaza Kebun Sayur.',
+      title: contents['seo.panduan.title'] || 'Panduan Kunjungan & Fasilitas - Plaza Kebun Sayur Balikpapan',
+      description: contents['seo.panduan.description'] || 'Rute transportasi, tips menawar ramah, informasi parkir, musholla, dan fasilitas lengkap untuk wisatawan di Plaza Kebun Sayur.',
       image: 'https://images.unsplash.com/photo-1582533561751-ef6f6ab93a2e?w=1200&q=80',
       url: 'https://plazakebunsayur.com/panduan-kunjungan',
     },
     {
       route: 'kontak',
-      title: 'Hubungi Kami - Pengelola Plaza Kebun Sayur Balikpapan',
-      description: 'Hubungi pengelola gedung Plaza Kebun Sayur untuk informasi kemitraan, direktori kios, layanan informasi, dan kritik/saran.',
+      title: contents['seo.kontak.title'] || 'Hubungi Kami - Pengelola Plaza Kebun Sayur Balikpapan',
+      description: contents['seo.kontak.description'] || 'Hubungi pengelola gedung Plaza Kebun Sayur untuk informasi kemitraan, direktori kios, layanan informasi, dan kritik/saran.',
       image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80',
       url: 'https://plazakebunsayur.com/kontak',
+    },
+    {
+      route: 'kebijakan-privasi',
+      title: contents['seo.privacy.title'] || 'Kebijakan Privasi - Plaza Kebun Sayur Balikpapan',
+      description: contents['seo.privacy.description'] || 'Komitmen perlindungan data pribadi dan transparansi pemrosesan data pengunjung sesuai UU No. 27 Tahun 2022 di Plaza Kebun Sayur.',
+      image: defaultOgImage,
+      url: 'https://plazakebunsayur.com/kebijakan-privasi',
+    },
+    {
+      route: 'syarat-ketentuan',
+      title: contents['seo.terms.title'] || 'Syarat & Ketentuan Penggunaan - Plaza Kebun Sayur Balikpapan',
+      description: contents['seo.terms.description'] || 'Syarat dan ketentuan penggunaan situs direktori komersial, batasan tanggung jawab transaksi kios, dan hak cipta di Plaza Kebun Sayur.',
+      image: defaultOgImage,
+      url: 'https://plazakebunsayur.com/syarat-ketentuan',
     },
   ];
 

@@ -5,6 +5,9 @@ import { PageHeader } from '../components/layout/PageHeader';
 import { Container } from '../components/layout/Container';
 import { FilterPills } from '../components/ui/FilterPills';
 import { fetchWhatsOn } from '../services/api';
+import { useContent } from '../hooks/useContent';
+import { useDocumentMeta } from '../hooks/useDocumentMeta';
+import { formatDateRange } from '../utils/date';
 
 const EVENT_FILTER_OPTIONS = [
   { value: 'all', label: 'Semua Agenda' },
@@ -13,9 +16,20 @@ const EVENT_FILTER_OPTIONS = [
 ];
 
 export function EventsPage() {
+  const metaTitle = useContent('seo.agenda.title', 'Agenda & Promo Pasar | Plaza Kebun Sayur Balikpapan');
+  const metaDesc = useContent('seo.agenda.description', 'Jadwal pameran batu akik, bazar cinderamata, pentas seni budaya Dayak, dan promo pedagang di Plaza Kebun Sayur.');
+  useDocumentMeta(metaTitle, metaDesc);
+
   const [events, setEvents] = useState([]);
   const [filterType, setFilterType] = useState('all');
   const [loading, setLoading] = useState(true);
+
+  const headerEyebrow = useContent('header.agenda.eyebrow', 'Agenda & Informasi Resmi');
+  const headerTitle = useContent('header.agenda.title', 'Pameran Budaya, Bazar & Promo Kios');
+  const headerDesc = useContent(
+    'header.agenda.description',
+    'Ikuti agenda pameran batu mulia tingkat nusantara, kontes akik Borneo, pertunjukan seni tari Dayak, serta penawaran promo cinderamata terbaru di Plaza Kebun Sayur.'
+  );
 
   useEffect(() => {
     async function loadEvents() {
@@ -36,9 +50,9 @@ export function EventsPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <PageHeader
-        eyebrow="Agenda & Informasi Resmi"
-        title="Pameran Budaya, Bazar & Promo Kios"
-        description="Ikuti agenda pameran batu mulia tingkat nusantara, kontes akik Borneo, pertunjukan seni tari Dayak, serta penawaran promo cinderamata terbaru di Plaza Kebun Sayur."
+        eyebrow={headerEyebrow}
+        title={headerTitle}
+        description={headerDesc}
       />
 
       <section className="py-8 bg-canvas flex-1">
@@ -52,49 +66,50 @@ export function EventsPage() {
             />
           </div>
 
-          {/* List of Events */}
+          {/* List of Events as Rows per DESIGN.md */}
           {loading ? (
             <div className="py-12 text-center text-text-muted">Memuat agenda...</div>
           ) : events.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
+            <div className="divide-y divide-border-subtle border-b border-border-subtle pt-2">
               {events.map((item) => (
-                <article
+                <div
                   key={item.id}
-                  className="p-5 sm:p-6 bg-surface-subtle border border-border-subtle hover:border-border-strong rounded-md flex flex-col justify-between gap-4 transition-all"
+                  className="py-6 sm:py-8 flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-8 group"
                 >
-                  <div className="flex flex-col gap-3">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs font-semibold text-text-muted">
-                        {item.type === 'event' ? 'Pameran & Acara' : 'Promo Belanja'}
-                      </span>
-                      <div className="flex items-center gap-1.5 text-xs text-text-muted font-medium">
-                        <Calendar size={14} />
-                        <span className="tabular-nums">
-                          {item.start_date}
-                          {item.end_date ? ` s.d ${item.end_date}` : ''}
-                        </span>
-                      </div>
+                  {/* Left Column: Date & Type */}
+                  <div className="w-full sm:w-56 shrink-0 flex sm:flex-col items-center sm:items-start justify-between sm:justify-start gap-1">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-text-muted">
+                      {item.type === 'event' ? 'Pameran & Acara' : 'Promo Belanja'}
+                    </span>
+                    <div className="flex items-center gap-1.5 text-xs font-medium text-text-primary tabular-nums">
+                      <Calendar size={13} className="text-brand-primary" />
+                      <span>{formatDateRange(item.start_date, item.end_date)}</span>
                     </div>
-
-                    <Link to={`/agenda/${item.slug}`}>
-                      <h3 className="font-bold text-lg sm:text-xl text-text-primary hover:text-brand-primary transition-colors tracking-tight">
-                        {item.title}
-                      </h3>
-                    </Link>
-
-                    <p className="text-xs sm:text-sm text-text-secondary leading-relaxed line-clamp-3">
-                      {item.summary}
-                    </p>
                   </div>
 
-                  <Link
-                    to={`/agenda/${item.slug}`}
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-primary hover:text-brand-primary-hover self-start pt-1"
-                  >
-                    <span>Baca selengkapnya</span>
-                    <ArrowRight size={14} />
-                  </Link>
-                </article>
+                  {/* Right Column: Title, Summary & Read More */}
+                  <div className="flex-1 flex flex-col gap-2">
+                    <Link to={`/agenda/${item.slug}`}>
+                      <h2 className="font-bold text-lg sm:text-xl text-text-primary group-hover:text-brand-primary transition-colors">
+                        {item.title}
+                      </h2>
+                    </Link>
+
+                    <p className="text-sm text-text-secondary leading-relaxed max-w-[68ch]">
+                      {item.summary}
+                    </p>
+
+                    <div className="pt-2">
+                      <Link
+                        to={`/agenda/${item.slug}`}
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-primary hover:underline"
+                      >
+                        <span>Lihat detail agenda</span>
+                        <ArrowRight size={13} />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           ) : (

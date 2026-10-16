@@ -15,10 +15,10 @@ export function FilterPills({
             key={String(opt.value)}
             type="button"
             onClick={() => onSelect(opt.value)}
-            className={`px-4 py-2 min-h-[44px] text-xs font-semibold rounded-full transition-all cursor-pointer flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
+            className={`px-4 py-2 min-h-[44px] text-xs font-semibold rounded-full whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
               isSelected
                 ? 'bg-brand-primary text-white'
-                : 'bg-canvas text-text-secondary border border-border-subtle hover:bg-surface-subtle hover:text-text-primary'
+                : 'bg-canvas text-text-secondary border border-border-input hover:bg-surface-subtle hover:text-text-primary'
             }`}
           >
             <span>{opt.label}</span>

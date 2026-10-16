@@ -1,8 +1,8 @@
 # 📋 Task Breakdown: Plaza Kebun Sayur Web
 
 > **Document Type:** Implementation Tasks (Spec-Driven Development - Phase 3 & 4)  
-> **Status:** Completed (Irisan 1A–1E & Irisan 2 Selesai & Terverifikasi)  
-> **Based On:** [SPECIFICATION.md](file:///home/asus/projects/plazakebunsayur-web/docs/SPECIFICATION.md) (Rev. 3) & [PLAN.md](file:///home/asus/projects/plazakebunsayur-web/docs/PLAN.md)  
+> **Status:** Completed (Irisan 1A–1E, Irisan 2, & Irisan 3 Selesai & Terverifikasi)  
+> **Based On:** [SPECIFICATION.md](file:///home/asus/projects/plazakebunsayur-web/docs/SPECIFICATION.md) (Rev. 5), [PLAN.md](file:///home/asus/projects/plazakebunsayur-web/docs/PLAN.md), & [CMS_EDITABLE_CONTENT_PLAN.md](file:///home/asus/projects/plazakebunsayur-web/docs/CMS_EDITABLE_CONTENT_PLAN.md)  
 > **Project:** `plazakebunsayur-web`  
 
 ---
@@ -197,4 +197,89 @@
     - `backend/app/Observers/TenantObserver.php`
     - `backend/app/Console/Commands/TriggerSiteRebuild.php`
     - `backend/app/Providers/AppServiceProvider.php`
+
+---
+
+## 🛠️ Irisan 3: CMS Konten Dinamis Menyeluruh (Fase A – Fase F)
+
+- [x] **Task 21: Fondasi `page_contents` (Fase A)**
+  - **Description:** Tabel, model `PageContent` dengan dictionary `defaults()`, seeder idempotent, endpoint `GET /api/page-contents`, dan custom resource Filament untuk mengedit teks dan gambar per grup.
+  - **Acceptance:** Nilai default tersimpan, gambar beresolusi ke URL storage publik, invalidasi cache bekerja saat update.
+  - **Verify:** `ddev artisan test --filter=PageContentApiTest` -> ALL PASS.
+  - **Files:**
+    - `backend/database/migrations/2026_10_12_001501_create_page_contents_table.php`
+    - `backend/app/Models/PageContent.php`
+    - `backend/database/seeders/PageContentSeeder.php`
+    - `backend/app/Http/Controllers/Api/PageContentController.php`
+    - `backend/app/Filament/Resources/PageContents/`
+    - `backend/tests/Feature/PageContentApiTest.php`
+
+- [x] **Task 22: Frontend Binding Tingkat 1 (Fase B)**
+  - **Description:** Implementasi `ContentProvider`, custom hook `useContent`, `useContentImage`, dan penggantian string/gambar hardcoded di Hero, Sejarah, Unggulan, Beranda, Footer, dan seluruh `PageHeader`.
+  - **Acceptance:** Tampilan web identik 100% dengan default awal; fast-refresh aman tanpa peringatan lint; fallback aktif bila backend offline.
+  - **Verify:** `npm run lint` -> 0 errors, 0 warnings; `npm run build` -> Sukses.
+  - **Files:**
+    - `frontend/src/context/contentContextInstance.js`
+    - `frontend/src/context/ContentContext.jsx`
+    - `frontend/src/hooks/useContent.js`
+    - `frontend/src/services/api.js`
+    - `frontend/src/data/mockData.js`
+    - `frontend/src/components/home/HeroSection.jsx`
+    - `frontend/src/components/home/HistorySection.jsx`
+    - `frontend/src/components/home/FeaturedSection.jsx`
+    - `frontend/src/components/layout/Footer.jsx`
+    - `frontend/src/pages/Home.jsx`
+    - Seluruh berkas halaman publik lainnya.
+
+- [x] **Task 23: Daftar Dinamis & Nav Items (Fase C)**
+  - **Description:** Tabel, model, seeder, dan Filament Resource untuk `access_routes`, `shopping_tips`, `building_rules`, dan `nav_items`. Endpoint publik `GET /api/visit-guide` dan `GET /api/nav-items`.
+  - **Acceptance:** Admin dapat menambah/mengedit/mengurutkan rute akses, tips belanja, tata tertib, dan navigasi navbar/footer. Frontend merender dinamis dengan fallback aman ke `visitGuide.js` dan navigasi bawaan.
+  - **Verify:** `ddev artisan test --filter=VisitGuideApiTest`, `ddev artisan test --filter=NavItemApiTest` -> ALL PASS.
+  - **Files:**
+    - `backend/database/migrations/2026_10_12_002701_create_dynamic_lists_and_nav_tables.php`
+    - `backend/app/Models/AccessRoute.php`
+    - `backend/app/Models/ShoppingTip.php`
+    - `backend/app/Models/BuildingRule.php`
+    - `backend/app/Models/NavItem.php`
+    - `backend/app/Filament/Resources/AccessRoutes/`
+    - `backend/app/Filament/Resources/ShoppingTips/`
+    - `backend/app/Filament/Resources/BuildingRules/`
+    - `backend/app/Filament/Resources/NavItems/`
+    - `frontend/src/pages/PlanYourVisit.jsx`
+    - `frontend/src/components/layout/Navbar.jsx`
+    - `frontend/src/components/layout/Footer.jsx`
+
+- [x] **Task 24: Halaman Hukum Rich-Text & Sanitasi XSS (Fase D)**
+  - **Description:** Tabel `legal_pages`, integrasi library HTMLPurifier pada model `LegalPage`, Filament Resource dengan toolbar aman, endpoint `GET /api/legal-pages/{slug}`, serta rendering di `PrivacyPolicy.jsx` & `TermsConditions.jsx`.
+  - **Acceptance:** Admin dapat mengubah pasal hukum secara visual; tag berbahaya (`<script>`, `onerror`, `javascript:`) otomatis disanitasi; fallback konten bawaan tetap ada.
+  - **Verify:** `ddev artisan test --filter=LegalPageApiTest` -> ALL PASS.
+  - **Files:**
+    - `backend/database/migrations/2026_10_12_003601_create_legal_pages_table.php`
+    - `backend/app/Models/LegalPage.php`
+    - `backend/app/Filament/Resources/LegalPages/`
+    - `backend/app/Http/Controllers/Api/LegalPageController.php`
+    - `backend/database/seeders/LegalPageSeeder.php`
+    - `frontend/src/pages/PrivacyPolicy.jsx`
+    - `frontend/src/pages/TermsConditions.jsx`
+
+- [x] **Task 25: SEO Meta & Trigger Rebuild Netlify (Fase E)**
+  - **Description:** Hook `useDocumentMeta` untuk runtime SEO per halaman, integrasi CMS meta title/description/OG ke `prerender.js`, serta tombol header action "Terbitkan Perubahan ke Website" di Filament `ListPageContents` yang memicu Netlify build hook (`FRONTEND_DEPLOY_HOOK_URL`).
+  - **Acceptance:** Meta tag terinjeksi ke HTML SSG saat build; tombol memicu HTTP POST ke Netlify dengan dialog konfirmasi dan notifikasi status.
+  - **Verify:** `npm run build` sukses menjalankan prerenderer; backend test hijau.
+  - **Files:**
+    - `frontend/src/hooks/useDocumentMeta.js`
+    - `frontend/scripts/prerender.js`
+    - `backend/app/Filament/Resources/PageContents/Pages/ListPageContents.php`
+    - `backend/config/services.php`
+    - `backend/.env.example`
+
+- [x] **Task 26: Dokumentasi Admin & Panduan Demo (Fase F)**
+  - **Description:** Pembuatan panduan komprehensif ramah pengguna awam (`PANDUAN_ADMIN.md`) dan panduan arsitektur publikasi demo Netlify + DDEV (`DEMO_PUBLISH.md`), serta pembaruan `SPECIFICATION.md` & `TASKS.md`.
+  - **Acceptance:** Panduan menjelaskan langkah operasional secara lugas dan jelas bagi pengelola non-IT; langkah demo DDEV share terdokumentasi terinci.
+  - **Verify:** Seluruh dokumen tersaji rapi dan valid.
+  - **Files:**
+    - `docs/PANDUAN_ADMIN.md`
+    - `docs/DEMO_PUBLISH.md`
+    - `docs/SPECIFICATION.md`
+    - `docs/TASKS.md`
 

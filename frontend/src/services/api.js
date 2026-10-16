@@ -4,9 +4,15 @@ import {
   MOCK_TENANTS,
   MOCK_FACILITIES,
   MOCK_WHATS_ON,
+  MOCK_SITE_SETTINGS,
+  MOCK_PAGE_CONTENTS,
+  MOCK_VISIT_GUIDE,
+  MOCK_NAV_ITEMS,
+  MOCK_LEGAL_PAGES,
 } from '../data/mockData';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+const DEFAULT_HEADERS = { 'ngrok-skip-browser-warning': '1' };
 
 // Strict environment isolation: Mock data is ONLY allowed during local npm run dev
 const isDev = import.meta.env.DEV;
@@ -22,7 +28,7 @@ export async function fetchCategories(type = null) {
 
   try {
     const url = type ? `${API_BASE_URL}/categories?type=${type}` : `${API_BASE_URL}/categories`;
-    const res = await fetch(url, { signal: AbortSignal.timeout(4000) });
+    const res = await fetch(url, { headers: DEFAULT_HEADERS, signal: AbortSignal.timeout(4000) });
     if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to fetch categories`);
     const json = await res.json();
     return json.data || [];
@@ -42,7 +48,7 @@ export async function fetchFloors() {
   if (isMockForced) return MOCK_FLOORS;
 
   try {
-    const res = await fetch(`${API_BASE_URL}/floors`, { signal: AbortSignal.timeout(4000) });
+    const res = await fetch(`${API_BASE_URL}/floors`, { headers: DEFAULT_HEADERS, signal: AbortSignal.timeout(4000) });
     if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to fetch floors`);
     const json = await res.json();
     return json.data || [];
@@ -74,7 +80,10 @@ export async function fetchTenants(params = {}) {
   }
 
   try {
-    const res = await fetch(`${API_BASE_URL}/tenants?${query.toString()}`, { signal: AbortSignal.timeout(4000) });
+    const res = await fetch(`${API_BASE_URL}/tenants?${query.toString()}`, {
+      headers: DEFAULT_HEADERS,
+      signal: AbortSignal.timeout(4000),
+    });
     if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to fetch tenants`);
     const json = await res.json();
     return {
@@ -144,7 +153,10 @@ export async function fetchTenantBySlug(slug) {
   }
 
   try {
-    const res = await fetch(`${API_BASE_URL}/tenants/${slug}`, { signal: AbortSignal.timeout(4000) });
+    const res = await fetch(`${API_BASE_URL}/tenants/${slug}`, {
+      headers: DEFAULT_HEADERS,
+      signal: AbortSignal.timeout(4000),
+    });
     if (!res.ok) {
       if (res.status === 404) throw new Error('NOT_FOUND');
       throw new Error(`HTTP ${res.status}: Failed to fetch tenant`);
@@ -170,7 +182,10 @@ export async function fetchFacilities() {
   if (isMockForced) return MOCK_FACILITIES;
 
   try {
-    const res = await fetch(`${API_BASE_URL}/facilities`, { signal: AbortSignal.timeout(4000) });
+    const res = await fetch(`${API_BASE_URL}/facilities`, {
+      headers: DEFAULT_HEADERS,
+      signal: AbortSignal.timeout(4000),
+    });
     if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to fetch facilities`);
     const json = await res.json();
     return json.data || [];
@@ -193,7 +208,10 @@ export async function fetchWhatsOn(type = null) {
 
   try {
     const url = type ? `${API_BASE_URL}/whats-on?type=${type}` : `${API_BASE_URL}/whats-on`;
-    const res = await fetch(url, { signal: AbortSignal.timeout(4000) });
+    const res = await fetch(url, {
+      headers: DEFAULT_HEADERS,
+      signal: AbortSignal.timeout(4000),
+    });
     if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to fetch whats-on`);
     const json = await res.json();
     return json.data || [];
@@ -217,7 +235,10 @@ export async function fetchWhatsOnBySlug(slug) {
   }
 
   try {
-    const res = await fetch(`${API_BASE_URL}/whats-on/${slug}`, { signal: AbortSignal.timeout(4000) });
+    const res = await fetch(`${API_BASE_URL}/whats-on/${slug}`, {
+      headers: DEFAULT_HEADERS,
+      signal: AbortSignal.timeout(4000),
+    });
     if (!res.ok) {
       if (res.status === 404) throw new Error('NOT_FOUND');
       throw new Error(`HTTP ${res.status}: Failed to fetch agenda detail`);
@@ -244,6 +265,7 @@ export async function submitContactMessage(formData) {
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
+      ...DEFAULT_HEADERS,
     },
     body: JSON.stringify(formData),
   });
@@ -259,3 +281,121 @@ export async function submitContactMessage(formData) {
 
   return json;
 }
+
+/**
+ * Fetch site settings (key-value dictionary)
+ */
+export async function fetchSiteSettings() {
+  if (isMockForced) return MOCK_SITE_SETTINGS;
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/site-settings`, {
+      headers: { 'ngrok-skip-browser-warning': '1' },
+      signal: AbortSignal.timeout(4000),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to fetch site settings`);
+    const json = await res.json();
+    return json.data || {};
+  } catch (err) {
+    if (isDev) {
+      console.warn('[DEV ONLY] Backend unavailable, using mock site settings:', err.message);
+      return MOCK_SITE_SETTINGS;
+    }
+    throw err;
+  }
+}
+
+/**
+ * Fetch page contents (key-value dictionary of all CMS texts & images)
+ */
+export async function fetchPageContents() {
+  if (isMockForced) return MOCK_PAGE_CONTENTS;
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/page-contents`, {
+      headers: { 'ngrok-skip-browser-warning': '1' },
+      signal: AbortSignal.timeout(4000),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to fetch page contents`);
+    const json = await res.json();
+    return json.data || {};
+  } catch (err) {
+    if (isDev) {
+      console.warn('[DEV ONLY] Backend unavailable, using mock page contents:', err.message);
+      return MOCK_PAGE_CONTENTS;
+    }
+    throw err;
+  }
+}
+
+/**
+ * Fetch visit guide data (access routes, shopping tips, building rules)
+ */
+export async function fetchVisitGuide() {
+  if (isMockForced) return MOCK_VISIT_GUIDE;
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/visit-guide`, {
+      headers: { 'ngrok-skip-browser-warning': '1' },
+      signal: AbortSignal.timeout(4000),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to fetch visit guide`);
+    const json = await res.json();
+    return json.data || {};
+  } catch (err) {
+    if (isDev) {
+      console.warn('[DEV ONLY] Backend unavailable, using mock visit guide:', err.message);
+      return MOCK_VISIT_GUIDE;
+    }
+    throw err;
+  }
+}
+
+/**
+ * Fetch navigation items (header & footer links)
+ */
+export async function fetchNavItems() {
+  if (isMockForced) return MOCK_NAV_ITEMS;
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/nav-items`, {
+      headers: { 'ngrok-skip-browser-warning': '1' },
+      signal: AbortSignal.timeout(4000),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to fetch nav items`);
+    const json = await res.json();
+    return json.data || { header: [], footer: [] };
+  } catch (err) {
+    if (isDev) {
+      console.warn('[DEV ONLY] Backend unavailable, using mock nav items:', err.message);
+      return MOCK_NAV_ITEMS;
+    }
+    throw err;
+  }
+}
+
+/**
+ * Fetch legal page by slug (e.g. kebijakan-privasi, syarat-ketentuan)
+ */
+export async function fetchLegalPage(slug) {
+  if (isMockForced) return MOCK_LEGAL_PAGES[slug] || null;
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/legal-pages/${slug}`, {
+      headers: { 'ngrok-skip-browser-warning': '1' },
+      signal: AbortSignal.timeout(4000),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to fetch legal page`);
+    const json = await res.json();
+    return json.data || null;
+  } catch (err) {
+    if (isDev) {
+      console.warn('[DEV ONLY] Backend unavailable, using mock legal page:', slug, err.message);
+      return MOCK_LEGAL_PAGES[slug] || null;
+    }
+    throw err;
+  }
+}
+
+
+

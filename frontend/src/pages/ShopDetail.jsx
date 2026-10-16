@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { MapPin, Clock, MessageCircle, ShieldCheck, Share2 } from 'lucide-react';
+import { MapPin, Clock, MessageCircle, Share2 } from 'lucide-react';
 import { InstagramIcon } from '../components/ui/InstagramIcon';
 import { Container } from '../components/layout/Container';
 import { Button } from '../components/ui/Button';
 import { fetchTenantBySlug } from '../services/api';
 import { generateWhatsAppLink } from '../utils/whatsapp';
+import { getWitaOperatingStatus } from '../utils/hours';
 
-const FALLBACK_SHOP_IMAGE = 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=1200&q=80';
+const FALLBACK_SHOP_IMAGE = 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80';
 
 export function ShopDetail() {
   const { slug } = useParams();
@@ -26,7 +27,7 @@ export function ShopDetail() {
         const data = await fetchTenantBySlug(slug);
         if (isCancelled) return;
 
-        // Type Guard: If this tenant is culinary, replace redirect to /kuliner/:slug
+        // Type Guard: If this tenant is culinary, redirect via replace to /kuliner/:slug
         if (data.category?.type === 'culinary') {
           navigate(`/kuliner/${slug}`, { replace: true });
           return;
@@ -53,11 +54,14 @@ export function ShopDetail() {
     return (
       <div className="py-16">
         <Container>
-          <div className="max-w-4xl mx-auto flex flex-col gap-6 animate-pulse">
-            <div className="w-48 h-5 bg-surface-muted rounded-sm" />
-            <div className="w-full aspect-[4/3] md:aspect-[16/9] bg-surface-muted rounded-md" />
-            <div className="w-3/4 h-8 bg-surface-muted rounded-sm" />
-            <div className="w-1/2 h-4 bg-surface-muted rounded-sm" />
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 animate-pulse">
+            <div className="w-full aspect-[4/3] bg-surface-muted rounded-md" />
+            <div className="flex flex-col gap-4">
+              <div className="w-32 h-4 bg-surface-muted rounded-sm" />
+              <div className="w-3/4 h-8 bg-surface-muted rounded-sm" />
+              <div className="w-1/2 h-4 bg-surface-muted rounded-sm" />
+              <div className="w-full h-24 bg-surface-muted rounded-sm mt-4" />
+            </div>
           </div>
         </Container>
       </div>
@@ -71,7 +75,7 @@ export function ShopDetail() {
           <div className="max-w-md mx-auto p-8 bg-surface-subtle border border-border-subtle rounded-md">
             <h2 className="text-xl font-bold text-text-primary tracking-tight">Kios Tidak Ditemukan</h2>
             <p className="text-sm text-text-secondary mt-2">
-              Kios yang Anda cari mungkin telah pindah unit atau alamat URL salah.
+              Kios yang Anda cari mungkin telah pindah unit atau tautan tidak valid.
             </p>
             <Button
               variant="primary"
@@ -87,14 +91,7 @@ export function ShopDetail() {
   }
 
   const waLink = generateWhatsAppLink(tenant.phone_whatsapp, tenant.name);
-
-  // Format jam buka terstruktur
-  let hoursDisplay = tenant.opening_hours || '09.00 - 18.00 WITA';
-  if (tenant.opening_time && tenant.closing_time) {
-    const open = tenant.opening_time.slice(0, 5);
-    const close = tenant.closing_time.slice(0, 5);
-    hoursDisplay = `${open} - ${close} WITA`;
-  }
+  const hours = getWitaOperatingStatus(tenant.opening_time, tenant.closing_time);
 
   const handleShare = () => {
     if (navigator.clipboard) {
@@ -120,9 +117,10 @@ export function ShopDetail() {
           <span className="text-text-primary font-medium line-clamp-1">{tenant.name}</span>
         </nav>
 
-        <div className="max-w-4xl mx-auto flex flex-col gap-8">
-          {/* Main Photo (Clean, Unobstructed Frame) */}
-          <div className="relative w-full aspect-[4/3] md:aspect-[16/9] bg-surface-muted rounded-md overflow-hidden border border-border-subtle shadow-card">
+        {/* 2-Column Responsive Layout per DESIGN.md */}
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-start">
+          {/* Left Column: Fixed 4:3 Photographic Frame */}
+          <div className="w-full aspect-[4/3] bg-surface-muted rounded-md overflow-hidden border border-border-subtle shadow-card">
             <img
               src={tenant.image_url || FALLBACK_SHOP_IMAGE}
               alt={tenant.name}
@@ -135,112 +133,94 @@ export function ShopDetail() {
             />
           </div>
 
-          {/* Info Header */}
-          <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 pb-6 border-b border-border-subtle">
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2 text-xs text-brand-primary font-semibold tracking-wide">
-                <span>{tenant.category?.name || 'Direktori Belanja'}</span>
-                {tenant.is_featured && (
-                  <>
-                    <span>•</span>
-                    <span className="text-gold-text">Pilihan Pengunjung</span>
-                  </>
-                )}
-              </div>
-
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-text-primary">
-                {tenant.name}
-              </h1>
-
-              <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-text-secondary mt-1">
-                <div className="flex items-center gap-1.5 font-medium text-text-primary">
-                  <MapPin size={15} className="text-brand-primary" />
-                  <span>
-                    {tenant.floor?.name || 'Lantai Dasar'} • {tenant.unit_number || 'Unit Kios'}
-                  </span>
-                </div>
-                <span>•</span>
-                <div className="flex items-center gap-1.5 text-text-secondary">
-                  <Clock size={15} />
-                  <span>
-                    {tenant.days_open || 'Setiap Hari'}, {hoursDisplay}
-                  </span>
-                </div>
+          {/* Right Column: Identity, Details, and WhatsApp Action */}
+          <div className="flex flex-col gap-5">
+            {/* Category Tag & Featured Indicator */}
+            <div className="flex items-center justify-between gap-2 border-b border-border-subtle pb-3">
+              <span className="text-xs font-semibold uppercase tracking-wider text-text-muted">
+                {tenant.category?.name || 'Direktori Belanja'}
+              </span>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={handleShare}
+                  className="inline-flex items-center gap-1 text-xs text-text-muted hover:text-text-primary transition-colors cursor-pointer"
+                  title="Bagikan tautan kios"
+                >
+                  <Share2 size={13} />
+                  <span>{copied ? 'Tersalin' : 'Bagikan'}</span>
+                </button>
               </div>
             </div>
 
-            {/* Quick Share Button */}
-            <button
-              type="button"
-              onClick={handleShare}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[44px] text-xs font-medium text-text-secondary border border-border-subtle rounded-sm hover:bg-surface-subtle hover:text-text-primary transition-all cursor-pointer self-start active:bg-surface-muted"
-            >
-              <Share2 size={14} />
-              <span>{copied ? 'Tautan Disalin' : 'Bagikan Kios'}</span>
-            </button>
-          </div>
+            {/* Shop Name (H1, Weight 700) */}
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary leading-tight">
+              {tenant.name}
+            </h1>
 
-          {/* Grid Content: Description & Contact Card */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
-            {/* Left 2 Cols: Description & Details */}
-            <div className="md:col-span-2 flex flex-col gap-6">
-              <div>
-                <h2 className="text-sm font-semibold text-text-primary mb-2">
-                  Profil & Koleksi Kios
-                </h2>
-                <p className="text-sm sm:text-base text-text-secondary leading-relaxed whitespace-pre-line max-w-prose">
-                  {tenant.description ||
-                    'Kios resmi cagar budaya di Plaza Kebun Sayur. Menyediakan beragam koleksi berkualitas langsung dari pengrajin terpercaya.'}
-                </p>
-              </div>
-
-              {/* Guarantees Box */}
-              <div className="p-4 bg-surface-subtle border border-border-subtle rounded-md flex items-start gap-3">
-                <ShieldCheck size={18} className="text-brand-primary shrink-0 mt-0.5" />
-                <div className="text-xs text-text-secondary leading-relaxed">
-                  <span className="font-semibold block text-text-primary mb-0.5">Pedagang Terdaftar Plaza Kebun Sayur</span>
-                  Semua transaksi berlangsung langsung antara pengunjung dan pengrajin/pedagang. Silakan hubungi langsung untuk memeriksa stok permata, ikat cincin, atau cenderamata.
-                </div>
-              </div>
+            {/* Location (Floor & Unit) */}
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-text-primary font-medium">
+              <MapPin size={15} className="text-brand-primary shrink-0" />
+              <span>
+                {tenant.floor?.name || tenant.floor?.code || 'Lantai Dasar'}{tenant.unit_number ? ` • ${tenant.unit_number}` : ''}
+              </span>
             </div>
 
-            {/* Right Col: Action & Contact Box */}
-            <div className="flex flex-col gap-4 p-5 sm:p-6 bg-surface-subtle border border-border-subtle rounded-md sticky top-24">
-              <div>
-                <h3 className="font-bold text-sm text-text-primary tracking-tight">
-                  Hubungi Pedagang
-                </h3>
-                <p className="text-xs text-text-secondary mt-1 leading-relaxed">
-                  Tanyakan harga, foto detail batu mulia, atau ketersediaan stok via WhatsApp.
-                </p>
-              </div>
+            {/* Operating Hours in WITA */}
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-text-secondary">
+              <Clock size={15} className="text-mono-400 shrink-0" />
+              <span>{hours.hoursText}</span>
+              {hours.statusLabel && (
+                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${hours.isOpen ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-surface-muted text-text-muted'}`}>
+                  {hours.statusLabel}
+                </span>
+              )}
+            </div>
 
-              <a
-                href={waLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full flex items-center justify-center gap-2 py-3 px-4 text-xs font-bold uppercase tracking-wider text-white bg-whatsapp hover:bg-emerald-700 active:bg-emerald-800 rounded-sm transition-all min-h-[44px]"
-              >
-                <MessageCircle size={16} />
-                <span>Chat via WhatsApp</span>
-              </a>
+            {/* Description */}
+            <div className="pt-2 border-t border-border-subtle">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-text-muted mb-2">
+                Deskripsi Kios
+              </h2>
+              <p className="text-sm text-text-secondary leading-relaxed whitespace-pre-line max-w-[68ch]">
+                {tenant.description || 'Kios resmi pedagang di kawasan Plaza Kebun Sayur Balikpapan.'}
+              </p>
+            </div>
+
+            {/* Direct WhatsApp Action Button (Wording: Chat Penjual, Min 44px) */}
+            <div className="pt-3 flex flex-col gap-3">
+              {tenant.phone_whatsapp ? (
+                <a
+                  href={waLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full min-h-[44px] flex items-center justify-center gap-2 py-3 px-5 text-xs font-bold uppercase tracking-wider text-white bg-whatsapp hover:bg-emerald-700 active:bg-emerald-800 rounded-sm transition-colors cursor-pointer"
+                  title={`Chat WhatsApp dengan ${tenant.name}`}
+                >
+                  <MessageCircle size={16} />
+                  <span>Chat Penjual</span>
+                </a>
+              ) : (
+                <div className="w-full min-h-[44px] flex items-center justify-center gap-2 py-2.5 px-4 text-xs font-medium text-text-muted bg-surface-muted border border-border-subtle rounded-sm">
+                  <span>Kontak WhatsApp belum tersedia</span>
+                </div>
+              )}
 
               {tenant.instagram && (
                 <a
                   href={`https://instagram.com/${tenant.instagram.replace('@', '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2 py-2.5 px-4 text-xs font-semibold text-text-primary bg-canvas border border-border-subtle hover:bg-surface-subtle rounded-sm transition-all min-h-[44px]"
+                  className="w-full min-h-[44px] flex items-center justify-center gap-2 py-2.5 px-4 text-xs font-semibold text-text-primary bg-canvas border border-border-subtle hover:bg-surface-subtle active:bg-surface-muted rounded-sm transition-colors"
                 >
                   <InstagramIcon size={14} />
                   <span>{tenant.instagram}</span>
                 </a>
               )}
 
-              <div className="pt-3 border-t border-border-subtle text-xs text-text-muted leading-relaxed flex items-center gap-1.5">
-                <MapPin size={14} className="shrink-0" />
-                <span>Balikpapan Barat • Pasar Inpres Kebun Sayur</span>
-              </div>
+              <span className="text-xs text-text-muted pt-1">
+                Lokasi: Pasar Inpres Kebun Sayur, Jl. Letjen Suprapto, Balikpapan Barat
+              </span>
             </div>
           </div>
         </div>

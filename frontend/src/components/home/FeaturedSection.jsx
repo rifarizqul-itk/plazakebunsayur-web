@@ -3,10 +3,13 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Container } from '../layout/Container';
 import { TenantCard } from '../directory/TenantCard';
+import { useContent } from '../../hooks/useContent';
 
 export function FeaturedSection({ retailTenants = [], culinaryTenants = [] }) {
   const featuredRetail = retailTenants.slice(0, 4);
   const featuredCulinary = culinaryTenants.slice(0, 4);
+  const retailTitle = useContent('home.featured.title', 'Kios Belanja Pilihan');
+  const culinaryTitle = useContent('home.featured.culinary_title', 'Kuliner Khas Balikpapan');
 
   return (
     <section className="py-16 sm:py-20 bg-surface-subtle border-b border-border-subtle">
@@ -14,8 +17,8 @@ export function FeaturedSection({ retailTenants = [], culinaryTenants = [] }) {
         {/* 1. Featured Retail Section */}
         <div className="flex flex-col gap-6">
           <div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-text-primary">
-              Kios Belanja Pilihan
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">
+              {retailTitle}
             </h2>
           </div>
 
@@ -39,8 +42,8 @@ export function FeaturedSection({ retailTenants = [], culinaryTenants = [] }) {
         {/* 2. Featured Culinary Section */}
         <div className="flex flex-col gap-6 mt-16 sm:mt-20 pt-12 border-t border-border-subtle">
           <div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-text-primary">
-              Kuliner Khas Balikpapan
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">
+              {culinaryTitle}
             </h2>
           </div>
 

@@ -1,13 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapPin, Phone, MessageCircle, Mail, Clock, Send, CheckCircle2, AlertCircle } from 'lucide-react';
 import { PageHeader } from '../components/layout/PageHeader';
 import { Container } from '../components/layout/Container';
 import { Input, Textarea } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
-import { submitContactMessage } from '../services/api';
+import { submitContactMessage, fetchSiteSettings } from '../services/api';
 import { generateManagementWhatsAppLink } from '../utils/whatsapp';
+import { useContent } from '../hooks/useContent';
+import { useDocumentMeta } from '../hooks/useDocumentMeta';
 
 export function ContactPage() {
+  const metaTitle = useContent('seo.kontak.title', 'Kontak & Pengaduan | Plaza Kebun Sayur Balikpapan');
+  const metaDesc = useContent('seo.kontak.description', 'Hubungi kantor manajemen Plaza Kebun Sayur Balikpapan untuk informasi sewa tempat, perizinan acara, dan layanan pengaduan.');
+  useDocumentMeta(metaTitle, metaDesc);
+
+  const headerEyebrow = useContent('header.kontak.eyebrow', 'Pusat Bantuan & Layanan');
+  const headerTitle = useContent('header.kontak.title', 'Hubungi Pengelola Plaza Kebun Sayur');
+  const headerDesc = useContent(
+    'header.kontak.description',
+    'Punya pertanyaan seputar fasilitas gedung, agenda kunjungan rombongan, atau barang tertinggal? Tim pengelola mall siap membantu Anda.'
+  );
+
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
@@ -20,8 +33,25 @@ export function ContactPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [siteSettings, setSiteSettings] = useState(null);
 
-  const waLink = generateManagementWhatsAppLink('081234567890');
+  useEffect(() => {
+    let isMounted = true;
+    fetchSiteSettings()
+      .then((settings) => {
+        if (isMounted) setSiteSettings(settings);
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const waLink = generateManagementWhatsAppLink(siteSettings?.management_whatsapp || '080000000000');
+  const officeAddress = siteSettings?.office_address || 'Lantai Dasar (Dekat Pintu Masuk Timur), Jl. Letjen Suprapto, Kebun Sayur, Balikpapan Barat 76131';
+  const mallHours = siteSettings?.mall_opening_hours || '08.00 – 18.00 WITA';
+  const securityPhone = siteSettings?.security_phone || '(0542) 734567';
+  const managementEmail = siteSettings?.management_email || 'pengelola@plazakebunsayur.com';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -55,9 +85,9 @@ export function ContactPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <PageHeader
-        eyebrow="Pusat Bantuan & Layanan"
-        title="Hubungi Pengelola Plaza Kebun Sayur"
-        description="Punya pertanyaan seputar fasilitas gedung, agenda kunjungan rombongan, atau barang tertinggal? Tim pengelola mall siap membantu Anda."
+        eyebrow={headerEyebrow}
+        title={headerTitle}
+        description={headerDesc}
       />
 
       <section className="py-12 sm:py-16 bg-canvas flex-1">
@@ -77,46 +107,46 @@ export function ContactPage() {
                 </p>
               </div>
 
-              <div className="flex flex-col gap-3 text-xs sm:text-sm">
-                <div className="p-4 bg-surface-subtle border border-border-subtle rounded-md flex items-start gap-3.5">
+              <div className="divide-y divide-border-subtle text-xs sm:text-sm">
+                <div className="py-4 first:pt-0 flex items-start gap-3.5">
                   <MapPin size={18} className="text-brand-primary shrink-0 mt-0.5" />
                   <div>
                     <strong className="block text-text-primary text-sm font-semibold">Kantor Pengelola Gedung</strong>
                     <span className="text-text-secondary leading-relaxed text-xs sm:text-sm">
-                      Lantai Dasar (Dekat Pintu Masuk Timur), Jl. Letjen Suprapto, Kebun Sayur, Balikpapan Barat 76131
+                      {officeAddress}
                     </span>
                   </div>
                 </div>
 
-                <div className="p-4 bg-surface-subtle border border-border-subtle rounded-md flex items-start gap-3.5">
+                <div className="py-4 flex items-start gap-3.5">
                   <Clock size={18} className="text-brand-primary shrink-0 mt-0.5" />
                   <div>
-                    <strong className="block text-text-primary text-sm font-semibold">Jam Kerja Kantor Pengelola</strong>
+                    <strong className="block text-text-primary text-sm font-semibold">Jam Operasional Mall</strong>
                     <span className="text-text-secondary">
-                      Senin – Sabtu: 08.30 – 17.00 WITA (Hari Minggu & Libur via WhatsApp Siaga)
+                      {mallHours}
                     </span>
                   </div>
                 </div>
 
-                <div className="p-4 bg-surface-subtle border border-border-subtle rounded-md flex items-start gap-3.5">
+                <div className="py-4 flex items-start gap-3.5">
                   <Phone size={18} className="text-brand-primary shrink-0 mt-0.5" />
                   <div>
-                    <strong className="block text-text-primary text-sm font-semibold">Telepon Darurat / Pos Keamanan</strong>
-                    <span className="text-text-secondary">(0542) 734567 / 0812-3456-7890</span>
+                    <strong className="block text-text-primary text-sm font-semibold">Telepon Pos Keamanan</strong>
+                    <span className="text-text-secondary">{securityPhone}</span>
                   </div>
                 </div>
 
-                <div className="p-4 bg-surface-subtle border border-border-subtle rounded-md flex items-start gap-3.5">
+                <div className="py-4 last:pb-0 flex items-start gap-3.5">
                   <Mail size={18} className="text-brand-primary shrink-0 mt-0.5" />
                   <div>
                     <strong className="block text-text-primary text-sm font-semibold">Email Resmi Pengelola</strong>
-                    <span className="text-text-secondary">info@plazakebunsayur.com</span>
+                    <span className="text-text-secondary">{managementEmail}</span>
                   </div>
                 </div>
               </div>
 
               {/* Direct WhatsApp Action Button */}
-              <div className="pt-1">
+              <div className="pt-2">
                 <a
                   href={waLink}
                   target="_blank"
@@ -130,7 +160,7 @@ export function ContactPage() {
             </div>
 
             {/* Right 7 Cols: Public Contact Form */}
-            <div className="lg:col-span-7 bg-surface-subtle border border-border-subtle p-6 sm:p-8 rounded-md">
+            <div className="lg:col-span-7 bg-surface-subtle border border-border-subtle p-6 sm:p-8 rounded-sm">
               <div className="mb-6">
                 <h3 className="text-lg font-bold text-text-primary">Kirim Pesan atau Pertanyaan</h3>
                 <p className="text-xs text-text-secondary mt-1">
@@ -139,7 +169,7 @@ export function ContactPage() {
               </div>
 
               {success && (
-                <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-md flex items-start gap-3 text-xs sm:text-sm">
+                <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-sm flex items-start gap-3 text-xs sm:text-sm">
                   <CheckCircle2 size={18} className="shrink-0 mt-0.5" />
                   <div>
                     <span className="font-bold block">Pesan Berhasil Terkirim!</span>
@@ -149,7 +179,7 @@ export function ContactPage() {
               )}
 
               {errorMsg && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-md flex items-start gap-3 text-xs sm:text-sm">
+                <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-sm flex items-start gap-3 text-xs sm:text-sm">
                   <AlertCircle size={18} className="shrink-0 mt-0.5" />
                   <div>
                     <span className="font-bold block">Terjadi Kendala</span>
@@ -228,7 +258,7 @@ export function ContactPage() {
                   className="mt-2 w-full sm:w-auto self-start"
                 >
                   <Send size={16} className="mr-2" />
-                  <span>{loading ? 'Mengirim Pesan...' : 'Kirim Pesan Sekarang'}</span>
+                  <span>{loading ? 'Mengirim pesan...' : 'Kirim pesan'}</span>
                 </Button>
               </form>
             </div>

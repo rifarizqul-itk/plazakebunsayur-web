@@ -1,13 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import { Search, ChevronRight, RotateCcw, BookOpen } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
+import { Search, RotateCcw } from 'lucide-react';
 import { Container } from '../components/layout/Container';
 import { TenantCard } from '../components/directory/TenantCard';
+import { CategoryFilter } from '../components/directory/CategoryFilter';
 import { SkeletonCard } from '../components/ui/SkeletonCard';
 import { PaginationControls } from '../components/ui/PaginationControls';
 import { fetchCategories, fetchFloors, fetchTenants } from '../services/api';
+import { useContent } from '../hooks/useContent';
+import { useDocumentMeta } from '../hooks/useDocumentMeta';
 
 export function ShoppingDirectory() {
+  const metaTitle = useContent('seo.belanja.title', 'Direktori Kios Belanja | Plaza Kebun Sayur Balikpapan');
+  const metaDesc = useContent('seo.belanja.description', 'Katalog lengkap kios batu mulia, perhiasan, suvenir Dayak, batik, dan kerajinan tradisional di Pasar Inpres Kebun Sayur Balikpapan.');
+  useDocumentMeta(metaTitle, metaDesc);
+
+  const headerTitle = useContent('header.belanja.title', 'Direktori Kios Belanja');
+  const headerDesc = useContent(
+    'header.belanja.description',
+    'Cari kios batu akik, permata, kerajinan Dayak Kenyah, perhiasan emas perak, dan cinderamata khas Kalimantan.'
+  );
+
   const [searchParams, setSearchParams] = useSearchParams();
   const initialQuery = searchParams.get('q') || '';
 
@@ -103,31 +116,21 @@ export function ShoppingDirectory() {
 
   return (
     <div className="flex flex-col min-h-screen bg-canvas">
-      {/* 1. Breadcrumbs ala YasMall */}
-      <div className="bg-surface-subtle border-b border-border-subtle py-3 text-xs text-text-muted">
-        <Container>
-          <div className="flex items-center gap-2">
-            <Link to="/" className="hover:text-text-primary transition-colors">
-              Beranda
-            </Link>
-            <ChevronRight size={12} />
-            <span className="text-text-primary font-semibold">Direktori Belanja</span>
-          </div>
-        </Container>
-      </div>
-
       <section className="py-8 sm:py-12 flex-1">
         <Container>
-          {/* 2. YasMall-Style Integrated Search & Filter Block */}
-          <div className="p-6 sm:p-8 bg-surface-subtle border border-border-subtle rounded-md mb-8">
-            <h1 className="text-xl sm:text-2xl font-bold uppercase tracking-tight text-text-primary mb-6">
-              Pencarian Kios & Toko Belanja
+          {/* 2. Header & Search / Floor Filter Block */}
+          <div className="p-6 sm:p-8 bg-surface-subtle border border-border-subtle rounded-md mb-6">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary mb-2">
+              {headerTitle}
             </h1>
+            <p className="text-xs sm:text-sm text-text-secondary mb-6 max-w-[68ch]">
+              {headerDesc}
+            </p>
 
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
               {/* Keyword Input */}
-              <div className="md:col-span-4 flex flex-col gap-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-text-secondary">
+              <div className="md:col-span-8 flex flex-col gap-1.5">
+                <label className="text-xs font-semibold uppercase tracking-wider text-text-secondary">
                   Kata Kunci Pencarian
                 </label>
                 <div className="relative">
@@ -138,38 +141,16 @@ export function ShoppingDirectory() {
                       setSearchQuery(e.target.value);
                       setCurrentPage(1);
                     }}
-                    placeholder="Contoh: batu akik, cincin, mandau..."
-                    className="w-full px-3.5 py-2.5 min-h-[44px] text-xs bg-canvas border border-border-subtle text-text-primary placeholder:text-text-muted focus:outline-none focus:border-brand-primary rounded-sm"
+                    placeholder="Cari nama kios, nomor unit, atau jenis batu..."
+                    className="w-full px-3.5 py-2.5 min-h-[44px] text-xs bg-canvas border border-border-input text-text-primary placeholder:text-text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-primary focus:border-brand-primary rounded-sm"
                   />
-                  <Search size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+                  <Search size={15} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
                 </div>
               </div>
 
-              {/* Category Dropdown */}
-              <div className="md:col-span-3 flex flex-col gap-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-text-secondary">
-                  Kategori Produk
-                </label>
-                <select
-                  value={selectedCatId || ''}
-                  onChange={(e) => {
-                    setSelectedCatId(e.target.value ? Number(e.target.value) : null);
-                    setCurrentPage(1);
-                  }}
-                  className="w-full px-3 py-2.5 min-h-[44px] text-xs bg-canvas border border-border-subtle text-text-primary focus:outline-none focus:border-brand-primary rounded-sm"
-                >
-                  <option value="">Semua Kategori Belanja</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
               {/* Floor Dropdown */}
-              <div className="md:col-span-2 flex flex-col gap-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-text-secondary">
+              <div className="md:col-span-3 flex flex-col gap-1.5">
+                <label className="text-xs font-semibold uppercase tracking-wider text-text-secondary">
                   Lantai Gedung
                 </label>
                 <select
@@ -178,7 +159,7 @@ export function ShoppingDirectory() {
                     setSelectedFloorId(e.target.value ? Number(e.target.value) : null);
                     setCurrentPage(1);
                   }}
-                  className="w-full px-3 py-2.5 min-h-[44px] text-xs bg-canvas border border-border-subtle text-text-primary focus:outline-none focus:border-brand-primary rounded-sm"
+                  className="w-full px-3 py-2.5 min-h-[44px] text-xs bg-canvas border border-border-input text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-primary focus:border-brand-primary rounded-sm cursor-pointer"
                 >
                   <option value="">Semua Lantai</option>
                   {floors.map((flr) => (
@@ -189,30 +170,42 @@ export function ShoppingDirectory() {
                 </select>
               </div>
 
-              {/* Action Buttons */}
-              <div className="md:col-span-3 flex items-center gap-2">
-                <Link
-                  to="/panduan-kunjungan"
-                  className="flex-1 py-2.5 px-3 min-h-[44px] bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white font-bold text-xs uppercase tracking-wider text-center transition-colors rounded-sm inline-flex items-center justify-center gap-1.5"
-                >
-                  <BookOpen size={13} />
-                  <span>Panduan Mall</span>
-                </Link>
-                {(searchQuery || selectedCatId || selectedFloorId) && (
+              {/* Reset Filter Button */}
+              <div className="md:col-span-1 flex items-center">
+                {(searchQuery || selectedCatId || selectedFloorId) ? (
                   <button
                     type="button"
                     onClick={handleResetFilters}
-                    className="p-2.5 min-h-[44px] min-w-[44px] bg-canvas hover:bg-surface-subtle border border-border-subtle text-text-primary transition-colors rounded-sm flex items-center justify-center"
+                    className="w-full min-h-[44px] bg-canvas hover:bg-surface-subtle active:bg-surface-muted border border-border-input text-text-primary transition-colors rounded-sm flex items-center justify-center cursor-pointer"
                     title="Reset Filter"
+                    aria-label="Reset Filter"
                   >
                     <RotateCcw size={15} />
                   </button>
+                ) : (
+                  <div className="hidden md:block w-full min-h-[44px]" />
                 )}
               </div>
             </div>
           </div>
 
-          {/* 3. Result Bar & Sorting */}
+          {/* 3. Horizontal Scrollable Category Capsule Filter per DESIGN.md */}
+          <div className="relative mb-8">
+            <div className="overflow-x-auto scrollbar-none pb-2">
+              <CategoryFilter
+                categories={categories}
+                selectedCategoryId={selectedCatId}
+                onSelectCategory={(id) => {
+                  setSelectedCatId(id);
+                  setCurrentPage(1);
+                }}
+              />
+            </div>
+            {/* Visual fade hint on right for mobile screen */}
+            <div className="sm:hidden pointer-events-none absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-canvas to-transparent" />
+          </div>
+
+          {/* 4. Result Bar & Sorting */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-3 border-b border-border-subtle mb-6 text-xs text-text-secondary">
             <div className="font-semibold text-text-primary">
               Hasil Pencarian: <span className="tabular-nums font-bold text-text-primary">{meta.total || tenants.length} Kios Ditemukan</span>
@@ -223,7 +216,7 @@ export function ShoppingDirectory() {
               <select
                 value={sortOrder}
                 onChange={(e) => setSortOrder(e.target.value)}
-                className="py-1.5 px-2.5 text-xs bg-canvas border border-border-subtle text-text-primary focus:outline-none focus:border-brand-primary rounded-sm"
+                className="py-1.5 px-2.5 text-xs bg-canvas border border-border-input text-text-primary focus:outline-none focus:border-brand-primary rounded-sm cursor-pointer"
               >
                 <option value="name_asc">Alfabet A ke Z</option>
                 <option value="name_desc">Alfabet Z ke A</option>
@@ -232,15 +225,15 @@ export function ShoppingDirectory() {
             </div>
           </div>
 
-          {/* 4. 4-Column Tenant Grid */}
+          {/* 5. Tenant Grid (1 col mobile, 2 col tablet, 4 col desktop per DESIGN.md) */}
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 pt-2">
               {Array.from({ length: 8 }).map((_, i) => (
                 <SkeletonCard key={i} />
               ))}
             </div>
           ) : tenants.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 pt-2">
               {tenants.map((tenant) => (
                 <TenantCard key={tenant.id} tenant={tenant} basePath="/belanja" />
               ))}
@@ -254,14 +247,14 @@ export function ShoppingDirectory() {
               <button
                 type="button"
                 onClick={handleResetFilters}
-                className="mt-4 inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] text-xs font-bold uppercase tracking-wider text-text-primary bg-canvas border border-border-subtle hover:border-border-strong transition-colors rounded-sm"
+                className="mt-4 inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] text-xs font-bold uppercase tracking-wider text-text-primary bg-canvas border border-border-input hover:border-border-strong active:bg-surface-subtle transition-colors rounded-sm cursor-pointer"
               >
                 Reset Semua Filter
               </button>
             </div>
           )}
 
-          {/* 5. Pagination */}
+          {/* 6. Pagination (Touch target >= 44px) */}
           <div className="pt-6">
             <PaginationControls
               currentPage={meta.current_page}

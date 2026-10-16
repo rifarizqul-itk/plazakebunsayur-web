@@ -1,9 +1,10 @@
 # 📋 Specification: Plaza Kebun Sayur Web (Hybrid Company Profile & Business Directory)
 
 > **Document Type:** System & Feature Specification (Spec-Driven Development)  
-> **Status:** Draft Approved for Plan (Phase 1: Specify - Revision 3)  
+> **Status:** Draft for Review (Phase 1: Specify - Revision 5)  
 > **Project:** `plazakebunsayur-web`  
 > **Target Date:** Oktober 2026  
+> **Dokumen Terkait:** `DESIGN.md` (aturan visual; menang atas dokumen ini untuk semua aspek visual), `CMS_EDITABLE_CONTENT_PLAN.md` (arsitektur CMS menyeluruh)  
 
 ---
 
@@ -14,10 +15,12 @@ Sebelum spesifikasi ini dijalankan, berikut asumsi dasar yang disepakati:
 2. **Karier, Kemitraan, & Hubungan Investor:** Ditunda seluruhnya ke Fase 2. Profil manajemen disematkan ringkas pada halaman Panduan Kunjungan / Beranda.
 3. **Pemisahan Belanja vs Kuliner:** Ditangani melalui kolom `type` pada tabel `categories`, sehingga kios mewarisi klasifikasinya dari kategori bisnis masing-masing.
 4. **Pesan Kontak:** Model `SpaceEnquiry` (sewa kios) digantikan sepenuhnya oleh model `ContactMessage` (pesan umum pengunjung + hotline resmi).
-5. **Palet Warna:** Palet Maroon (`#8B1A1A`) & Gold (`#C59B27`) berstatus **"DITINJAU ULANG"** (didefinisikan seluruhnya sebagai variabel `@theme` agar palet mudah diganti saat proses evaluasi visual).
+5. **Identitas Visual:** Marun (`#8B1A1A`) adalah identitas Bunsay dan sudah final. Seluruh token, tipografi, komponen, dan aturan visual didefinisikan di `DESIGN.md`. Untuk aspek visual, `DESIGN.md` menang atas dokumen ini.
 6. **Mock Data:** Murni hanya aktif pada environment development lokal saat menjalankan `npm run dev` (`import.meta.env.DEV === true`). Pada build produksi (`npm run build`), flag `import.meta.env.DEV` otomatis bernilai `false` dan aplikasi **wajib** mengonsumsi REST API nyata; tidak ada toleransi data mock di produksi.
 7. **Arsitektur Frontend:** Clean-slate rewrite untuk komponen halaman publik guna memastikan hierarki tampilan baru yang segar, rapi, dan modular.
 8. **Arsip Lama:** Folder `Insos_Bunsay` tetap merupakan arsip read-only dan tidak disentuh.
+9. **Konten Situs Dinamis & CMS Menyeluruh:** Seluruh teks publik, foto aset, daftar dinamis (rute akses, tips belanja, tata tertib), menu navigasi (navbar header & footer), dan dokumen hukum (Kebijakan Privasi, Syarat Ketentuan) dapat diedit sepenuhnya oleh pengelola mall non-IT lewat panel Filament Admin (`/admin`). Kode frontend mempertahankan nilai bawaan (fallback hardcoded) di setiap komponen sehingga situs tetap tampil normal tanpa regresi visual jika backend offline.
+10. **Klaim Faktual:** Status cagar budaya, jumlah kios, dan narasi sejarah hanya boleh tampil setelah dikonfirmasi pengelola. Sebelum itu, jangan ditampilkan.
 
 ---
 
@@ -35,86 +38,34 @@ Membangun website modern hybrid **Company Profile & Commercial Business Director
 * **Pengelola Mall (Admin):**
   * Dapat mengelola data kios, kategori, lantai, fasilitas, dan agenda acara secara mandiri melalui Admin Panel GUI (Filament v5).
   * Dapat membaca dan mengelola status pesan masuk dari pengunjung.
+  * Dapat mengubah informasi operasional (jam buka mall, hotline WhatsApp, telepon keamanan, alamat kantor) tanpa bantuan developer.
 
 ---
 
-## 3. Design System (Berbasis `style-references/YasMall`)
+## 3. Desain Visual
 
-Desain mengadaptasi estetika modern, lapang, dan terstruktur dari referensi Yas Mall, disesuaikan dengan karakter cagar budaya & wisata belanja Plaza Kebun Sayur.
+Seluruh aturan visual (token warna, tipografi, bentuk, komponen, copywriting, larangan tampilan generik, dan checklist penerimaan) didefinisikan di **`DESIGN.md`**. Untuk aspek visual, `DESIGN.md` menang atas dokumen ini. Bagian ini hanya memuat catatan layout per halaman dan kriteria sukses visual. Bila ada perbedaan, ikuti `DESIGN.md`.
 
-### A. Asal Nilai Token dari File Yas Mall & Pemetaan ke `@theme`
-Seluruh token didefinisikan sebagai CSS Custom Variables di dalam blok `@theme` Tailwind CSS v4 (`src/index.css`) agar seluruh tema dan palet warna dapat diganti secara instan:
+Referensi: `style-references/YasMall` untuk pola struktur direktori, dan prinsip disiplin visual dari anthropic.com. Hanya prinsip dan keputusan yang diadopsi, bukan kode, teks, aset, atau warna.
 
-```css
-@theme {
-  /* 1. Kanvas & Permukaan (Dari YasMall Landing.htm & Plan_Your_Visit.htm) */
-  /* Asal: body, .whatsNew-content-box { background-color: #fff } */
-  --color-canvas: #ffffff;
-  /* Asal: .search-popup, custom-control { background-color: #f8f9fa / #e9ecef } */
-  --color-surface-subtle: #f8f9fa;
-  --color-surface-muted: #f1f3f5;
+### A. Catatan Layout per Halaman
+* **Beranda (`/`):** Hero (slider foto gedung, tombol jeda terlihat) → Tiga kartu aksi (Belanja dominan, Kuliner, Panduan Kunjungan) → Sorotan Kios Belanja → Sorotan Kuliner → Agenda Terkini → Informasi Lokasi & Peta → Footer. Ringkasan sejarah hanya sebagai blok teks faktual, dan hanya setelah dikonfirmasi pengelola.
+* **Direktori Belanja (`/belanja`):** Header Halaman → Pencarian & Filter Lantai → Kategori (kapsul, `type=retail`) → Grid Kios (12 per halaman) → Pagination.
+* **Detail Kios Belanja (`/belanja/:slug`):** Breadcrumb → Foto Kios (4:3) → Identitas (Nama, Kategori, Lantai, Unit) → Jam Buka & Status (hanya bila data tersedia) → Deskripsi → Tombol "Chat Penjual" → Lokasi (lantai dan unit, berupa teks).
+* **Direktori Kuliner (`/kuliner`):** Header Sentra Kuliner → Pencarian & Filter Kategori (kapsul, `type=culinary`) → Grid Kios Kuliner (12 per halaman) → Pagination.
+* **Detail Kios Kuliner (`/kuliner/:slug`):** Struktur identik dengan detail belanja.
+* **Agenda (`/agenda`):** Daftar berupa baris dengan kolom tanggal, bukan grid kartu.
+* **Detail Agenda (`/agenda/:slug`):** Banner 16:9 (bila ada), rentang tanggal, teks lengkap, lokasi acara.
+* **Panduan Kunjungan (`/panduan-kunjungan`):** Halaman bacaan: Jam Buka Mall (dari `site_settings`), Akses (dari Bandara Sepinggan dan Pelabuhan Semayang), Tips Belanja, Tata Tertib (teks dari `src/content/`), dan Fasilitas (dari API).
+* **Kontak (`/kontak`):** Informasi pengelola (dari `site_settings`) di satu kolom dan formulir pesan di kolom lain.
+* **Not Found (`*`):** Pesan singkat dan tombol kembali ke Beranda atau Direktori Belanja.
 
-  /* 2. Teks & Garis Batas (Dari YasMall Landing.htm & Plan_Your_Visit.htm) */
-  /* Asal: body, .top-links, .header { color: #212529 / #000000 } */
-  --color-text-primary: #111827;
-  /* Asal: .form-control, .contact-links { color: #495057 / #6c757d } */
-  --color-text-secondary: #4b5563;
-  --color-text-muted: #9ca3af;
-  /* Asal: .top-links, .category-dropdown { border-color: #e5e7eb / #000000 } */
-  --color-border-subtle: #e5e7eb;
-  --color-border-strong: #111827;
-
-  /* 3. Aksen & Brand (STATUS: DITINJAU ULANG) */
-  /* Asal: Warisan identitas awal Kaltim (Ditinjau ulang untuk evaluasi modern) */
-  --color-brand-primary: #8b1a1a;
-  --color-brand-primary-hover: #731515;
-  --color-brand-surface: #fdf6f6;
-  /* Asal: YasMall Landing.htm .footer-bottom { background-color: #b6a171 } (Ditinjau ulang) */
-  --color-brand-accent: #b6a171;
-  --color-brand-accent-hover: #a38d5d;
-  --color-brand-accent-light: #f7f3ea;
-
-  /* 4. Tipografi (Dari YasMall Gotham-Medium, Gotham-Bold) */
-  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  
-  /* 5. Radius Sudut */
-  --radius-card: 1rem;       /* 16px untuk kartu kios ala YasMall */
-  --radius-pill: 9999px;     /* Pill badge & tombol pencarian */
-}
-```
-
-### B. Tipografi & Hierarki Teks
-* **Headings (`h1`, `h2`, `h3`):** Bobot SemiBold (600) hingga Bold (700), dengan `tracking-tight` (-0.025em) untuk headline display editorial.
-* **Pre-headers / Eyebrows:** Huruf kapital (`uppercase`), ukuran `text-xs` (12px), `tracking-widest` (0.1em), bobot Medium (500) atau SemiBold (600) untuk label kategori dan penanda seksi.
-* **Body Text:** Ukuran 14px–16px (`text-sm` / `text-base`), bobot Regular (400), `leading-relaxed` (1.625) untuk kemudahan membaca di layar seluler.
-
-### C. Komponen Utama
-1. **Header / Navbar:** Sticky dengan backdrop blur (`backdrop-blur-md bg-canvas/90 border-b border-border-subtle`), tautan navigasi desktop bersih, tombol CTA WhatsApp pengelola, dan hamburger drawer mobile.
-2. **Hero Section:** Banner editorial dengan tipografi tegas, deskripsi ringkas, penanda cagar budaya resmi, dan *quick-stats bar* (300+ Kios, Sentra Resmi Kaltim, 3 Lantai).
-3. **Directory Card (Belanja & Kuliner):** Rasio aspek foto 4:3 yang seragam (crop center), tag pill kategori di sudut atas, nama kios tebal, nomor unit & lantai kontras, jam buka terstruktur, serta tombol aksi cepat Direct WhatsApp.
-4. **Filter & Search Bar:** Input pencarian bersih berikon kaca pembesar dengan tombol reset, dipadukan barisan tombol kapsul kategori (*category pills*) yang dapat digeser mendatar (*horizontal swipe*) di perangkat seluler.
-5. **Panduan Kunjungan (Structured Grid):** Kartu terpisah untuk Jam Operasional Gedung, Akses Rute & Transportasi, Fasilitas Umum, dan Etika/Tips Belanja Cerdas.
-6. **Formulir Kontak (Two-Column Layout):** Kolom kiri memuat informasi kantor pengelola, alamat, jam kerja, nomor darurat WhatsApp pengelola; kolom kanan memuat formulir input pesan pengunjung.
-
-### D. Catatan Layout per Halaman
-* **Beranda (`/`):** Hero editorial → Quick Category Navigator → Sorotan Kios Belanja Pilihan → Sorotan Kuliner Khas → Agenda Terkini → Sejarah Ringkas Cagar Budaya → Peta Lokasi → Footer.
-* **Direktori Belanja (`/belanja`):** Header Halaman → Search Bar & Filter Lantai → Kategori Pills (`type=retail`) → Grid Kios (12 per halaman) → Pagination Controls.
-* **Detail Kios Belanja (`/belanja/:slug`):** Breadcrumb navigasi → Galeri Foto Utama (4:3) → Identitas Kios (Nama, Lantai, Unit) → Jadwal Operasional Terstruktur → Deskripsi Profil Toko → Tombol Utama "Chat Penjual via WhatsApp" → Lokasi Lantai.
-* **Direktori Kuliner (`/kuliner`):** Header Sentra Kuliner → Search & Filter Kategori Kuliner (`type=culinary`) → Grid Kios Kuliner (12 per halaman) → Pagination Controls.
-* **Detail Kios Kuliner (`/kuliner/:slug`):** Struktur identik detail belanja, disesuaikan untuk profil stan makanan/minuman khas dan pemesanan WhatsApp.
-* **Agenda (`/agenda`):** Daftar pameran, bazar UMKM, dan promo mall dengan kartu tanggal bergaya kalender Yas Mall.
-* **Detail Agenda (`/agenda/:slug`):** Banner agenda (16:9), rentang tanggal, teks pengumuman lengkap, dan lokasi acara.
-* **Panduan Kunjungan (`/panduan-kunjungan`):** Informasi terpadu: Jam Buka Mall, Panduan Akses (dari Bandara Sepinggan & Pelabuhan Semayang), Tips Belanja Cerdas, Tata Tertib, serta Direktori Fasilitas Lengkap (Musholla, ATM, Toilet, Parkir, Pos Satpam).
-* **Kontak (`/kontak`):** Alamat kantor pengelola di mall, nomor telepon keamanan, hotline WhatsApp pengelola, dan formulir pengiriman pesan publik.
-* **Not Found (`*`):** Tampilan 404 ramah pengguna dengan tombol kembali ke Beranda atau Direktori Belanja.
-
-### E. Kriteria Sukses Visual
-* **Review Screenshot Wajib:** Setiap irisan (slice) implementasi visual wajib diverifikasi tampilannya pada 2 breakpoint:
-  * **Mobile Viewport:** `360px` (standar smartphone Android/iPhone).
-  * **Desktop Viewport:** `1024px` (layar laptop/desktop).
+### B. Kriteria Sukses Visual
+* **Review Screenshot Wajib:** Setiap irisan (slice) implementasi visual diverifikasi pada dua breakpoint: `360px` (ponsel) dan `1024px` (desktop).
 * **Zero Horizontal Scroll:** Tidak ada elemen yang meluap ke luar lebar layar pada 360px.
-* **Touch Target:** Seluruh tombol, pill filter, dan link navigasi mobile memiliki area sentuh minimal `44 x 44 px`.
-* **Kontras Aksesibilitas:** Rasio kontras teks terhadap latar belakang minimal 4.5:1 (WCAG AA).
+* **Touch Target:** Seluruh tombol, kapsul filter, dan tautan navigasi mobile berukuran minimal `44 x 44 px`.
+* **Kontras Aksesibilitas:** Teks minimal 4,5:1 (WCAG AA); batas komponen UI seperti input minimal 3:1. Nilai terverifikasi ada di `DESIGN.md`.
+* **Checklist Penerimaan:** Setiap irisan lolos checklist "Sebelum Hasil Diterima" di `DESIGN.md`.
 
 ---
 
@@ -123,7 +74,7 @@ Seluruh token didefinisikan sebagai CSS Custom Variables di dalam blok `@theme` 
 | Layer | Pilihan Teknologi | Versi Terpilih | Bukti & Alasan Pemilihan |
 | :--- | :--- | :--- | :--- |
 | **Backend Framework** | Laravel Framework | **13.33.0** (`^13.17`) | Sudah aktif terpasang di environment (`composer.json`) bersama PHP 8.5.4; stabil, cepat, dan modern. |
-| **Admin Panel (CMS)** | Filament | **v5.x** | **Bukti Kompatibilitas:** Filament v5 adalah rilis mayor resmi yang dirancang khusus untuk mendukung Laravel 13 (Packagist 2026), mendukung Livewire 4, serta Tailwind CSS v4 native. |
+| **Admin Panel (CMS)** | Filament | **v5.x** | Filament v5 mendukung Livewire 4 dan Laravel 12/13 menurut manifest paketnya. **Verifikasi saat instalasi:** pastikan `composer require filament/filament:^5.0` lolos tanpa konflik di Laravel 13, lalu kunci versi di `composer.lock`. |
 | **PHP Runtime** | PHP CLI | **8.5.4** | Runtime native aktif di host environment. |
 | **Frontend Framework** | React | **19.2.8** | Komponen reaktif modern dengan rendering performan. |
 | **Frontend Tooling** | Vite | **8.3.0** | Bundling kilat dengan Hot Module Replacement. |
@@ -131,6 +82,8 @@ Seluruh token didefinisikan sebagai CSS Custom Variables di dalam blok `@theme` 
 | **Routing** | React Router | **v7.18.4** | Navigasi multi-page client-side yang stabil. |
 | **Icons** | Lucide React | **v1.48.0** | Set ikon modern dan ringan. |
 | **Database** | SQLite / MySQL | - | SQLite untuk pengembangan lokal instan, siap switch ke MySQL di production. |
+
+Versi di tabel dibaca dari `composer.json` dan `package.json` proyek. Bila manifest berbeda, manifest yang benar.
 
 ---
 
@@ -159,8 +112,11 @@ npm run preview
 # Menjalankan migrasi database
 .\artisan.bat migrate
 
-# Mengisi data awal (seeding)
+# Mengisi data awal produksi (kategori, lantai, fasilitas, pengaturan situs)
 .\artisan.bat db:seed
+
+# Mengisi data demo (HANYA lokal; dilarang dijalankan di produksi)
+.\artisan.bat db:seed --class=DemoSeeder
 
 # Menghubungkan storage publik untuk media upload
 .\artisan.bat storage:link
@@ -204,8 +160,12 @@ Struktur direktori proyek setelah clean-slate rewrite:
 ```
 plazakebunsayur-web/
 ├── docs/
-│   ├── SPECIFICATION.md     # Dokumen spesifikasi SDD ini
-│   └── ARCHITECTURE.md      # Catatan arsitektur & keputusan teknis
+│   ├── SPECIFICATION.md     # Dokumen spesifikasi SDD ini (Rev. 5)
+│   ├── DESIGN.md            # Aturan visual (menang atas dokumen ini); sesuaikan path dengan lokasi sebenarnya
+│   ├── ARCHITECTURE.md      # Catatan arsitektur & keputusan teknis
+│   ├── CMS_EDITABLE_CONTENT_PLAN.md # Blueprint implementasi CMS dinamis
+│   ├── PANDUAN_ADMIN.md     # Panduan penggunaan dashboard Filament untuk pengelola non-IT
+│   └── DEMO_PUBLISH.md      # Panduan demo & arsitektur deployment Netlify + DDEV
 ├── backend/
 │   ├── app/
 │   │   ├── Filament/Resources/
@@ -214,23 +174,48 @@ plazakebunsayur-web/
 │   │   │   ├── TenantResource.php
 │   │   │   ├── FacilityResource.php
 │   │   │   ├── WhatsOnResource.php
-│   │   │   └── ContactMessageResource.php
+│   │   │   ├── ContactMessageResource.php
+│   │   │   ├── SiteSettingResource.php
+│   │   │   ├── PageContents/
+│   │   │   │   └── PageContentResource.php # Key-value text & image editor per grup
+│   │   │   ├── AccessRoutes/
+│   │   │   │   └── AccessRouteResource.php # Manajemen rute panduan kunjungan
+│   │   │   ├── ShoppingTips/
+│   │   │   │   └── ShoppingTipResource.php # Tips berbelanja batu akik & kerajinan
+│   │   │   ├── BuildingRules/
+│   │   │   │   └── BuildingRuleResource.php # Tata tertib gedung mall
+│   │   │   ├── NavItems/
+│   │   │   │   └── NavItemResource.php     # Manajemen menu header & link footer
+│   │   │   └── LegalPages/
+│   │   │       └── LegalPageResource.php   # Rich-editor halaman privasi & syarat ketentuan
 │   │   ├── Http/Controllers/Api/
 │   │   │   ├── CategoryController.php
 │   │   │   ├── TenantController.php
 │   │   │   ├── FacilityController.php
 │   │   │   ├── WhatsOnController.php
-│   │   │   └── ContactController.php
+│   │   │   ├── ContactController.php
+│   │   │   ├── SiteSettingController.php
+│   │   │   ├── PageContentController.php   # Endpoint GET /api/page-contents
+│   │   │   ├── VisitGuideController.php    # Endpoint GET /api/visit-guide
+│   │   │   ├── NavItemController.php       # Endpoint GET /api/nav-items
+│   │   │   └── LegalPageController.php     # Endpoint GET /api/legal-pages/{slug}
 │   │   └── Models/
 │   │       ├── Category.php     # Ditambah kolom `type` ('retail', 'culinary')
 │   │       ├── Floor.php
 │   │       ├── Tenant.php       # Structured hours, image_path, logo_path
 │   │       ├── Facility.php
 │   │       ├── WhatsOn.php      # banner_image_path
-│   │       └── ContactMessage.php
+│   │       ├── ContactMessage.php
+│   │       ├── SiteSetting.php
+│   │       ├── PageContent.php  # Key-value dictionary dengan defaults
+│   │       ├── AccessRoute.php
+│   │       ├── ShoppingTip.php
+│   │       ├── BuildingRule.php
+│   │       ├── NavItem.php
+│   │       └── LegalPage.php    # Sanitasi HTMLPurifier XSS guard
 │   ├── database/
 │   │   ├── migrations/
-│   │   └── seeders/
+│   │   └── seeders/             # DatabaseSeeder, PageContentSeeder, VisitGuideSeeder, NavItemSeeder, LegalPageSeeder
 │   ├── routes/
 │   │   └── api.php
 │   ├── artisan.bat
@@ -256,18 +241,28 @@ plazakebunsayur-web/
     │   │   ├── EventDetail.jsx
     │   │   ├── PlanYourVisit.jsx
     │   │   ├── ContactPage.jsx
+    │   │   ├── PrivacyPolicy.jsx  # Rich-text render dengan fallback
+    │   │   ├── TermsConditions.jsx # Rich-text render dengan fallback
     │   │   └── NotFound.jsx
+    │   ├── context/
+    │   │   ├── contentContextInstance.js # Dedicated instance (Fast-refresh safe)
+    │   │   └── ContentContext.jsx       # ContentProvider & fetch orchestration
+    │   ├── hooks/
+    │   │   ├── useContent.js            # useContent, useContentImage, useNavItems
+    │   │   └── useDocumentMeta.js       # Runtime dynamic page title & meta description
     │   ├── services/
-    │   │   └── api.js           # Fetch API wrapper + strict dev mock isolation
+    │   │   └── api.js           # Fetch API wrapper + strict dev mock isolation + ngrok header
     │   ├── data/
     │   │   └── mockData.js      # Dataset lokal hanya untuk npm run dev
+    │   ├── content/
+    │   │   └── visitGuide.js    # Fallback lokal Panduan Kunjungan (rute akses, tips, tata tertib)
     │   ├── utils/
     │   │   └── whatsapp.js      # Generator tautan WhatsApp terformat
-    │   ├── App.jsx              # React Router setup & scroll restoration
+    │   ├── App.jsx              # React Router setup, ContentProvider wrapper, & scroll restoration
     │   ├── main.jsx
     │   └── index.css            # Tailwind v4 configuration (@theme tokens)
     ├── scripts/
-    │   └── prerender.js         # Build-time SSG script (Tahap Irisan 2)
+    │   └── prerender.js         # Build-time SSG script dengan integrasi CMS meta injection
     ├── package.json
     └── vite.config.js
 ```
@@ -304,9 +299,10 @@ plazakebunsayur-web/
 * `description`: TEXT, nullable
 * `phone_whatsapp`: VARCHAR(50)
 * `instagram`: VARCHAR(100), nullable
-* **`opening_time`**: TIME, nullable, default: `'09:00:00'`
-* **`closing_time`**: TIME, nullable, default: `'20:00:00'`
-* **`days_open`**: VARCHAR(100), default: `'Setiap Hari (Senin - Minggu)'`
+* **`opening_time`**: TIME, nullable, tanpa nilai default (kosong bila data belum ada)
+* **`closing_time`**: TIME, nullable, tanpa nilai default
+* **`days_open`**: VARCHAR(100), nullable, tanpa nilai default (teks tampilan, misalnya "Setiap hari"; tidak dipakai untuk menghitung status)
+* *Aturan jam buka:* status buka/tutup hanya dihitung bila `opening_time` dan `closing_time` terisi, memakai zona waktu `Asia/Makassar` (WITA), bukan jam perangkat pengunjung. Bila kosong, tampilkan "Jam buka belum tersedia".
 * **`image_path`**: VARCHAR(255), nullable (Foto etalase/depan kios)
 * **`logo_path`**: VARCHAR(255), nullable (Logo kios jika ada)
 * `is_featured`: BOOLEAN, default: false
@@ -346,12 +342,77 @@ plazakebunsayur-web/
 * `status`: ENUM(`'unread'`, `'read'`, `'responded'`), default: `'unread'`
 * Timestamps
 
+#### 7. Tabel `site_settings`
+* `id`: BIGINT (PK)
+* `key`: VARCHAR(100) (Unique)
+* `value`: TEXT, nullable
+* Timestamps
+* Kunci operasional: `mall_opening_hours`, `management_whatsapp`, `security_phone`, `office_address`, `management_email`, `maps_url`.
+
+#### 8. Tabel `page_contents` (CMS Konten Dinamis - Tingkat 1)
+* `id`: BIGINT (PK)
+* `key`: VARCHAR(100) (Unique, misal: `home.hero.title`, `brand.logo`)
+* `value`: TEXT, nullable (teks, markdown, atau path relatif storage gambar)
+* `type`: ENUM(`'text'`, `'textarea'`, `'image'`, `'url'`), default: `'text'`
+* `group`: VARCHAR(50) (Pengelompokan tab form: `home`, `page_headers`, `footer`, `plan_visit`, `assets`, `seo`)
+* `label`: VARCHAR(255) (Label ramah pengguna di form Filament)
+* `help`: VARCHAR(255), nullable (Petunjuk & rekomendasi dimensi/karakter)
+* `order_index`: INTEGER, default: 0
+* Timestamps
+* *Catatan:* Dikelola melalui custom page Filament dengan dictionary default lengkap di model `PageContent::defaults()`. Jika key kosong di DB, sistem otomatis merender default fallback hardcoded.
+
+#### 9. Tabel `access_routes` (Panduan Akses Menuju Mall)
+* `id`: BIGINT (PK)
+* `title`: VARCHAR(255) (Contoh: "Dari Bandara SAMS Sepinggan (BPN)")
+* `distance`: VARCHAR(100), nullable (Contoh: "±12 km · 25–35 menit")
+* `description`: TEXT (Instruksi moda transportasi & rute)
+* `order_index`: INTEGER, default: 0
+* `is_active`: BOOLEAN, default: true
+* Timestamps
+
+#### 10. Tabel `shopping_tips` (Tips Belanja Cinderamata & Batu Akik)
+* `id`: BIGINT (PK)
+* `title`: VARCHAR(255)
+* `description`: TEXT
+* `order_index`: INTEGER, default: 0
+* `is_active`: BOOLEAN, default: true
+* Timestamps
+
+#### 11. Tabel `building_rules` (Tata Tertib & Kenyamanan Mall)
+* `id`: BIGINT (PK)
+* `title`: VARCHAR(255)
+* `description`: TEXT
+* `order_index`: INTEGER, default: 0
+* `is_active`: BOOLEAN, default: true
+* Timestamps
+
+#### 12. Tabel `nav_items` (Menu Header & Link Footer)
+* `id`: BIGINT (PK)
+* `label`: VARCHAR(100)
+* `path`: VARCHAR(255) (Path internal misal `/belanja` atau URL eksternal)
+* `location`: ENUM(`'header'`, `'footer'`), default: `'header'`
+* `is_external`: BOOLEAN, default: false
+* `order_index`: INTEGER, default: 0
+* `is_active`: BOOLEAN, default: true
+* `is_cta`: BOOLEAN, default: false (Penanda tombol sorot/CTA)
+* Timestamps
+
+#### 13. Tabel `legal_pages` (Dokumen Hukum Kebijakan Privasi & Syarat Ketentuan)
+* `id`: BIGINT (PK)
+* `slug`: VARCHAR(100) (Unique: `kebijakan-privasi`, `syarat-ketentuan`)
+* `title`: VARCHAR(255)
+* `intro`: TEXT, nullable
+* `body`: LONGTEXT (Konten HTML dari RichEditor, wajib disanitasi HTMLPurifier)
+* `updated_label`: VARCHAR(100), nullable (Contoh: "Oktober 2026")
+* Timestamps
+* *Keamanan:* Sanitasi mutator model membersihkan tag berbahaya (`<script>`, inline `on*` events, javascript URLs).
+
 ---
 
 ### B. Pengolahan Gambar saat Unggah & Kriteria Performa
 
 1. **Pipeline Unggah & Pemotongan (Backend / Filament Form):**
-   * **Batas Maksimal Berkas Mentah:** Dinaikkan menjadi **10 MB** (mengakomodasi jepretan kamera smartphone resolusi tinggi oleh admin).
+   * **Batas Maksimal Berkas Mentah:** Dinaikkan menjadi **10 MB** (mengakomodasi jepretan kamera smartphone resolusi tinggi oleh admin). Konfigurasi PHP di hosting (`upload_max_filesize`, `post_max_size`) harus dinaikkan sesuai, karena nilai bawaan PHP lebih kecil dari 10 MB. `maxSize` pada form upload Filament disetel sama.
    * **Format Input:** `jpg`, `jpeg`, `png`, `webp`.
    * **Dependensi Pemrosesan:** Paket **`intervention/image` v3** (`composer require intervention/image`) dengan driver native PHP 8.5 **GD** (`ext-gd`) atau **Imagick**.
    * **Pemotongan Proporsional (Cropping 4:3):**
@@ -360,7 +421,7 @@ plazakebunsayur-web/
      * Menghapus seluruh metadata EXIF kamera untuk keamanan privasi dan penghematan byte.
 2. **Kriteria Performa Frontend:**
    * Seluruh tag gambar `<img>` wajib menyertakan atribut `loading="lazy"` dan `decoding="async"`, kecuali foto hero LCP di Beranda.
-   * Kontainer gambar memiliki kelas aspect ratio eksplisit (`aspect-[4/3]` untuk kartu kios, `aspect-[16/9]` untuk banner) guna menghindari *Cumulative Layout Shift* (CLS $< 0.1$).
+   * Kontainer gambar memiliki kelas aspect ratio eksplisit (`aspect-[4/3]` untuk kartu kios, `aspect-[16/9]` untuk banner) guna menghindari *Cumulative Layout Shift* (CLS < 0.1).
 
 ---
 
@@ -391,7 +452,7 @@ Seluruh respons dibungkus dalam format standar JSON:
   * `q` (opsional): string pencarian (nama kios, nomor unit, deskripsi)
   * `featured` (opsional): `1` untuk menampilkan tenant unggulan
   * `page` (opsional, default: 1): nomor halaman
-  * `per_page` (opsional, default: 12): jumlah kios per halaman
+  * `per_page` (opsional, default: 12, maksimum: 100): jumlah kios per halaman. Nilai di atas maksimum dipotong menjadi 100.
 * **Respons:**
 ```json
 {
@@ -399,16 +460,16 @@ Seluruh respons dibungkus dalam format standar JSON:
   "data": [
     {
       "id": 1,
-      "name": "Permata Borneo Gemstone",
-      "slug": "permata-borneo-gemstone",
+      "name": "Kios Contoh Batu Akik",
+      "slug": "kios-contoh-batu-akik",
       "unit_number": "Blok A No. 12",
-      "description": "Spesialis batu mulia kecubung, akik khas Kalimantan, dan ikat perak pesanan khusus.",
-      "phone_whatsapp": "081234567890",
-      "instagram": "permataborneo",
+      "description": "Data contoh untuk demo. Bukan kios nyata.",
+      "phone_whatsapp": "080000000000",
+      "instagram": null,
       "opening_time": "09:00:00",
       "closing_time": "20:00:00",
       "days_open": "Setiap Hari (Senin - Minggu)",
-      "image_url": "/storage/tenants/permata-borneo.webp",
+      "image_url": "/storage/tenants/contoh.webp",
       "logo_url": null,
       "is_featured": true,
       "category": { "id": 1, "name": "Batu Mulia & Permata", "slug": "batu-mulia", "type": "retail" },
@@ -444,7 +505,7 @@ Seluruh respons dibungkus dalam format standar JSON:
 {
   "full_name": "Rian Pratama",
   "email": "rian@example.com",
-  "phone_number": "081298765432",
+  "phone_number": "080000000000",
   "subject": "Pertanyaan Jam Buka Hari Libur",
   "message": "Apakah saat hari libur nasional pasar tetap buka normal?",
   "bot_check": "" 
@@ -456,6 +517,83 @@ Seluruh respons dibungkus dalam format standar JSON:
 {
   "success": true,
   "message": "Pesan Anda berhasil dikirim. Tim pengelola akan segera menghubungi Anda."
+}
+```
+
+### 9. `GET /api/site-settings`
+* **Respons:** Objek key-value untuk kunci yang diizinkan (`mall_opening_hours`, `management_whatsapp`, `security_phone`, `office_address`, `management_email`, `maps_url`). Kunci selain itu tidak pernah dikembalikan.
+```json
+{
+  "success": true,
+  "data": { "mall_opening_hours": "...", "management_whatsapp": "...", "security_phone": "...", "office_address": "...", "management_email": "...", "maps_url": "..." }
+}
+```
+
+### 10. `GET /api/page-contents` (Key-Value CMS Konten & Foto)
+* **Respons:** Objek key-value seluruh konten teks dan URL gambar publik dari `page_contents` (hanya key yang terdaftar di dictionary `defaults()` yang diekspos). Gambar dikonversi ke URL storage publik absolut.
+```json
+{
+  "success": true,
+  "data": {
+    "home.hero.title": "Sentra Batu Mulia, Etnik Dayak & Kerajinan Khas Kalimantan",
+    "home.hero.image": "https://plazakebunsayur-backend.ddev.site/storage/page-contents/hero.webp",
+    "brand.logo": "https://plazakebunsayur-backend.ddev.site/storage/page-contents/logo.webp",
+    "footer.tagline": "Pusat Kerajinan, Permata & Kuliner Khas Kalimantan Timur"
+  }
+}
+```
+
+### 11. `GET /api/visit-guide` (Daftar Dinamis Panduan Kunjungan)
+* **Respons:** Kumpulan tiga daftar terstruktur untuk halaman `/panduan-kunjungan` (`access_routes`, `shopping_tips`, `building_rules`), terurut berdasarkan `order_index` dengan filter `is_active = true`.
+```json
+{
+  "success": true,
+  "data": {
+    "access_routes": [
+      { "id": 1, "title": "Dari Bandara SAMS Sepinggan (BPN)", "distance": "±12 km · 25–35 menit", "description": "Taksi resmi bandara atau transportasi online..." }
+    ],
+    "shopping_tips": [
+      { "id": 1, "title": "Pilih Kios Bereputasi & Minta Sertifikat", "description": "Pedagang batu permata terpercaya siap memberikan memo uji laboratorium..." }
+    ],
+    "building_rules": [
+      { "id": 1, "title": "Kawasan Tertib & Bersih", "description": "Dilarang membuang sampah sembarangan dan menjaga kenyamanan bersama." }
+    ]
+  }
+}
+```
+
+### 12. `GET /api/nav-items` (Menu Header & Link Footer)
+* **Respons:** Navigasi dinamis terbagi atas `header` dan `footer`, hanya entri `is_active = true`, terurut berdasarkan `order_index`.
+```json
+{
+  "success": true,
+  "data": {
+    "header": [
+      { "id": 1, "label": "Beranda", "path": "/", "is_external": false, "is_cta": false },
+      { "id": 2, "label": "Direktori Belanja", "path": "/belanja", "is_external": false, "is_cta": false }
+    ],
+    "footer": [
+      { "id": 7, "label": "Direktori Belanja", "path": "/belanja", "is_external": false, "is_cta": false },
+      { "id": 8, "label": "Kebijakan Privasi", "path": "/kebijakan-privasi", "is_external": false, "is_cta": false }
+    ]
+  }
+}
+```
+
+### 13. `GET /api/legal-pages/{slug}` (Dokumen Hukum)
+* **Parameter Slug:** `kebijakan-privasi` atau `syarat-ketentuan` (mengembalikan HTTP 404 jika tidak ditemukan).
+* **Respons:** Konten HTML rich-text yang telah disanitasi bebas dari script berbahaya.
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "slug": "kebijakan-privasi",
+    "title": "Kebijakan Privasi",
+    "intro": "Plaza Kebun Sayur berkomitmen melindungi privasi pengunjung...",
+    "body": "<h2>1. Informasi yang Kami Kumpulkan</h2><p>Kami hanya mengumpulkan informasi...</p>",
+    "updated_label": "Oktober 2026"
+  }
 }
 ```
 
@@ -497,7 +635,7 @@ export function generateWhatsAppLink(rawPhone, storeName) {
 ## 11. Alur Data Prerender & Aturan Hosting
 
 ### A. Alur Prerender (SEO)
-1. **Sumber Data:** Script Node.js `scripts/prerender.js` memanggil endpoint backend `GET /api/tenants?per_page=500` saat proses build untuk mengumpulkan seluruh slug kios aktif.
+1. **Sumber Data:** Script Node.js `scripts/prerender.js` memanggil `GET /api/tenants` secara berhalaman (`per_page=100`, ulangi sampai `last_page`) saat proses build untuk mengumpulkan seluruh slug kios aktif.
 2. **Generasi Berkas:** Menghasilkan file statis `dist/belanja/:slug/index.html` dan `dist/kuliner/:slug/index.html` dengan HTML shell berisi `<title>`, meta description, dan Open Graph preview tags.
 3. **Pemicu Build Ulang (Rebuild Triggers):**
    * **Webhook CMS:** Event `TenantSaved` / `TenantDeleted` di Filament dapat memicu Webhook URL deploy Netlify/Vercel.
@@ -529,12 +667,15 @@ Untuk memastikan kios baru yang baru saja diinput admin langsung bisa diakses pu
    * **Viewport Responsive Audit:** Pengujian tampilan wajib dilakukan pada dua ukuran layar:
      * `360px` (layar ponsel kecil): Verifikasi zero horizontal scrollbar dan kerapian drawer menu mobile.
      * `1024px` (layar desktop): Verifikasi kerapian grid direktori dan padding kontainer.
-   * **Audit Performa Jaringan (4G Throttling):** Pengujian dengan simulasi jaringan 4G pada Chrome DevTools untuk memastikan LCP $< 2.0$ detik.
+   * **Audit Performa Jaringan (4G Throttling):** Pengujian dengan simulasi jaringan 4G pada Chrome DevTools untuk memastikan LCP < 2.0 detik.
 2. **Backend API Testing (PHPUnit / Pest):**
    * `test_can_fetch_categories_filtered_by_type`: Memastikan `GET /api/categories?type=retail` hanya mengembalikan kategori belanja.
    * `test_can_fetch_tenants_with_pagination`: Memastikan `GET /api/tenants?page=1&per_page=12` mengembalikan pagination metadata (`current_page`, `last_page`, `total`).
    * `test_contact_form_validation_and_rate_limiting`: Memastikan `POST /api/contact` memvalidasi input wajib dan memblokir request ke-6 dalam interval 10 menit (HTTP 429 Too Many Requests).
    * `test_image_upload_converts_to_webp_4_3`: Memastikan unggahan foto kios otomatis dipotong ke rasio 4:3 dan disimpan dalam format WebP.
+   * `test_can_fetch_site_settings_whitelisted_keys`: Memastikan `GET /api/site-settings` hanya mengembalikan kunci yang diizinkan.
+   * `test_production_seeder_has_no_demo_data`: Memastikan `DatabaseSeeder` tidak membuat kios, pedagang, atau nomor WhatsApp contoh.
+   * `test_per_page_is_capped_at_100`: Memastikan `per_page=500` dipotong menjadi 100.
 
 ---
 
@@ -546,8 +687,9 @@ Untuk memastikan kios baru yang baru saja diinput admin langsung bisa diakses pu
   * Terapkan konversi WebP dan crop 4:3 otomatis saat upload media.
   * Sanitasi dan batasi pengiriman pesan kontak (Rate Limit: 5 pesan / 10 menit per IP + Honeypot).
   * Matikan seluruh akses mock data pada build produksi.
+  * Pisahkan data demo ke `DemoSeeder`; jangan panggil dari `DatabaseSeeder`.
 * **ASK FIRST (Tanyakan terlebih dahulu):**
-  * Mengunggah berkas gambar dengan ukuran mentah $> 10\text{ MB}$ atau format selain JPG/PNG/WebP.
+  * Mengunggah berkas gambar dengan ukuran mentah > 10 MB atau format selain JPG/PNG/WebP.
   * Mengubah skema tabel atau menambahkan kolom baru di luar yang telah ditentukan di spesifikasi ini.
   * Menambah library JavaScript eksternal yang melebihi ukuran bundle 50 KB.
   * Memindahkan penyimpanan media dari Laravel local public disk ke cloud storage eksternal (S3, Cloudinary).
@@ -556,13 +698,16 @@ Untuk memastikan kios baru yang baru saja diinput admin langsung bisa diakses pu
   * Menulis atau mengimplementasikan sistem pembayaran/kasir/Midtrans.
   * Memasukkan kredensial atau file `.env` produksi ke dalam version control git.
   * Mengizinkan kebocoran mock data ke lingkungan produksi.
+  * Menjalankan `DemoSeeder` atau memasukkan kios, pedagang, atau nomor WhatsApp contoh ke database produksi.
+  * Menyalin kode, teks, aset, atau warna dari situs referensi mana pun (Yas Mall, Anthropic, atau lainnya).
+  * Menampilkan klaim faktual (status cagar budaya, jumlah kios, narasi sejarah) yang belum dikonfirmasi pengelola.
 
 ---
 
 ## 14. Success Criteria (Testable Acceptance)
 
 1. [ ] **Verifikasi 10 Rute:** Seluruh 9 rute konten publik dan 1 rute 404 dapat diakses langsung via URL maupun navigasi internal tanpa error.
-2. [ ] **Verifikasi Visual 360px & 1024px:** Setiap halaman lolos inspeksi screenshot pada lebar 360px (tanpa horizontal overflow, touch target $\ge 44\text{ px}$) dan 1024px (tata letak grid lapang ala Yas Mall).
+2. [ ] **Verifikasi Visual 360px & 1024px:** Setiap halaman lolos inspeksi screenshot pada lebar 360px (tanpa horizontal overflow, touch target ≥ 44 px) dan 1024px, serta lolos checklist penerimaan di `DESIGN.md`.
 3. [ ] **Target Performa LCP:** Nilai LCP (Largest Contentful Paint) berada di bawah **2.0 detik** pada simulasi koneksi seluler 4G.
 4. [ ] **Pemisahan Belanja vs Kuliner:** 
    * `/belanja` hanya menampilkan kategori & kios bertipe `retail`.
@@ -571,6 +716,23 @@ Untuk memastikan kios baru yang baru saja diinput admin langsung bisa diakses pu
 5. [ ] **WhatsApp Click-to-Chat:** Tombol WhatsApp pada halaman detail membuka tautan `https://wa.me/62...` dengan pesan pembuka otomatis yang menyebutkan nama kios.
 6. [ ] **Formulir Kontak Terproteksi:** Pengunjung dapat mengirim pesan melalui `/kontak`, tersimpan di tabel `contact_messages`, dan dibatasi oleh rate limiter (HTTP 429 setelah 5x kirim) serta terlindung honeypot.
 7. [ ] **Admin Panel Filament v5:** Admin pengelola dapat login, melakukan CRUD pada Kios, Kategori, Fasilitas, Whats On, serta membaca Pesan Masuk.
-8. [ ] **Optimasi Gambar Otomatis:** Foto kios yang diunggah terpotong rasio 4:3 dan tersimpan dalam format WebP dengan ukuran $< 150\text{ KB}$.
-9. [ ] **Isolasi Mock Data:** Pada build produksi (`npm run build`), web murni mengonsumsi API backend tanpa ada kebocoran mock data dev.
+8. [ ] **Optimasi Gambar Otomatis:** Foto kios yang diunggah terpotong rasio 4:3 dan banner agenda 16:9, keduanya tersimpan sebagai WebP dengan ukuran < 150 KB (kios) dan < 350 KB (banner).
+9. [ ] **Isolasi Mock Data:** Pada build produksi (`npm run build`), web murni mengonsumsi API backend. Uji: `mockData.js` mengekspor konstanta penanda `MOCK_MARKER = '__MOCK_DATA_DEV_ONLY__'`, dan pencarian teks itu di folder `dist` setelah build tidak menemukan apa pun.
 10. [ ] **SPA Hosting Fallback:** Kios baru yang belum ter-prerender tetap dapat dibuka secara langsung via URL melalui SPA fallback rewrite tanpa menampilkan halaman 404.
+11. [x] **Konten Operasional dari Admin:** Admin dapat mengubah jam buka mall, hotline WhatsApp, telepon keamanan, dan alamat kantor lewat Filament, dan perubahannya muncul di halaman Kontak dan Panduan Kunjungan tanpa deploy ulang frontend.
+12. [x] **Data Demo Terisolasi di Backend:** Database yang diisi dengan `db:seed` (tanpa `--class`) tidak berisi kios, pedagang, atau nomor WhatsApp contoh.
+13. [x] **CMS Konten Publik Menyeluruh:** Setiap teks, gambar aset (logo, hero, sejarah), daftar panduan (rute, tips, aturan), menu navigasi (navbar & footer), dan dokumen legal (privasi & ketentuan) dapat diubah langsung dari Filament Admin (`/admin`) tanpa menyentuh kode.
+14. [x] **Fallback Aman Saat Backend Offline:** Frontend mempertahankan hardcoded fallback di seluruh komponen publik; website statis tetap tampil sempurna tanpa regresi visual saat backend mati.
+15. [x] **XSS Sanitizer Guard:** Dokumen hukum tersanitasi otomatis oleh HTMLPurifier di backend dengan whitelist tag semantik aman.
+16. [x] **Rebuild Deploy Hook:** Admin dapat memicu pembaruan build SSG Netlify via tombol "Terbitkan Perubahan ke Website" pada Filament Admin.
+
+---
+
+## 15. Keputusan yang Perlu Dikonfirmasi
+
+1. **Konten operasional dan editorial:** *SELESAI (Final).* Seluruh konten dikelola lewat arsitektur CMS bertingkat (`page_contents`, daftar dinamis, `legal_pages`, `nav_items`, `site_settings`) dengan fallback hardcoded aman di frontend.
+2. **Status buka/tutup mengabaikan hari libur dan hari tutup.** `days_open` hanya teks tampilan.
+3. **Agenda dan Panduan Kunjungan berupa daftar, bukan kartu** (mengikuti `DESIGN.md`).
+4. **Klaim faktual** (status cagar budaya, jumlah kios, sejarah) menunggu konfirmasi pengelola.
+5. **Hosting demo:** Menggunakan Netlify (Frontend gratis) + Local DDEV backend via `ddev share` (lihat `docs/DEMO_PUBLISH.md`).
+

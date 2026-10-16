@@ -14,6 +14,7 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
@@ -65,6 +66,18 @@ class WhatsOnResource extends Resource
                     ->required(),
                 DatePicker::make('end_date')
                     ->label('Tanggal Selesai'),
+                TextInput::make('time')
+                    ->label('Waktu / Jam Operasional Acara')
+                    ->placeholder('Contoh: 10.00 – 17.30 WITA')
+                    ->default('10.00 – 18.00 WITA'),
+                TextInput::make('location')
+                    ->label('Lokasi Spesifik di Gedung')
+                    ->placeholder('Contoh: Atrium Utama (Lantai Dasar & Koridor Timur)')
+                    ->default('Atrium Utama (Lantai Dasar)'),
+                TextInput::make('admission')
+                    ->label('Ketentuan Tiket / Biaya Masuk (HTM)')
+                    ->placeholder('Contoh: Gratis (Terbuka untuk Umum)')
+                    ->default('Gratis (Terbuka untuk Umum)'),
                 FileUpload::make('banner_image_path')
                     ->label('Banner Kegiatan (Rasio 16:9)')
                     ->disk('public')
@@ -80,6 +93,11 @@ class WhatsOnResource extends Resource
                     ->label('Detail Lengkap & Jadwal')
                     ->placeholder('Deskripsi acara, pengisi acara, syarat ketentuan promo...')
                     ->rows(6)
+                    ->columnSpanFull(),
+                TagsInput::make('highlights')
+                    ->label('Sorotan & Rangkaian Aktivitas Acara')
+                    ->placeholder('Ketik sorotan lalu tekan Enter')
+                    ->helperText('Daftar poin keunggulan/daya tarik acara untuk kemudahan pembaca di halaman detail.')
                     ->columnSpanFull(),
                 Toggle::make('is_active')
                     ->label('Status Publikasi Aktif')
