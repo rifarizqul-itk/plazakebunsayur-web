@@ -16,7 +16,7 @@ const EVENT_FILTER_OPTIONS = [
 ];
 
 export function EventsPage() {
-  const metaTitle = useContent('seo.agenda.title', 'Agenda & Promo Pasar | Plaza Kebun Sayur Balikpapan');
+  const metaTitle = useContent('seo.agenda.title', 'Agenda & Promo | Plaza Kebun Sayur Balikpapan');
   const metaDesc = useContent('seo.agenda.description', 'Jadwal pameran batu akik, bazar cinderamata, pentas seni budaya Dayak, dan promo pedagang di Plaza Kebun Sayur.');
   useDocumentMeta(metaTitle, metaDesc);
 

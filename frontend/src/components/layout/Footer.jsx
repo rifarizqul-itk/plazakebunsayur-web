@@ -11,7 +11,7 @@ const CURRENT_YEAR = new Date().getFullYear();
 const DEFAULT_FOOTER_NAV = [
   { id: 1, label: 'Direktori Kios Belanja', path: '/belanja', is_external: false },
   { id: 2, label: 'Sentra Kuliner Tradisional', path: '/kuliner', is_external: false },
-  { id: 3, label: 'Agenda & Promo Pasar', path: '/agenda', is_external: false },
+  { id: 3, label: 'Agenda & Promo Plaza', path: '/agenda', is_external: false },
   { id: 4, label: 'Panduan Kunjungan Gedung', path: '/panduan-kunjungan', is_external: false },
   { id: 5, label: 'Kontak & Pengaduan', path: '/kontak', is_external: false },
 ];
@@ -21,7 +21,7 @@ export function Footer() {
 
   const mallDesc = useContent(
     'footer.mall_description',
-    'Pusat perniagaan Pasar Inpres Kebun Sayur di Balikpapan Barat. Sentra batu mulia, perhiasan emas dan perak, kerajinan Dayak, batik, dan kuliner khas.'
+    'Pusat perniagaan Plaza Kebun Sayur di Balikpapan Barat. Sentra batu mulia, perhiasan emas dan perak, kerajinan Dayak, batik, dan kuliner khas.'
   );
   const mgmtTitle = useContent('footer.management_title', 'Kantor Pengelola');
   const mgmtDesc = useContent(
@@ -70,7 +70,7 @@ export function Footer() {
                   <h4 className="font-bold text-sm tracking-wider uppercase text-white">
                     Plaza Kebun Sayur
                   </h4>
-                  <p className="text-xs text-mono-300">Pasar Inpres Balikpapan Barat</p>
+                  <p className="text-xs text-mono-300">Balikpapan Barat</p>
                 </div>
               </div>
               <p className="text-xs text-mono-300 leading-relaxed">

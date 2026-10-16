@@ -15,7 +15,7 @@ export function Home() {
   const metaDesc = useContent('seo.home.description', 'Situs resmi direktori kios Plaza Kebun Sayur Balikpapan. Sentra batu akik, kerajinan etnik Dayak, kain batik, dan kuliner khas Kalimantan Timur.');
   useDocumentMeta(metaTitle, metaDesc);
 
-  const eventsTitle = useContent('home.events.title', 'Agenda dan kegiatan pasar');
+  const eventsTitle = useContent('home.events.title', 'Agenda & Kegiatan Mendatang');
   const [retailTenants, setRetailTenants] = useState([]);
   const [culinaryTenants, setCulinaryTenants] = useState([]);
   const [latestEvents, setLatestEvents] = useState([]);

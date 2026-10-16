@@ -105,7 +105,7 @@ export function PlanYourVisit() {
                   <div className="text-sm text-text-secondary leading-relaxed space-y-2 max-w-[68ch]">
                     <p className="text-text-primary font-medium">{mallAddress}</p>
                     <p>
-                      Terletak di pusat perniagaan Kebun Sayur (Pasar Inpres), berhadapan langsung dengan koridor jalan raya utama dan dekat kawasan permukiman Kampung Baru.
+                      Terletak di pusat perniagaan Kebun Sayur, Balikpapan Barat, berhadapan langsung dengan koridor jalan raya utama dan dekat kawasan permukiman Kampung Baru.
                     </p>
                     {mapsUrl && (
                       <div className="pt-2">
@@ -231,7 +231,7 @@ export function PlanYourVisit() {
                   Tips Berbelanja Cerdas
                 </h2>
                 <p className="text-xs sm:text-sm text-text-secondary mt-1 max-w-[68ch]">
-                  Praktik terbaik saat berbelanja suvenir, kerajinan etnik, dan batu mulia di Pasar Inpres Kebun Sayur.
+                  Praktik terbaik saat berbelanja suvenir, kerajinan etnik, dan batu mulia di Plaza Kebun Sayur.
                 </p>
               </div>
 

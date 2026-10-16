@@ -276,14 +276,14 @@ export const MOCK_PAGE_CONTENTS = {
   'home.featured.title': 'Kios Pilihan & Rekomendasi Unggulan',
   'home.featured.description': 'Rekomendasi kios kerajinan, perhiasan, dan kuliner terfavorit yang wajib Anda kunjungi saat berada di Plaza Kebun Sayur.',
   'home.history.eyebrow': 'Warisan Budaya Balikpapan',
-  'home.history.title': 'Sejarah & Perjalanan Pasar Inpres Kebun Sayur',
-  'home.history.p1': 'Berdiri sejak puluhan tahun silam di kawasan Balikpapan Barat, Pasar Inpres Kebun Sayur telah tumbuh menjadi ikon wisata belanja budaya utama di Kalimantan Timur. Dikenal luas oleh wisatawan nusantara hingga mancanegara sebagai sentra perniagaan batu mulia dan kerajinan otentik Dayak.',
-  'home.history.p2': 'Kini hadir dengan bangunan modern Plaza Kebun Sayur yang nyaman, gedung ini tetap merawat denyut ekonomi rakyat dan keaslian tradisi lokal. Setiap sudut kios menyimpan cerita ketekunan para pengrajin dan pedagang yang setia melestarikan warisan bumi Borneo.',
+  'home.history.title': 'Sejarah & Perjalanan Plaza Kebun Sayur',
+  'home.history.p1': 'Berdiri kokoh di kawasan perniagaan Kebun Sayur, Balikpapan Barat, Plaza Kebun Sayur telah tumbuh menjadi sentra belanja modern dan pusat cinderamata utama di Kalimantan Timur. Dikenal luas oleh wisatawan nusantara hingga mancanegara sebagai pusat perniagaan batu mulia, perhiasan emas, dan kerajinan otentik Dayak.',
+  'home.history.p2': 'Menghadirkan kenyamanan berbelanja di dalam gedung bertingkat yang rapi dan terawat, Plaza Kebun Sayur tetap merawat denyut ekonomi rakyat dan keaslian tradisi lokal. Setiap sudut kios menyimpan cerita ketekunan para pengrajin dan pedagang yang setia melestarikan warisan bumi Borneo.',
   'home.history.image': '/assets/Photograph_of_plaza_building.webp',
   'home.quick_access.title': 'Akses Cepat Direktori',
   'home.quick_access.description': 'Temukan kios belanja favorit, stan kuliner khas, jadwal kegiatan pameran, dan informasi rute kunjungan Anda.',
   'home.events.title': 'Agenda & Kegiatan Mendatang',
-  'home.events.description': 'Informasi pameran batu mulia, pentas seni budaya Dayak, dan promo menarik dari pedagang pasar.',
+  'home.events.description': 'Informasi pameran batu mulia, pentas seni budaya Dayak, dan promo menarik dari kios pedagang di Plaza Kebun Sayur.',
   'header.belanja.eyebrow': 'Katalog Pedagang',
   'header.belanja.title': 'Direktori Kios Belanja',
   'header.belanja.description': 'Jelajahi kios batu mulia, perhiasan emas dan perak, cinderamata khas Dayak, serta batik Kalimantan di Plaza Kebun Sayur.',
@@ -291,7 +291,7 @@ export const MOCK_PAGE_CONTENTS = {
   'header.kuliner.title': 'Pusat Jajanan & Oleh-Oleh Khas',
   'header.kuliner.description': 'Nikmati aneka panganan tradisional Kalimantan Timur, mulai dari amplang renyah, bingka kentang, mantau, hingga kopi lokal.',
   'header.agenda.eyebrow': 'Agenda & Pengumuman',
-  'header.agenda.title': 'Agenda Kegiatan & Promo Pasar',
+  'header.agenda.title': 'Agenda Kegiatan & Promo Plaza',
   'header.agenda.description': 'Temukan informasi pameran batu akik, pergelaran seni etnik Dayak, bazar diskon cinderamata, serta pengumuman resmi pengelola mall.',
   'header.panduan.eyebrow': 'Panduan & Informasi Gedung',
   'header.panduan.title': 'Rencanakan Kunjungan Anda',
@@ -305,7 +305,7 @@ export const MOCK_PAGE_CONTENTS = {
   'header.terms.eyebrow': 'Informasi Legal & Kepatuhan',
   'header.terms.title': 'Syarat & Ketentuan',
   'header.terms.description': 'Ketentuan penggunaan portal direktori komersial dan layanan informasi publik Plaza Kebun Sayur Balikpapan.',
-  'footer.mall_description': 'Pusat perniagaan Pasar Inpres Kebun Sayur di Balikpapan Barat. Sentra batu mulia, perhiasan emas dan perak, kerajinan Dayak, batik, dan kuliner khas.',
+  'footer.mall_description': 'Pusat perniagaan Plaza Kebun Sayur di Balikpapan Barat. Sentra batu mulia, perhiasan emas dan perak, kerajinan Dayak, batik, dan kuliner khas.',
   'footer.management_title': 'Kantor Pengelola',
   'footer.management_description': 'Kantor manajemen berlokasi di Lantai Dasar (Pintu Timur). Melayani informasi kios, ketertiban, dan layanan pengunjung.',
   'brand.logo': '/assets/main_logo_transparent_for_light_bg.webp',
@@ -343,7 +343,7 @@ export const MOCK_VISIT_GUIDE = {
       id: 1,
       title: 'Tawar-Menawar dengan Santun',
       description:
-        'Tradisi berniaga di Pasar Inpres mengedepankan keramahan dan kekeluargaan. Silakan berdiskusi dan menawar harga cinderamata secara wajar dengan para pedagang kios.',
+        'Tradisi berniaga di Plaza Kebun Sayur mengedepankan keramahan dan kekeluargaan. Silakan berdiskusi dan menawar harga cinderamata secara wajar dengan para pedagang kios.',
     },
     {
       id: 2,
@@ -398,7 +398,7 @@ export const MOCK_NAV_ITEMS = {
   footer: [
     { id: 7, label: 'Direktori Kios Belanja', path: '/belanja', location: 'footer', is_external: false },
     { id: 8, label: 'Sentra Kuliner Tradisional', path: '/kuliner', location: 'footer', is_external: false },
-    { id: 9, label: 'Agenda & Promo Pasar', path: '/agenda', location: 'footer', is_external: false },
+    { id: 9, label: 'Agenda & Promo Plaza', path: '/agenda', location: 'footer', is_external: false },
     { id: 10, label: 'Panduan Kunjungan Gedung', path: '/panduan-kunjungan', location: 'footer', is_external: false },
     { id: 11, label: 'Kontak & Pengaduan', path: '/kontak', location: 'footer', is_external: false },
   ],
@@ -412,7 +412,7 @@ export const MOCK_LEGAL_PAGES = {
       'Komitmen Plaza Kebun Sayur dalam melindungi data pribadi pengunjung dan transparansi pemrosesan data sesuai Undang-Undang No. 27 Tahun 2022 (UU PDP).',
     updated_label: '11 Oktober 2026',
     body: `<h2>1. Pendahuluan &amp; Prinsip Perlindungan Data</h2>
-<p>Pengelola Plaza Kebun Sayur (Pasar Inpres Kebun Sayur Balikpapan) berkomitmen penuh untuk menghormati, menjaga kerahasiaan, dan melindungi hak privasi setiap pengunjung situs direktori resmi ini.</p>
+<p>Pengelola Plaza Kebun Sayur Balikpapan berkomitmen penuh untuk menghormati, menjaga kerahasiaan, dan melindungi hak privasi setiap pengunjung situs direktori resmi ini.</p>
 <p>Dokumen Kebijakan Privasi ini menjelaskan bagaimana data dan informasi pribadi Anda dikumpulkan, digunakan, disimpan, dan dilindungi saat mengakses portal web serta layanan informasi digital kami, sejalan dengan prinsip transparansi hukum Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP).</p>
 
 <h2>2. Data Pribadi yang Kami Kumpulkan</h2>
@@ -466,7 +466,7 @@ export const MOCK_LEGAL_PAGES = {
 <p>Jika Anda tidak menyetujui bagian mana pun dari ketentuan ini, Anda disarankan untuk tidak melanjutkan penggunaan situs ini.</p>
 
 <h2>2. Peran &amp; Ruang Lingkup Layanan</h2>
-<p>Situs ini dikelola sebagai portal profil komersial resmi dan direktori pedagang bagi pusat perniagaan Plaza Kebun Sayur (Pasar Inpres Kebun Sayur, Balikpapan Barat). Fungsi utama situs ini adalah:</p>
+<p>Situs ini dikelola sebagai portal profil komersial resmi dan direktori pedagang bagi pusat perniagaan Plaza Kebun Sayur, Balikpapan Barat. Fungsi utama situs ini adalah:</p>
 <ul>
     <li>Menyediakan katalog informasi kios perhiasan, batu permata mulia, cinderamata etnik Dayak, kain batik khas Kalimantan, serta warung kuliner tradisional.</li>
     <li>Menyajikan informasi denah lantai, fasilitas umum gedung (toilet, musholla, pos satpam, ATM), dan panduan akses transportasi pengunjung.</li>

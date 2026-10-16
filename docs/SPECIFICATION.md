@@ -26,7 +26,7 @@ Sebelum spesifikasi ini dijalankan, berikut asumsi dasar yang disepakati:
 
 ## 2. Objective & Value Proposition
 
-Membangun website modern hybrid **Company Profile & Commercial Business Directory** untuk **Plaza Kebun Sayur Balikpapan** (Pasar Inpres Kebun Sayur). Website ini mempromosikan sentra batu mulia/akik, perhiasan emas & perak, kerajinan etnik suku Dayak Kenyah, batik khas Balikpapan, cinderamata Kaltim, dan sentra kuliner khas, serta menghubungkan pengunjung langsung ke pedagang melalui **Direct WhatsApp Click-to-Chat**.
+Membangun website modern hybrid **Company Profile & Commercial Business Directory** untuk **Plaza Kebun Sayur Balikpapan** (gedung pusat perbelanjaan dan sentra cinderamata di Balikpapan Barat). Website ini mempromosikan sentra batu mulia/akik, perhiasan emas & perak, kerajinan etnik suku Dayak Kenyah, batik khas Balikpapan, cinderamata Kaltim, dan sentra kuliner khas, serta menghubungkan pengunjung langsung ke pedagang melalui **Direct WhatsApp Click-to-Chat**.
 
 ### Kebutuhan Pengguna (User Stories)
 * **Wisatawan / Pengunjung:**
@@ -507,7 +507,7 @@ Seluruh respons dibungkus dalam format standar JSON:
   "email": "rian@example.com",
   "phone_number": "080000000000",
   "subject": "Pertanyaan Jam Buka Hari Libur",
-  "message": "Apakah saat hari libur nasional pasar tetap buka normal?",
+  "message": "Apakah saat hari libur nasional plaza tetap buka normal?",
   "bot_check": "" 
 }
 ```

@@ -89,7 +89,7 @@ class NavItemSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'label' => 'Agenda & Promo Pasar',
+                'label' => 'Agenda & Promo Plaza',
                 'path' => '/agenda',
                 'location' => 'footer',
                 'is_external' => false,

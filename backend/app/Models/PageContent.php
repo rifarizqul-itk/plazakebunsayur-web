@@ -107,22 +107,22 @@ class PageContent extends Model
                 'type' => 'text',
                 'group' => 'home',
                 'label' => 'Sejarah: Judul',
-                'help' => 'Judul bagian cerita sejarah pasar.',
-                'default' => 'Sejarah & Perjalanan Pasar Inpres Kebun Sayur',
+                'help' => 'Judul bagian cerita sejarah perniagaan gedung.',
+                'default' => 'Sejarah & Perjalanan Plaza Kebun Sayur',
             ],
             'home.history.p1' => [
                 'type' => 'textarea',
                 'group' => 'home',
                 'label' => 'Sejarah: Paragraf Pertama',
                 'help' => 'Paragraf pembuka narasi sejarah.',
-                'default' => 'Berdiri sejak puluhan tahun silam di kawasan Balikpapan Barat, Pasar Inpres Kebun Sayur telah tumbuh menjadi ikon wisata belanja budaya utama di Kalimantan Timur. Dikenal luas oleh wisatawan nusantara hingga mancanegara sebagai sentra perniagaan batu mulia dan kerajinan otentik Dayak.',
+                'default' => 'Berdiri kokoh di kawasan perniagaan Kebun Sayur, Balikpapan Barat, Plaza Kebun Sayur telah tumbuh menjadi sentra belanja modern dan pusat cinderamata utama di Kalimantan Timur. Dikenal luas oleh wisatawan nusantara hingga mancanegara sebagai pusat perniagaan batu mulia, perhiasan emas, dan kerajinan otentik Dayak.',
             ],
             'home.history.p2' => [
                 'type' => 'textarea',
                 'group' => 'home',
                 'label' => 'Sejarah: Paragraf Kedua',
                 'help' => 'Paragraf kedua kelanjutan narasi modernisasi.',
-                'default' => 'Kini hadir dengan bangunan modern Plaza Kebun Sayur yang nyaman, gedung ini tetap merawat denyut ekonomi rakyat dan keaslian tradisi lokal. Setiap sudut kios menyimpan cerita ketekunan para pengrajin dan pedagang yang setia melestarikan warisan bumi Borneo.',
+                'default' => 'Menghadirkan kenyamanan berbelanja di dalam gedung bertingkat yang rapi dan terawat, Plaza Kebun Sayur tetap merawat denyut ekonomi rakyat dan keaslian tradisi lokal. Setiap sudut kios menyimpan cerita ketekunan para pengrajin dan pedagang yang setia melestarikan warisan bumi Borneo.',
             ],
             'home.history.image' => [
                 'type' => 'image',
@@ -157,7 +157,7 @@ class PageContent extends Model
                 'group' => 'home',
                 'label' => 'Agenda Beranda: Deskripsi',
                 'help' => 'Penjelasan cuplikan agenda di halaman utama.',
-                'default' => 'Informasi pameran batu mulia, pentas seni budaya Dayak, dan promo menarik dari pedagang pasar.',
+                'default' => 'Informasi pameran batu mulia, pentas seni budaya Dayak, dan promo menarik dari kios pedagang di Plaza Kebun Sayur.',
             ],
 
             // --- Group: Header Halaman ---
@@ -215,7 +215,7 @@ class PageContent extends Model
                 'group' => 'header',
                 'label' => 'Hal. Agenda: Judul',
                 'help' => 'Judul header halaman agenda.',
-                'default' => 'Agenda Kegiatan & Promo Pasar',
+                'default' => 'Agenda Kegiatan & Promo Plaza',
             ],
             'header.agenda.description' => [
                 'type' => 'textarea',
@@ -315,7 +315,7 @@ class PageContent extends Model
                 'group' => 'footer',
                 'label' => 'Footer: Deskripsi Mall',
                 'help' => 'Teks ringkas profil mall di kolom pertama footer.',
-                'default' => 'Pusat perniagaan Pasar Inpres Kebun Sayur di Balikpapan Barat. Sentra batu mulia, perhiasan emas dan perak, kerajinan Dayak, batik, dan kuliner khas.',
+                'default' => 'Pusat perniagaan Plaza Kebun Sayur di Balikpapan Barat. Sentra batu mulia, perhiasan emas dan perak, kerajinan Dayak, batik, dan kuliner khas.',
             ],
             'footer.management_title' => [
                 'type' => 'text',
@@ -375,7 +375,7 @@ class PageContent extends Model
                 'group' => 'seo',
                 'label' => 'SEO: Deskripsi Halaman Belanja',
                 'help' => 'Deskripsi meta halaman belanja.',
-                'default' => 'Katalog lengkap kios batu mulia, perhiasan, suvenir Dayak, batik, dan kerajinan tradisional di Pasar Inpres Kebun Sayur Balikpapan.',
+                'default' => 'Katalog lengkap kios batu mulia, perhiasan, suvenir Dayak, batik, dan kerajinan tradisional di Plaza Kebun Sayur Balikpapan.',
             ],
             'seo.kuliner.title' => [
                 'type' => 'text',
@@ -396,7 +396,7 @@ class PageContent extends Model
                 'group' => 'seo',
                 'label' => 'SEO: Judul Halaman Agenda',
                 'help' => 'Judul meta tab agenda.',
-                'default' => 'Agenda & Promo Pasar | Plaza Kebun Sayur Balikpapan',
+                'default' => 'Agenda & Promo | Plaza Kebun Sayur Balikpapan',
             ],
             'seo.agenda.description' => [
                 'type' => 'textarea',

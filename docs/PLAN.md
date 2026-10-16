@@ -124,7 +124,7 @@ Sesuai kesepakatan spesifikasi:
 2. **Halaman Agenda (`EventsPage.jsx` - `/agenda` & `EventDetail.jsx` - `/agenda/:slug`):**
    * Daftar event budaya, pameran batu permata, dan promo pedagang dengan badge kalender.
 3. **Halaman Panduan Kunjungan (`PlanYourVisit.jsx` - `/panduan-kunjungan`):**
-   * Grid informasi terpadu: Jadwal Buka Mall, Akses Transportasi (rute bandara SAMS Sepinggan & pelabuhan Semayang), Tips Belanja Cerdas, Tata Tertib Pasar, dan Direktori 6 Fasilitas Mall (Musholla, ATM, Toilet, Parkir, Pos Keamanan).
+   * Grid informasi terpadu: Jadwal Buka Mall, Akses Transportasi (rute bandara SAMS Sepinggan & pelabuhan Semayang), Tips Belanja Cerdas, Tata Tertib Gedung, dan Direktori 6 Fasilitas Mall (Musholla, ATM, Toilet, Parkir, Pos Keamanan).
 4. **Halaman Kontak (`ContactPage.jsx` - `/kontak`):**
    * Layout dua kolom: Informasi kantor pengelola, nomor darurat/hotline WhatsApp, alamat gedung; serta formulir pengiriman pesan publik yang terhubung ke `POST /api/contact`.
 5. **Halaman 404 (`NotFound.jsx` - `*`):**

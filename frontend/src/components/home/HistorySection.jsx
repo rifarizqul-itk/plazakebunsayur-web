@@ -5,14 +5,14 @@ import { Container } from '../layout/Container';
 import { useContent, useContentImage } from '../../hooks/useContent';
 
 export function HistorySection() {
-  const title = useContent('home.history.title', 'Pasar Inpres Kebun Sayur Balikpapan');
+  const title = useContent('home.history.title', 'Plaza Kebun Sayur Balikpapan');
   const p1 = useContent(
     'home.history.p1',
-    'Dikenal luas masyarakat sebagai Pasar Inpres Kebun Sayur, kawasan ini bermula dari pasar tradisional pasca kemerdekaan sebelum diresmikan sebagai pusat cinderamata terpadu pada era 1980-an.'
+    'Berdiri kokoh di kawasan perniagaan Kebun Sayur, Balikpapan Barat, Plaza Kebun Sayur telah tumbuh menjadi sentra belanja modern dan pusat cinderamata utama di Kalimantan Timur.'
   );
   const p2 = useContent(
     'home.history.p2',
-    'Kini, Plaza Kebun Sayur menjadi pusat perdagangan cinderamata di Balikpapan Barat. Pengunjung dapat menemukan batu mulia seperti Kecubung dan Red Borneo, kerajinan Dayak, manik-manik etnik, serta kain tenun dan batik khas pesisir.'
+    'Pengunjung dapat menemukan ragam batu mulia khas Kalimantan seperti Kecubung dan Red Borneo, perhiasan emas dan perak, kerajinan Dayak, manik-manik etnik, serta kain tenun dan batik khas pesisir dengan fasilitas gedung yang nyaman.'
   );
   const historyImage = useContentImage('home.history.image', '/assets/Photograph_of_plaza_building.webp');
 
@@ -49,7 +49,7 @@ export function HistorySection() {
             <div className="relative w-full aspect-[4/3] overflow-hidden border border-border-subtle bg-surface-muted rounded-md group">
               <img
                 src={historyImage}
-                alt="Gedung Pasar Inpres Kebun Sayur Balikpapan"
+                alt="Gedung Plaza Kebun Sayur Balikpapan"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                 loading="lazy"
                 decoding="async"

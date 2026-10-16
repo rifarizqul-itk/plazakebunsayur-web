@@ -219,7 +219,7 @@ export function CulinaryDetail() {
               )}
 
               <span className="text-xs text-text-muted pt-1">
-                Lokasi: Sentra Kuliner Pasar Inpres Kebun Sayur, Balikpapan Barat
+                Lokasi: Sentra Kuliner Plaza Kebun Sayur, Balikpapan Barat
               </span>
             </div>
           </div>

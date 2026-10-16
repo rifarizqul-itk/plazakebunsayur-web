@@ -22,12 +22,16 @@ const retailTenants = MOCK_TENANTS.filter(t => t.category?.type === 'retail').sl
 const culinaryTenants = MOCK_TENANTS.filter(t => t.category?.type === 'culinary').slice(0, 3);
 
 // Read compiled CSS
-const cssPath = path.join(rootDir, 'dist/assets/index-DjaT85Nq.css');
+const assetsDir = path.join(rootDir, 'dist/assets');
 let cssContent = '';
-if (fs.existsSync(cssPath)) {
-  cssContent = fs.readFileSync(cssPath, 'utf8');
-} else {
-  console.warn('CSS file not found at', cssPath);
+if (fs.existsSync(assetsDir)) {
+  const cssFile = fs.readdirSync(assetsDir).find(f => f.endsWith('.css'));
+  if (cssFile) {
+    cssContent = fs.readFileSync(path.join(assetsDir, cssFile), 'utf8');
+  }
+}
+if (!cssContent) {
+  console.warn('CSS file not found in dist/assets');
 }
 
 // Render component tree

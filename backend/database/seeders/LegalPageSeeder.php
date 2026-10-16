@@ -14,7 +14,7 @@ class LegalPageSeeder extends Seeder
     {
         $privacyBody = <<<'HTML'
 <h2>1. Pendahuluan &amp; Prinsip Perlindungan Data</h2>
-<p>Pengelola Plaza Kebun Sayur (Pasar Inpres Kebun Sayur Balikpapan) berkomitmen penuh untuk menghormati, menjaga kerahasiaan, dan melindungi hak privasi setiap pengunjung situs direktori resmi ini.</p>
+<p>Pengelola Plaza Kebun Sayur Balikpapan berkomitmen penuh untuk menghormati, menjaga kerahasiaan, dan melindungi hak privasi setiap pengunjung situs direktori resmi ini.</p>
 <p>Dokumen Kebijakan Privasi ini menjelaskan bagaimana data dan informasi pribadi Anda dikumpulkan, digunakan, disimpan, dan dilindungi saat mengakses portal web serta layanan informasi digital kami, sejalan dengan prinsip transparansi hukum Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP).</p>
 
 <h2>2. Data Pribadi yang Kami Kumpulkan</h2>
@@ -64,7 +64,7 @@ HTML;
 <p>Jika Anda tidak menyetujui bagian mana pun dari ketentuan ini, Anda disarankan untuk tidak melanjutkan penggunaan situs ini.</p>
 
 <h2>2. Peran &amp; Ruang Lingkup Layanan</h2>
-<p>Situs ini dikelola sebagai portal profil komersial resmi dan direktori pedagang bagi pusat perniagaan Plaza Kebun Sayur (Pasar Inpres Kebun Sayur, Balikpapan Barat). Fungsi utama situs ini adalah:</p>
+<p>Situs ini dikelola sebagai portal profil komersial resmi dan direktori pedagang bagi pusat perniagaan Plaza Kebun Sayur, Balikpapan Barat. Fungsi utama situs ini adalah:</p>
 <ul>
     <li>Menyediakan katalog informasi kios perhiasan, batu permata mulia, cinderamata etnik Dayak, kain batik khas Kalimantan, serta warung kuliner tradisional.</li>
     <li>Menyajikan informasi denah lantai, fasilitas umum gedung (toilet, musholla, pos satpam, ATM), dan panduan akses transportasi pengunjung.</li>

@@ -105,7 +105,7 @@ export function TermsConditions() {
                   </h2>
                   <div className="text-sm sm:text-base text-text-secondary leading-relaxed space-y-3">
                     <p>
-                      Situs ini dikelola sebagai portal profil komersial resmi dan direktori pedagang bagi pusat perniagaan Plaza Kebun Sayur (Pasar Inpres Kebun Sayur, Balikpapan Barat). Fungsi utama situs ini adalah:
+                      Situs ini dikelola sebagai portal profil komersial resmi dan direktori pedagang bagi pusat perniagaan Plaza Kebun Sayur, Balikpapan Barat. Fungsi utama situs ini adalah:
                     </p>
                     <ul className="list-disc pl-5 space-y-2">
                       <li>Menyediakan katalog informasi kios perhiasan, batu permata mulia, cinderamata etnik Dayak, kain batik khas Kalimantan, serta warung kuliner tradisional.</li>

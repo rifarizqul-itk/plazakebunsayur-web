@@ -90,7 +90,7 @@ export function PrivacyPolicy() {
                   </h2>
                   <div className="text-sm sm:text-base text-text-secondary leading-relaxed space-y-3">
                     <p>
-                      Pengelola Plaza Kebun Sayur (Pasar Inpres Kebun Sayur Balikpapan) berkomitmen penuh untuk menghormati, menjaga kerahasiaan, dan melindungi hak privasi setiap pengunjung situs direktori resmi ini.
+                      Pengelola Plaza Kebun Sayur Balikpapan berkomitmen penuh untuk menghormati, menjaga kerahasiaan, dan melindungi hak privasi setiap pengunjung situs direktori resmi ini.
                     </p>
                     <p>
                       Dokumen Kebijakan Privasi ini menjelaskan bagaimana data dan informasi pribadi Anda dikumpulkan, digunakan, disimpan, dan dilindungi saat mengakses portal web serta layanan informasi digital kami, sejalan dengan prinsip transparansi hukum Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP).

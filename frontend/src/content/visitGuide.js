@@ -31,7 +31,7 @@ export const SHOPPING_TIPS = [
   {
     title: 'Tawar-Menawar dengan Santun',
     description:
-      'Tradisi berniaga di Pasar Inpres mengedepankan keramahan dan kekeluargaan. Silakan berdiskusi dan menawar harga cinderamata secara wajar dengan para pedagang kios.',
+      'Tradisi berniaga di Plaza Kebun Sayur mengedepankan keramahan dan kekeluargaan. Silakan berdiskusi dan menawar harga cinderamata secara wajar dengan para pedagang kios.',
   },
   {
     title: 'Uji Keaslian Batu Mulia',

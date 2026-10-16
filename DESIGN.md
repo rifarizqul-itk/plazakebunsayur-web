@@ -121,7 +121,7 @@ Untuk semua aspek visual (warna, tipografi, bentuk, komponen, copywriting, tata 
 
 ## Overview
 
-Situs ini adalah profil perusahaan dan direktori komersial untuk Plaza Kebun Sayur, Pasar Inpres Kebun Sayur Balikpapan Barat. Fungsi utamanya adalah membantu pengunjung menemukan kios belanja, kuliner, agenda, panduan kunjungan, dan kontak pedagang melalui WhatsApp.
+Situs ini adalah profil perusahaan dan direktori komersial untuk Plaza Kebun Sayur Balikpapan, pusat perbelanjaan dan sentra cinderamata di Balikpapan Barat. Fungsi utamanya adalah membantu pengunjung menemukan kios belanja, kuliner, agenda, panduan kunjungan, dan kontak pedagang melalui WhatsApp.
 
 Informasi sejarah atau status cagar budaya hanya ditampilkan sebagai konteks faktual bila diperlukan. Jangan menjadikannya slogan, label dekoratif, atau identitas utama yang diulang-ulang.
 
@@ -314,10 +314,9 @@ Bahasa situs harus sederhana, konkret, dan informatif. Jangan menulis seperti la
 ### Istilah yang Boleh Dipakai Bila Perlu
 
 - Plaza Kebun Sayur
-- Pasar Inpres Kebun Sayur
 - Balikpapan Barat
 - cagar budaya (hanya setelah status resminya dikonfirmasi pengelola, dan cantumkan sumbernya)
-- sejarah pasar
+- sejarah gedung / perniagaan
 - paguyuban pedagang
 - direktori kios
 - panduan kunjungan
@@ -333,7 +332,7 @@ Destinasi heritage modern yang menghadirkan experience berbelanja tak terlupakan
 Baik:
 
 ```text
-Plaza Kebun Sayur berada di kawasan Pasar Inpres Kebun Sayur, Balikpapan Barat. Temukan kios batu mulia, perhiasan, kerajinan, batik, dan kuliner, lalu hubungi pedagang lewat WhatsApp.
+Plaza Kebun Sayur adalah pusat perbelanjaan dan cinderamata di Balikpapan Barat. Temukan kios batu mulia, perhiasan, kerajinan, batik, dan kuliner, lalu hubungi pedagang lewat WhatsApp.
 ```
 
 Buruk:
@@ -760,7 +759,7 @@ Bentuk:
 ### Foto
 
 - Gunakan foto asli Plaza Kebun Sayur bila tersedia.
-- Catatan fase demo & prototipe: Karena tim Inovasi Sosial belum turun ke lapangan untuk dokumentasi pemotretan langsung, penggunaan stok foto kurasi yang relevan (arsitektur pasar, batu permata Borneo, kerajinan Dayak, kuliner tradisional) diperbolehkan sebagai placeholder visual kebutuhan demo.
+- Catatan fase demo & prototipe: Karena tim Inovasi Sosial belum turun ke lapangan untuk dokumentasi pemotretan langsung, penggunaan stok foto kurasi yang relevan (arsitektur gedung pusat perbelanjaan, batu permata Borneo, kerajinan Dayak, kuliner tradisional) diperbolehkan sebagai placeholder visual kebutuhan demo.
 - Foto demo akan digantikan secara bertahap oleh foto dokumentasi riil begitu data visual lapangan telah dihimpun.
 - Semua kartu tenant memakai rasio foto 4:3.
 
@@ -788,16 +787,16 @@ Identitas situs dibangun dari tiga hal nyata:
 
 1. Warna marun Bunsay.
 2. Fungsi direktori kios dan informasi kunjungan.
-3. Konteks lokasi: Pasar Inpres Kebun Sayur, Balikpapan Barat.
+3. Konteks lokasi: Plaza Kebun Sayur, Balikpapan Barat.
 
 ### Aturan Konten Sejarah
 
 - Informasi sejarah atau cagar budaya boleh tampil jika faktual dan relevan.
 - Gunakan istilah konkret seperlunya, misalnya:
-  - `Pasar Inpres Kebun Sayur`
+  - `Plaza Kebun Sayur`
   - `Balikpapan Barat`
   - `cagar budaya`
-  - `sejarah pasar`
+  - `sejarah gedung / perniagaan`
 - Jangan menjadikannya slogan utama.
 - Jangan mengarang narasi sejarah.
 - Jangan membuat klaim budaya tanpa data.
@@ -997,7 +996,7 @@ Sebelum hasil desain atau kode diterima, cek:
 - [ ] Semua kartu, tombol, dan tautan memiliki tujuan jelas.
 - [ ] Semua state kosong, loading, dan error mengikuti aturan desain.
 - [ ] Tidak ada fitur baru yang belum disepakati.
-- [ ] Situs tetap terasa sebagai direktori Pasar Inpres Kebun Sayur, bukan landing page startup generik.
+- [ ] Situs tetap terasa sebagai direktori Plaza Kebun Sayur yang autentik dan praktis, bukan landing page startup generik.
 - [ ] Tidak ada kotak ikon di atas atau di samping heading kartu.
 - [ ] Tidak ada emoji di file `.jsx` (cek: `grep -rnP "[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}]" frontend/src`).
 - [ ] Tidak ada `animate-ping` atau `animate-pulse` selain skeleton loading.
@@ -1024,7 +1023,7 @@ Sebelum hasil desain atau kode diterima, cek:
 - Tampilkan lantai dan nomor unit bersama nama kios.
 - Pastikan setiap efek hover punya padanan untuk sentuhan.
 - Gunakan bahasa Indonesia yang sederhana, konkret, dan informatif.
-- Gunakan istilah lokasi dan pasar yang nyata.
+- Gunakan istilah lokasi dan gedung perbelanjaan yang nyata.
 - Tampilkan empty state jika data belum tersedia.
 - Pastikan setiap section memiliki fungsi yang jelas.
 - Pakai `border-input` untuk kolom formulir dan `border-subtle` hanya untuk garis dekoratif.

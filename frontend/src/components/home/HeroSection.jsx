@@ -46,9 +46,9 @@ const slides = [
   {
     id: 5,
     image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1800&q=80',
-    tag: 'Suasana Kios Pasar Inpres',
+    tag: 'Suasana Kios Plaza Kebun Sayur',
     title: 'Ratusan Kios Resmi Pengrajin Lokal',
-    desc: 'Keramahan interaksi pasar tradisional yang telah melegenda puluhan tahun.',
+    desc: 'Keramahan interaksi perniagaan dan belanja cinderamata yang nyaman dan terpercaya.',
   },
 ];
 
@@ -287,7 +287,7 @@ export function HeroSection() {
         </div>
       </section>
 
-      {/* 2. Layanan dan Komoditas Pasar */}
+      {/* 2. Layanan dan Komoditas Belanja */}
       <section className="py-14 sm:py-18 bg-canvas border-b border-border-subtle">
         <Container>
           {/* Centered Display Header */}

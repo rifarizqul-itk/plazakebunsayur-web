@@ -61,7 +61,7 @@ class TenantApiTest extends TestCase
 
     public function test_returns_404_for_unknown_tenant_slug(): void
     {
-        $response = $this->getJson('/api/tenants/toko-tidak-ada-di-pasar');
+        $response = $this->getJson('/api/tenants/toko-tidak-ada-di-plaza');
         $response->assertStatus(404)
             ->assertJson([
                 'success' => false,

@@ -12,7 +12,7 @@ import { useDocumentMeta } from '../hooks/useDocumentMeta';
 
 export function ShoppingDirectory() {
   const metaTitle = useContent('seo.belanja.title', 'Direktori Kios Belanja | Plaza Kebun Sayur Balikpapan');
-  const metaDesc = useContent('seo.belanja.description', 'Katalog lengkap kios batu mulia, perhiasan, suvenir Dayak, batik, dan kerajinan tradisional di Pasar Inpres Kebun Sayur Balikpapan.');
+  const metaDesc = useContent('seo.belanja.description', 'Katalog lengkap kios batu mulia, perhiasan, suvenir Dayak, batik, dan kerajinan tradisional di Plaza Kebun Sayur Balikpapan.');
   useDocumentMeta(metaTitle, metaDesc);
 
   const headerTitle = useContent('header.belanja.title', 'Direktori Kios Belanja');

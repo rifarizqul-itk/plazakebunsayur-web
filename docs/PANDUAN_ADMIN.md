@@ -56,7 +56,7 @@ Menu ini adalah pusat kendali untuk mengganti teks sambutan, deskripsi sejarah, 
   *Contoh:* *"Sentra Batu Mulia, Etnik Dayak & Kerajinan Khas Kalimantan"*.
 * **Subjudul Hero (`home.hero.subtitle`):** Penjelasan singkat di bawah judul utama mall.
 * **Teks Tombol Aksi Hero (`home.hero.cta_label`):** Teks pada tombol tombol pintas (misal: *"Jelajahi Direktori Kios"*).
-* **Judul & Narasi Sejarah (`home.history.title`, `home.history.body`):** Cerita kilas balik dan sejarah berdirinya Pasar Inpres Kebun Sayur.
+* **Judul & Narasi Sejarah (`home.history.title`, `home.history.body`):** Cerita kilas balik dan sejarah perniagaan Plaza Kebun Sayur.
 * **Judul & Deskripsi Bagian Unggulan (`home.featured.title`, `home.featured.description`):** Teks pengantar untuk blok kios dan stan pilihan.
 
 ### B. Tab "Header Halaman"
@@ -106,7 +106,7 @@ Halaman **Panduan Kunjungan** dirancang agar wisatawan dari luar kota Balikpapan
 * Anda dapat menambah tips baru kapan saja saat ada panduan baru bagi wisatawan.
 
 ### 3. Tata Tertib Gedung (`Tata Tertib`)
-* Aturan ketertiban, kebersihan, dan keselamatan bersama di area pasar/plaza.
+* Aturan ketertiban, kebersihan, dan keselamatan bersama di area gedung Plaza Kebun Sayur.
 * **Contoh:** *"Dilarang merokok di area tertutup"*, *"Jaga barang bawaan berharga Anda"*.
 
 ---

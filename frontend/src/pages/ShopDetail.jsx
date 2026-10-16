@@ -219,7 +219,7 @@ export function ShopDetail() {
               )}
 
               <span className="text-xs text-text-muted pt-1">
-                Lokasi: Pasar Inpres Kebun Sayur, Jl. Letjen Suprapto, Balikpapan Barat
+                Lokasi: Plaza Kebun Sayur, Jl. Letjen Suprapto, Balikpapan Barat
               </span>
             </div>
           </div>

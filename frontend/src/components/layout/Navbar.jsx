@@ -89,7 +89,7 @@ export function Navbar() {
                   PLAZA KEBUN SAYUR
                 </span>
                 <span className="text-xs text-text-muted uppercase tracking-wider font-semibold whitespace-nowrap">
-                  Pasar Inpres Balikpapan
+                  Balikpapan Barat
                 </span>
               </div>
             </Link>
