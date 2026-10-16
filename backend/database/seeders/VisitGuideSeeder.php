@@ -73,7 +73,7 @@ class VisitGuideSeeder extends Seeder
         ];
 
         foreach ($shoppingTips as $tip) {
-            ShoppingTip::firstOrCreate(
+            ShoppingTip::updateOrCreate(
                 ['title' => $tip['title']],
                 $tip
             );
@@ -101,7 +101,7 @@ class VisitGuideSeeder extends Seeder
         ];
 
         foreach ($buildingRules as $rule) {
-            BuildingRule::firstOrCreate(
+            BuildingRule::updateOrCreate(
                 ['title' => $rule['title']],
                 $rule
             );

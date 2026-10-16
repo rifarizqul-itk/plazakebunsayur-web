@@ -118,10 +118,10 @@ class NavItemSeeder extends Seeder
         ];
 
         foreach ($items as $item) {
-            NavItem::firstOrCreate(
+            NavItem::updateOrCreate(
                 [
-                    'label' => $item['label'],
                     'location' => $item['location'],
+                    'path' => $item['path'],
                 ],
                 $item
             );

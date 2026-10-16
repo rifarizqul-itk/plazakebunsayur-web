@@ -104,7 +104,7 @@ HTML;
 <p>Syarat &amp; Ketentuan ini diatur dan ditafsirkan sesuai dengan hukum Negara Kesatuan Republik Indonesia. Setiap perselisihan yang timbul sehubungan dengan penggunaan situs ini akan diselesaikan secara musyawarah untuk mufakat terlebih dahulu, dan bila tidak tercapai titik temu, akan diselesaikan melalui yurisdiksi pengadilan yang berwenang di Kota Balikpapan.</p>
 HTML;
 
-        LegalPage::firstOrCreate(
+        LegalPage::updateOrCreate(
             ['slug' => 'kebijakan-privasi'],
             [
                 'title' => 'Kebijakan Privasi',
@@ -114,7 +114,7 @@ HTML;
             ]
         );
 
-        LegalPage::firstOrCreate(
+        LegalPage::updateOrCreate(
             ['slug' => 'syarat-ketentuan'],
             [
                 'title' => 'Syarat & Ketentuan',
