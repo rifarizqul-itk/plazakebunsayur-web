@@ -10,6 +10,40 @@ import { getWitaOperatingStatus } from '../utils/hours';
 
 const FALLBACK_CULINARY_IMAGE = 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80';
 
+function ShareButton({ copied, onShare, label = 'Bagikan tautan stan' }) {
+  return (
+    <button
+      type="button"
+      onClick={onShare}
+      className="inline-flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] px-3 py-2 text-xs font-medium text-text-muted hover:text-text-primary hover:bg-surface-subtle active:bg-surface-muted transition-colors rounded-sm cursor-pointer"
+      title={label}
+      aria-label={label}
+    >
+      <Share2 size={15} />
+      <span>{copied ? 'Tersalin' : 'Bagikan'}</span>
+    </button>
+  );
+}
+
+function OperatingHoursBadge({ daysOpen, hours }) {
+  const prefix = daysOpen ? `${daysOpen} • ` : '';
+  const badgeClass = hours.isOpen
+    ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+    : 'bg-surface-muted text-text-muted';
+
+  return (
+    <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-text-secondary">
+      <Clock size={15} className="text-mono-400 shrink-0" />
+      <span>{prefix}{hours.hoursText}</span>
+      {hours.statusLabel && (
+        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${badgeClass}`}>
+          {hours.statusLabel}
+        </span>
+      )}
+    </div>
+  );
+}
+
 export function CulinaryDetail() {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -141,16 +175,11 @@ export function CulinaryDetail() {
                 {tenant.category?.name || 'Sentra Kuliner'}
               </span>
               <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={handleShare}
-                  className="inline-flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] px-3 py-2 text-xs font-medium text-text-muted hover:text-text-primary hover:bg-surface-subtle active:bg-surface-muted transition-colors rounded-sm cursor-pointer"
-                  title="Bagikan tautan stan"
-                  aria-label="Bagikan tautan stan"
-                >
-                  <Share2 size={15} />
-                  <span>{copied ? 'Tersalin' : 'Bagikan'}</span>
-                </button>
+                <ShareButton
+                  copied={copied}
+                  onShare={handleShare}
+                  label="Bagikan tautan stan"
+                />
               </div>
             </div>
 
@@ -168,15 +197,7 @@ export function CulinaryDetail() {
             </div>
 
             {/* Operating Hours in WITA */}
-            <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-text-secondary">
-              <Clock size={15} className="text-mono-400 shrink-0" />
-              <span>{tenant.days_open ? `${tenant.days_open} • ` : ''}{hours.hoursText}</span>
-              {hours.statusLabel && (
-                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${hours.isOpen ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-surface-muted text-text-muted'}`}>
-                  {hours.statusLabel}
-                </span>
-              )}
-            </div>
+            <OperatingHoursBadge daysOpen={tenant.days_open} hours={hours} />
 
             {/* Description */}
             <div className="pt-2 border-t border-border-subtle">

@@ -7,15 +7,36 @@ const FALLBACK_STOCK_PHOTOS = {
   retail: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80',
 };
 
+function getTenantPhoto(tenant) {
+  const fallback = FALLBACK_STOCK_PHOTOS[tenant.category?.type] || FALLBACK_STOCK_PHOTOS.retail;
+  return tenant.image_url || fallback;
+}
+
+function getTenantLocation(tenant) {
+  const floor = tenant.floor?.name || tenant.floor?.code || 'Lantai Dasar';
+  return tenant.unit_number ? `${floor} • ${tenant.unit_number}` : floor;
+}
+
+function CategoryHeader({ categoryName, isFeatured }) {
+  return (
+    <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-text-muted">
+      <span className="truncate">{categoryName || 'Direktori Kios'}</span>
+      {isFeatured && (
+        <span className="shrink-0 text-brand-primary font-bold text-[11px]">
+          • Pilihan
+        </span>
+      )}
+    </div>
+  );
+}
+
 export function TenantCard({ tenant, basePath = '/belanja' }) {
   if (!tenant) return null;
 
   const detailLink = `${basePath}/${tenant.slug}`;
-
-  const floorText = tenant.floor?.name || tenant.floor?.code || 'Lantai Dasar';
-  const unitText = tenant.unit_number ? ` • ${tenant.unit_number}` : '';
+  const locationText = getTenantLocation(tenant);
+  const imageSource = getTenantPhoto(tenant);
   const fallbackPhoto = FALLBACK_STOCK_PHOTOS[tenant.category?.type] || FALLBACK_STOCK_PHOTOS.retail;
-  const imageSource = tenant.image_url || fallbackPhoto;
 
   return (
     <article className="group flex flex-col bg-canvas border border-border-subtle hover:border-border-strong active:border-border-strong transition-all duration-150 rounded-md overflow-hidden">
@@ -43,15 +64,10 @@ export function TenantCard({ tenant, basePath = '/belanja' }) {
       {/* Card Info Body */}
       <div className="p-4 flex flex-col flex-1 justify-between gap-3 text-left">
         <div className="flex flex-col gap-1">
-          {/* Category Tag & Featured Indicator */}
-          <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-text-muted">
-            <span className="truncate">{tenant.category?.name || 'Direktori Kios'}</span>
-            {tenant.is_featured && (
-              <span className="shrink-0 text-brand-primary font-bold text-[11px]">
-                • Pilihan
-              </span>
-            )}
-          </div>
+          <CategoryHeader
+            categoryName={tenant.category?.name}
+            isFeatured={tenant.is_featured}
+          />
 
           {/* Store Name (Max 2 baris line-clamp-2, font-semibold / weight 600) */}
           <Link
@@ -65,7 +81,7 @@ export function TenantCard({ tenant, basePath = '/belanja' }) {
 
           {/* Floor & Location */}
           <span className="text-xs text-text-secondary font-normal">
-            {floorText}{unitText}
+            {locationText}
           </span>
         </div>
 

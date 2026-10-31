@@ -3,6 +3,14 @@ import { fetchPageContents, fetchNavItems, fetchSiteSettings } from '../services
 import { MOCK_PAGE_CONTENTS, MOCK_NAV_ITEMS, MOCK_SITE_SETTINGS } from '../data/mockData';
 import { ContentContext } from './contentContextInstance';
 
+function hasValidData(res) {
+  return res?.status === 'fulfilled' && res.value && Object.keys(res.value).length > 0;
+}
+
+function hasValue(val) {
+  return val !== undefined && val !== null && val !== '';
+}
+
 export function ContentProvider({ children }) {
   const [contents, setContents] = useState(MOCK_PAGE_CONTENTS);
   const [navItems, setNavItems] = useState(MOCK_NAV_ITEMS);
@@ -11,22 +19,36 @@ export function ContentProvider({ children }) {
 
   useEffect(() => {
     let isMounted = true;
-    Promise.allSettled([fetchPageContents(), fetchNavItems(), fetchSiteSettings()]).then(([contentsRes, navRes, settingsRes]) => {
+
+    async function loadSiteData() {
+      const [contentsRes, navRes, settingsRes] = await Promise.allSettled([
+        fetchPageContents(),
+        fetchNavItems(),
+        fetchSiteSettings(),
+      ]);
+
       if (!isMounted) return;
-      if (contentsRes.status === 'fulfilled' && contentsRes.value && Object.keys(contentsRes.value).length > 0) {
+
+      if (hasValidData(contentsRes)) {
         setContents((prev) => ({ ...prev, ...contentsRes.value }));
       }
+
       if (navRes.status === 'fulfilled' && navRes.value) {
+        const { header, footer } = navRes.value;
         setNavItems({
-          header: navRes.value.header?.length > 0 ? navRes.value.header : MOCK_NAV_ITEMS.header,
-          footer: navRes.value.footer?.length > 0 ? navRes.value.footer : MOCK_NAV_ITEMS.footer,
+          header: header?.length ? header : MOCK_NAV_ITEMS.header,
+          footer: footer?.length ? footer : MOCK_NAV_ITEMS.footer,
         });
       }
-      if (settingsRes.status === 'fulfilled' && settingsRes.value && Object.keys(settingsRes.value).length > 0) {
+
+      if (hasValidData(settingsRes)) {
         setSiteSettings((prev) => ({ ...prev, ...settingsRes.value }));
       }
+
       setLoading(false);
-    });
+    }
+
+    loadSiteData();
 
     return () => {
       isMounted = false;
@@ -35,18 +57,12 @@ export function ContentProvider({ children }) {
 
   const getContent = (key, fallback) => {
     const val = contents[key];
-    if (val !== undefined && val !== null && val !== '') {
-      return val;
-    }
-    return fallback;
+    return hasValue(val) ? val : fallback;
   };
 
   const getContentImage = (key, fallback) => {
     const val = contents[key];
-    if (val !== undefined && val !== null && val !== '') {
-      return val;
-    }
-    return fallback;
+    return hasValue(val) ? val : fallback;
   };
 
   return (

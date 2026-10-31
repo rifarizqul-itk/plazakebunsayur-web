@@ -61,27 +61,28 @@ export async function fetchFloors() {
   }
 }
 
+function buildTenantQueryString(params = {}) {
+  const query = new URLSearchParams();
+  const allowedKeys = ['type', 'category_id', 'category_slug', 'floor_id', 'q', 'sort', 'page', 'per_page'];
+  allowedKeys.forEach((key) => {
+    if (params[key]) query.set(key, params[key]);
+  });
+  if (params.featured) query.set('featured', '1');
+  return query.toString();
+}
+
 /**
  * Fetch paginated tenants with filters
  */
 export async function fetchTenants(params = {}) {
-  const query = new URLSearchParams();
-  if (params.type) query.set('type', params.type);
-  if (params.category_id) query.set('category_id', params.category_id);
-  if (params.category_slug) query.set('category_slug', params.category_slug);
-  if (params.floor_id) query.set('floor_id', params.floor_id);
-  if (params.q) query.set('q', params.q);
-  if (params.sort) query.set('sort', params.sort);
-  if (params.featured) query.set('featured', '1');
-  if (params.page) query.set('page', params.page);
-  if (params.per_page) query.set('per_page', params.per_page);
-
   if (isMockForced) {
     return getMockPaginatedTenants(params);
   }
 
+  const queryString = buildTenantQueryString(params);
+
   try {
-    const res = await fetch(`${API_BASE_URL}/tenants?${query.toString()}`, {
+    const res = await fetch(`${API_BASE_URL}/tenants?${queryString}`, {
       headers: DEFAULT_HEADERS,
       signal: AbortSignal.timeout(4000),
     });
@@ -100,8 +101,8 @@ export async function fetchTenants(params = {}) {
   }
 }
 
-function getMockPaginatedTenants(params) {
-  let list = [...MOCK_TENANTS];
+function filterMockTenants(tenants, params) {
+  let list = [...tenants];
   if (params.type) {
     list = list.filter((t) => t.category?.type === params.type);
   }
@@ -126,27 +127,36 @@ function getMockPaginatedTenants(params) {
         (t.unit_number && t.unit_number.toLowerCase().includes(q))
     );
   }
+  return list;
+}
 
-  if (params.sort === 'name_desc') {
-    list.sort((a, b) => b.name.localeCompare(a.name));
-  } else if (params.sort === 'floor') {
-    list.sort((a, b) => (a.floor?.order_index || 0) - (b.floor?.order_index || 0) || a.name.localeCompare(b.name));
-  } else {
-    list.sort((a, b) => a.name.localeCompare(b.name));
+function sortMockTenants(list, sortOrder) {
+  const sorted = [...list];
+  if (sortOrder === 'name_desc') {
+    return sorted.sort((a, b) => b.name.localeCompare(a.name));
   }
+  if (sortOrder === 'floor') {
+    return sorted.sort((a, b) => (a.floor?.order_index || 0) - (b.floor?.order_index || 0) || a.name.localeCompare(b.name));
+  }
+  return sorted.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function getMockPaginatedTenants(params) {
+  const filtered = filterMockTenants(MOCK_TENANTS, params);
+  const sorted = sortMockTenants(filtered, params.sort);
 
   const perPage = Number(params.per_page) || 12;
   const page = Number(params.page) || 1;
   const start = (page - 1) * perPage;
-  const paged = list.slice(start, start + perPage);
+  const paged = sorted.slice(start, start + perPage);
 
   return {
     data: paged,
     meta: {
       current_page: page,
-      last_page: Math.max(1, Math.ceil(list.length / perPage)),
+      last_page: Math.max(1, Math.ceil(sorted.length / perPage)),
       per_page: perPage,
-      total: list.length,
+      total: sorted.length,
     },
   };
 }
