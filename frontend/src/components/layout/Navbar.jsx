@@ -14,6 +14,66 @@ const DEFAULT_HEADER_NAV = [
   { id: 6, label: 'KONTAK', path: '/kontak', is_external: false },
 ];
 
+function DesktopNavItem({ item }) {
+  if (item.is_external) {
+    return (
+      <a
+        href={item.path}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="px-2.5 xl:px-3.5 py-2 text-xs xl:text-sm font-semibold tracking-wide transition-colors whitespace-nowrap text-text-primary hover:text-brand-primary"
+      >
+        {item.label}
+      </a>
+    );
+  }
+
+  return (
+    <NavLink
+      to={item.path}
+      className={({ isActive }) =>
+        `px-2.5 xl:px-3.5 py-2 text-xs xl:text-sm font-semibold tracking-wide transition-colors whitespace-nowrap ${
+          isActive ? 'text-brand-primary' : 'text-text-primary hover:text-brand-primary'
+        }`
+      }
+    >
+      {item.label}
+    </NavLink>
+  );
+}
+
+function MobileNavItem({ item, onClose }) {
+  if (item.is_external) {
+    return (
+      <a
+        href={item.path}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={onClose}
+        className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-sm flex items-center"
+      >
+        {item.label}
+      </a>
+    );
+  }
+
+  return (
+    <NavLink
+      to={item.path}
+      onClick={onClose}
+      className={({ isActive }) =>
+        `px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide rounded-sm flex items-center transition-colors ${
+          isActive
+            ? 'bg-mono-800 text-gold font-bold border-l-2 border-gold pl-2.5'
+            : 'text-white hover:bg-mono-800'
+        }`
+      }
+    >
+      <span>{item.label}</span>
+    </NavLink>
+  );
+}
+
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchNavInput, setSearchNavInput] = useState('');
@@ -98,31 +158,9 @@ export function Navbar() {
 
             {/* Desktop Navigation Links (Flat Navigation) */}
             <nav className="hidden lg:flex items-center gap-1 xl:gap-3 2xl:gap-5 h-full" aria-label="Navigasi Utama">
-              {navItems.map((item) =>
-                item.is_external ? (
-                  <a
-                    key={item.id || item.path}
-                    href={item.path}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-2.5 xl:px-3.5 py-2 text-xs xl:text-sm font-semibold tracking-wide transition-colors whitespace-nowrap text-text-primary hover:text-brand-primary"
-                  >
-                    {item.label}
-                  </a>
-                ) : (
-                  <NavLink
-                    key={item.id || item.path}
-                    to={item.path}
-                    className={({ isActive }) =>
-                      `px-2.5 xl:px-3.5 py-2 text-xs xl:text-sm font-semibold tracking-wide transition-colors whitespace-nowrap ${
-                        isActive ? 'text-brand-primary' : 'text-text-primary hover:text-brand-primary'
-                      }`
-                    }
-                  >
-                    {item.label}
-                  </NavLink>
-                )
-              )}
+              {navItems.map((item) => (
+                <DesktopNavItem key={item.id || item.path} item={item} />
+              ))}
             </nav>
 
             {/* Desktop Right Search Field & Hotline Pengelola */}
@@ -215,35 +253,13 @@ export function Navbar() {
             </button>
           </form>
 
-          {navItems.map((item) =>
-            item.is_external ? (
-              <a
-                key={item.id || item.path}
-                href={item.path}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-sm flex items-center"
-              >
-                {item.label}
-              </a>
-            ) : (
-              <NavLink
-                key={item.id || item.path}
-                to={item.path}
-                onClick={() => setMobileMenuOpen(false)}
-                className={({ isActive }) =>
-                  `px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide rounded-sm flex items-center transition-colors ${
-                    isActive
-                      ? 'bg-mono-800 text-gold font-bold border-l-2 border-gold pl-2.5'
-                      : 'text-white hover:bg-mono-800'
-                  }`
-                }
-              >
-                <span>{item.label}</span>
-              </NavLink>
-            )
-          )}
+          {navItems.map((item) => (
+            <MobileNavItem
+              key={item.id || item.path}
+              item={item}
+              onClose={() => setMobileMenuOpen(false)}
+            />
+          ))}
 
           <div className="pt-3 border-t border-mono-800 mt-2">
             <a

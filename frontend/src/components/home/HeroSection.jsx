@@ -88,6 +88,142 @@ const actionCards = [
   },
 ];
 
+function SlideItem({ slide, idx, isActive }) {
+  return (
+    <div
+      className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+        isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+      }`}
+      aria-hidden={!isActive}
+    >
+      <img
+        src={slide.image}
+        alt={slide.title}
+        className="w-full h-full object-cover scale-102 transition-transform duration-7000 ease-out"
+        loading={idx === 0 ? 'eager' : 'lazy'}
+      />
+      {/* Cinematic dark gradients for caption legibility */}
+      <div className="absolute inset-0 bg-gradient-to-t from-mono-900/95 via-mono-900/40 to-mono-900/10" />
+      <div className="absolute inset-0 bg-gradient-to-r from-mono-900/60 via-transparent to-mono-900/30" />
+
+      {/* Slide Minimal Caption */}
+      <div className="absolute bottom-0 left-0 right-0 z-20 pb-8 sm:pb-12 pt-16">
+        <Container>
+          <div className="max-w-xl flex flex-col gap-1.5 text-white">
+            <span className="text-xs font-semibold tracking-wider uppercase text-gold">
+              {slide.tag}
+            </span>
+            {idx === 0 ? (
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white leading-tight">
+                {slide.title}
+              </h1>
+            ) : (
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white leading-tight">
+                {slide.title}
+              </h2>
+            )}
+            <p className="text-xs sm:text-sm text-mono-200 line-clamp-2 mt-0.5">
+              {slide.desc}
+            </p>
+            {slide.ctaHref && (
+              <Link
+                to={slide.ctaHref}
+                className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-white hover:text-gold transition-colors self-start group/link min-h-[44px] py-2"
+              >
+                <span>{slide.ctaText}</span>
+                <ArrowRight size={14} className="transition-transform group-hover/link:translate-x-1" />
+              </Link>
+            )}
+          </div>
+        </Container>
+      </div>
+    </div>
+  );
+}
+
+function SlideControls({ isPaused, onTogglePause, currentSlide, totalSlides, onSelectSlide }) {
+  const currentFormatted = String(currentSlide + 1).padStart(2, '0');
+  const totalFormatted = String(totalSlides).padStart(2, '0');
+
+  return (
+    <div className="absolute bottom-8 sm:bottom-12 right-4 sm:right-8 z-30 flex items-center gap-2 bg-surface-dark/85 backdrop-blur-sm px-2.5 py-1 border border-white/10 rounded-sm shadow-subtle">
+      <button
+        type="button"
+        onClick={onTogglePause}
+        className="w-10 h-10 min-h-[44px] min-w-[44px] flex items-center justify-center text-white hover:text-gold active:text-gold-text transition-colors rounded-sm cursor-pointer focus:outline-none"
+        aria-label={isPaused ? 'Putar otomatis slider' : 'Jeda otomatis slider'}
+        title={isPaused ? 'Putar slider' : 'Jeda slider'}
+      >
+        {isPaused ? <Play size={16} className="fill-current" /> : <Pause size={16} className="fill-current" />}
+      </button>
+      <span className="text-xs font-mono font-bold text-white tracking-widest tabular-nums border-l border-white/20 pl-2 pr-1">
+        {currentFormatted} / {totalFormatted}
+      </span>
+      <div className="flex items-center gap-1" role="group" aria-label="Navigasi Slide">
+        {Array.from({ length: totalSlides }).map((_, idx) => (
+          <button
+            key={idx}
+            type="button"
+            onClick={() => onSelectSlide(idx)}
+            className="min-h-[44px] flex items-center px-1 cursor-pointer focus:outline-none"
+            aria-label={`Buka slide ${idx + 1}`}
+            aria-current={idx === currentSlide ? 'true' : 'false'}
+          >
+            <span
+              className={`h-1.5 overflow-hidden transition-all rounded-sm relative block ${
+                idx === currentSlide
+                  ? 'w-8 bg-white/20'
+                  : 'w-2.5 bg-white/40 hover:bg-white/80'
+              }`}
+            >
+              {idx === currentSlide && (
+                <span
+                  key={`progress-${currentSlide}`}
+                  className="absolute inset-y-0 left-0 bg-brand-primary animate-slide-progress"
+                  style={{
+                    animationPlayState: isPaused ? 'paused' : 'running',
+                  }}
+                />
+              )}
+            </span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ActionCardItem({ card }) {
+  return (
+    <Link
+      to={card.href}
+      className="group relative rounded-md overflow-hidden bg-surface-dark border border-mono-800 flex flex-col justify-end p-6 min-h-[300px] sm:min-h-[340px] h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-primary transition-all duration-300 hover:border-mono-600 cursor-pointer"
+    >
+      {/* Background Ambient Image */}
+      <img
+        src={card.image}
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all duration-700 ease-out z-0 pointer-events-none"
+      />
+      {/* Balanced dark gradient */}
+      <div className="absolute inset-0 bg-gradient-to-t from-mono-900/90 via-mono-900/60 to-mono-900/20 z-1 pointer-events-none" />
+
+      <div className="relative z-10 flex flex-col gap-2">
+        <span className="text-xs font-bold uppercase tracking-wider text-gold drop-shadow-sm">
+          {card.category}
+        </span>
+        <h3 className="text-xl sm:text-2xl font-bold text-white leading-snug mb-3 drop-shadow-sm">
+          {card.title}
+        </h3>
+        <div className="w-full py-3 px-4 min-h-[44px] bg-brand-primary group-hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white font-bold text-xs uppercase tracking-wider text-center transition-all flex items-center justify-center gap-2 rounded-sm shadow-sm">
+          <span>{card.btnText}</span>
+          <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-1" />
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 export function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -189,55 +325,12 @@ export function HeroSection() {
       >
         {/* Slides */}
         {activeSlides.map((slide, idx) => (
-          <div
+          <SlideItem
             key={slide.id}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              idx === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
-            }`}
-            aria-hidden={idx !== currentSlide}
-          >
-            <img
-              src={slide.image}
-              alt={slide.title}
-              className="w-full h-full object-cover scale-102 transition-transform duration-7000 ease-out"
-              loading={idx === 0 ? 'eager' : 'lazy'}
-            />
-            {/* Cinematic dark gradients for caption legibility */}
-            <div className="absolute inset-0 bg-gradient-to-t from-mono-900/95 via-mono-900/40 to-mono-900/10" />
-            <div className="absolute inset-0 bg-gradient-to-r from-mono-900/60 via-transparent to-mono-900/30" />
-
-            {/* Slide Minimal Caption */}
-            <div className="absolute bottom-0 left-0 right-0 z-20 pb-8 sm:pb-12 pt-16">
-              <Container>
-                <div className="max-w-xl flex flex-col gap-1.5 text-white">
-                  <span className="text-xs font-semibold tracking-wider uppercase text-gold">
-                    {slide.tag}
-                  </span>
-                  {idx === 0 ? (
-                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white leading-tight">
-                      {slide.title}
-                    </h1>
-                  ) : (
-                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white leading-tight">
-                      {slide.title}
-                    </h2>
-                  )}
-                  <p className="text-xs sm:text-sm text-mono-200 line-clamp-2 mt-0.5">
-                    {slide.desc}
-                  </p>
-                  {slide.ctaHref && (
-                    <Link
-                      to={slide.ctaHref}
-                      className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-white hover:text-gold transition-colors self-start group/link min-h-[44px] py-2"
-                    >
-                      <span>{slide.ctaText}</span>
-                      <ArrowRight size={14} className="transition-transform group-hover/link:translate-x-1" />
-                    </Link>
-                  )}
-                </div>
-              </Container>
-            </div>
-          </div>
+            slide={slide}
+            idx={idx}
+            isActive={idx === currentSlide}
+          />
         ))}
 
         {/* Prev / Next Arrows */}
@@ -260,50 +353,13 @@ export function HeroSection() {
         </button>
 
         {/* Slide Controls: Play/Pause, Counter & Progress Indicator */}
-        <div className="absolute bottom-8 sm:bottom-12 right-4 sm:right-8 z-30 flex items-center gap-2 bg-surface-dark/85 backdrop-blur-sm px-2.5 py-1 border border-white/10 rounded-sm shadow-subtle">
-          <button
-            type="button"
-            onClick={() => setIsPaused((prev) => !prev)}
-            className="w-10 h-10 min-h-[44px] min-w-[44px] flex items-center justify-center text-white hover:text-gold active:text-gold-text transition-colors rounded-sm cursor-pointer focus:outline-none"
-            aria-label={isPaused ? 'Putar otomatis slider' : 'Jeda otomatis slider'}
-            title={isPaused ? 'Putar slider' : 'Jeda slider'}
-          >
-            {isPaused ? <Play size={16} className="fill-current" /> : <Pause size={16} className="fill-current" />}
-          </button>
-          <span className="text-xs font-mono font-bold text-white tracking-widest tabular-nums border-l border-white/20 pl-2 pr-1">
-            0{currentSlide + 1} / 0{activeSlides.length}
-          </span>
-          <div className="flex items-center gap-1" role="group" aria-label="Navigasi Slide">
-            {activeSlides.map((_, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => setCurrentSlide(idx)}
-                className="min-h-[44px] flex items-center px-1 cursor-pointer focus:outline-none"
-                aria-label={`Buka slide ${idx + 1}`}
-                aria-current={idx === currentSlide ? 'true' : 'false'}
-              >
-                <span
-                  className={`h-1.5 overflow-hidden transition-all rounded-sm relative block ${
-                    idx === currentSlide
-                      ? 'w-8 bg-white/20'
-                      : 'w-2.5 bg-white/40 hover:bg-white/80'
-                  }`}
-                >
-                  {idx === currentSlide && (
-                    <span
-                      key={`progress-${currentSlide}`}
-                      className="absolute inset-y-0 left-0 bg-brand-primary animate-slide-progress"
-                      style={{
-                        animationPlayState: isPaused ? 'paused' : 'running',
-                      }}
-                    />
-                  )}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
+        <SlideControls
+          isPaused={isPaused}
+          onTogglePause={() => setIsPaused((prev) => !prev)}
+          currentSlide={currentSlide}
+          totalSlides={activeSlides.length}
+          onSelectSlide={setCurrentSlide}
+        />
       </section>
 
       {/* 2. Layanan dan Komoditas Belanja */}
@@ -319,33 +375,7 @@ export function HeroSection() {
           {/* Trio Action Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
             {activeActionCards.map((card) => (
-              <Link
-                key={card.id}
-                to={card.href}
-                className="group relative rounded-md overflow-hidden bg-surface-dark border border-mono-800 flex flex-col justify-end p-6 min-h-[300px] sm:min-h-[340px] h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-primary transition-all duration-300 hover:border-mono-600 cursor-pointer"
-              >
-                {/* Background Ambient Image - full opacity for clear visibility */}
-                <img
-                  src={card.image}
-                  alt=""
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all duration-700 ease-out z-0 pointer-events-none"
-                />
-                {/* Balanced dark gradient: reduced from 100%/80%/40% to 90%/60%/20% */}
-                <div className="absolute inset-0 bg-gradient-to-t from-mono-900/90 via-mono-900/60 to-mono-900/20 z-1 pointer-events-none" />
-
-                <div className="relative z-10 flex flex-col gap-2">
-                  <span className="text-xs font-bold uppercase tracking-wider text-gold drop-shadow-sm">
-                    {card.category}
-                  </span>
-                  <h3 className="text-xl sm:text-2xl font-bold text-white leading-snug mb-3 drop-shadow-sm">
-                    {card.title}
-                  </h3>
-                  <div className="w-full py-3 px-4 min-h-[44px] bg-brand-primary group-hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white font-bold text-xs uppercase tracking-wider text-center transition-all flex items-center justify-center gap-2 rounded-sm shadow-sm">
-                    <span>{card.btnText}</span>
-                    <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-1" />
-                  </div>
-                </div>
-              </Link>
+              <ActionCardItem key={card.id} card={card} />
             ))}
           </div>
 
