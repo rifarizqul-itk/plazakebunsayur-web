@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Search, MessageCircle } from 'lucide-react';
 import { Container } from './Container';
 import { generateManagementWhatsAppLink } from '../../utils/whatsapp';
-import { fetchSiteSettings } from '../../services/api';
-import { useContentImage, useNavItems } from '../../hooks/useContent';
+import { useContentImage, useNavItems, useSiteSettings } from '../../hooks/useContent';
 
 const DEFAULT_HEADER_NAV = [
   { id: 1, label: 'BERANDA', path: '/', is_external: false },
@@ -18,50 +17,53 @@ const DEFAULT_HEADER_NAV = [
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchNavInput, setSearchNavInput] = useState('');
-  const [waNumber, setWaNumber] = useState('080000000000');
   const searchInputRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
+  const siteSettings = useSiteSettings();
+  const waNumber = siteSettings?.management_whatsapp || '080000000000';
   const logoUrl = useContentImage('brand.logo', '/assets/main_logo_transparent_for_light_bg.webp');
   const waLink = generateManagementWhatsAppLink(waNumber);
   const headerNavItems = useNavItems('header');
   const navItems = headerNavItems?.length > 0 ? headerNavItems : DEFAULT_HEADER_NAV;
 
-  useEffect(() => {
-    let isMounted = true;
-    fetchSiteSettings()
-      .then((settings) => {
-        if (isMounted && settings?.management_whatsapp) {
-          setWaNumber(settings.management_whatsapp);
-        }
-      })
-      .catch(() => {});
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  const isKulinerPage = location.pathname.startsWith('/kuliner');
+  const searchPlaceholder = isKulinerPage ? 'Cari menu / kuliner...' : 'Cari kios / produk...';
 
   useEffect(() => {
     const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        if (mobileMenuOpen) {
+          setMobileMenuOpen(false);
+          return;
+        }
+        if (document.activeElement === searchInputRef.current) {
+          searchInputRef.current?.blur();
+          return;
+        }
+      }
+
       const isInput =
         ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName) || e.target.isContentEditable;
       if (!isInput && (e.key === '/' || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k'))) {
         e.preventDefault();
         searchInputRef.current?.focus();
-      } else if (e.key === 'Escape' && document.activeElement === searchInputRef.current) {
-        searchInputRef.current?.blur();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [mobileMenuOpen]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    if (searchNavInput.trim()) {
-      navigate(`/belanja?q=${encodeURIComponent(searchNavInput.trim())}`);
+    const query = searchNavInput.trim();
+    if (query) {
+      const targetPath = isKulinerPage ? '/kuliner' : '/belanja';
+      navigate(`${targetPath}?q=${encodeURIComponent(query)}`);
       setSearchNavInput('');
+      setMobileMenuOpen(false);
     }
   };
 
@@ -129,7 +131,8 @@ export function Navbar() {
                 <input
                   ref={searchInputRef}
                   type="text"
-                  placeholder="Cari kios / produk..."
+                  placeholder={searchPlaceholder}
+                  aria-label={isKulinerPage ? 'Cari stan kuliner atau menu' : 'Cari nama kios atau produk'}
                   value={searchNavInput}
                   onChange={(e) => setSearchNavInput(e.target.value)}
                   className="w-24 focus:w-44 xl:w-36 2xl:w-48 py-1.5 pl-2 pr-11 text-xs border-b border-border-strong bg-transparent text-text-primary placeholder:text-text-muted focus:outline-none focus:border-brand-primary transition-all duration-200 rounded-sm"
@@ -144,7 +147,7 @@ export function Navbar() {
                   </kbd>
                   <button
                     type="submit"
-                    aria-label="Cari Kios"
+                    aria-label="Kirim pencarian"
                     className="p-1 text-text-primary hover:text-brand-primary transition-colors cursor-pointer"
                   >
                     <Search size={14} />
@@ -197,14 +200,15 @@ export function Navbar() {
           <form onSubmit={handleSearchSubmit} className="relative mb-2">
             <input
               type="text"
-              placeholder="Cari nama kios atau produk..."
+              placeholder={searchPlaceholder}
+              aria-label={isKulinerPage ? 'Cari stan kuliner atau menu' : 'Cari nama kios atau produk'}
               value={searchNavInput}
               onChange={(e) => setSearchNavInput(e.target.value)}
               className="w-full py-2.5 pl-3 pr-9 min-h-[44px] text-xs border border-mono-700 rounded-sm bg-mono-900 text-white placeholder:text-mono-400 focus:outline-none focus:border-gold"
             />
             <button
               type="submit"
-              aria-label="Cari"
+              aria-label="Kirim pencarian"
               className="absolute right-3 top-1/2 -translate-y-1/2 text-mono-400 hover:text-gold"
             >
               <Search size={16} />
@@ -228,15 +232,15 @@ export function Navbar() {
                 key={item.id || item.path}
                 to={item.path}
                 onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-sm flex items-center justify-between"
+                className={({ isActive }) =>
+                  `px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide rounded-sm flex items-center transition-colors ${
+                    isActive
+                      ? 'bg-mono-800 text-gold font-bold border-l-2 border-gold pl-2.5'
+                      : 'text-white hover:bg-mono-800'
+                  }`
+                }
               >
                 <span>{item.label}</span>
-                {item.path === '/belanja' && (
-                  <span className="text-xs font-normal text-mono-400">5 Kategori</span>
-                )}
-                {item.path === '/kuliner' && (
-                  <span className="text-xs font-normal text-mono-400">3 Kategori</span>
-                )}
               </NavLink>
             )
           )}

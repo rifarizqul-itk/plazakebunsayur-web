@@ -22,11 +22,13 @@ export function TenantCard({ tenant, basePath = '/belanja' }) {
       {/* 4:3 Ratio Photographic Frame */}
       <Link
         to={detailLink}
-        className="relative block w-full aspect-[4/3] bg-surface-muted overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+        tabIndex={-1}
+        aria-hidden="true"
+        className="relative block w-full aspect-[4/3] bg-surface-muted overflow-hidden focus:outline-none"
       >
         <img
           src={imageSource}
-          alt={tenant.name}
+          alt=""
           loading="lazy"
           decoding="async"
           onError={(e) => {
@@ -41,15 +43,20 @@ export function TenantCard({ tenant, basePath = '/belanja' }) {
       {/* Card Info Body */}
       <div className="p-4 flex flex-col flex-1 justify-between gap-3 text-left">
         <div className="flex flex-col gap-1">
-          {/* Category Tag */}
-          <span className="text-xs font-semibold uppercase tracking-wider text-text-muted block truncate">
-            {tenant.category?.name || 'Direktori Kios'}
-          </span>
+          {/* Category Tag & Featured Indicator */}
+          <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-text-muted">
+            <span className="truncate">{tenant.category?.name || 'Direktori Kios'}</span>
+            {tenant.is_featured && (
+              <span className="shrink-0 text-brand-primary font-bold text-[11px]">
+                • Pilihan
+              </span>
+            )}
+          </div>
 
           {/* Store Name (Max 2 baris line-clamp-2, font-semibold / weight 600) */}
           <Link
             to={detailLink}
-            className="focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+            className="focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-sm"
           >
             <h3 className="font-semibold text-base text-text-primary group-hover:text-brand-primary transition-colors line-clamp-2">
               {tenant.name}
@@ -66,8 +73,9 @@ export function TenantCard({ tenant, basePath = '/belanja' }) {
         <div className="pt-2 border-t border-border-subtle mt-1">
           <Link
             to={detailLink}
+            tabIndex={-1}
+            aria-hidden="true"
             className="w-full min-h-[44px] flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold text-text-primary hover:text-brand-primary hover:border-brand-primary active:bg-surface-muted bg-surface-subtle border border-border-subtle rounded-sm transition-colors group/btn"
-            title={`Lihat detail ${tenant.name}`}
           >
             <Eye size={15} className="text-text-secondary group-hover/btn:text-brand-primary transition-colors" />
             <span>Lihat Detail</span>

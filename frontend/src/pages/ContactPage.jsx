@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { MapPin, Phone, MessageCircle, Mail, Clock, Send, CheckCircle2, AlertCircle } from 'lucide-react';
 import { PageHeader } from '../components/layout/PageHeader';
 import { Container } from '../components/layout/Container';
 import { Input, Textarea } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
-import { submitContactMessage, fetchSiteSettings } from '../services/api';
+import { submitContactMessage } from '../services/api';
 import { generateManagementWhatsAppLink } from '../utils/whatsapp';
-import { useContent } from '../hooks/useContent';
+import { useContent, useSiteSettings } from '../hooks/useContent';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 
 export function ContactPage() {
@@ -14,7 +14,6 @@ export function ContactPage() {
   const metaDesc = useContent('seo.kontak.description', 'Hubungi kantor manajemen Plaza Kebun Sayur Balikpapan untuk informasi sewa tempat, perizinan acara, dan layanan pengaduan.');
   useDocumentMeta(metaTitle, metaDesc);
 
-  const headerEyebrow = useContent('header.kontak.eyebrow', 'Pusat Bantuan & Layanan');
   const headerTitle = useContent('header.kontak.title', 'Hubungi Pengelola Plaza Kebun Sayur');
   const headerDesc = useContent(
     'header.kontak.description',
@@ -33,19 +32,7 @@ export function ContactPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [siteSettings, setSiteSettings] = useState(null);
-
-  useEffect(() => {
-    let isMounted = true;
-    fetchSiteSettings()
-      .then((settings) => {
-        if (isMounted) setSiteSettings(settings);
-      })
-      .catch(() => {});
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  const siteSettings = useSiteSettings();
 
   const waLink = generateManagementWhatsAppLink(siteSettings?.management_whatsapp || '080000000000');
   const officeAddress = siteSettings?.office_address || 'Lantai Dasar (Dekat Pintu Masuk Timur), Jl. Letjen Suprapto, Kebun Sayur, Balikpapan Barat 76131';
@@ -85,14 +72,13 @@ export function ContactPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <PageHeader
-        eyebrow={headerEyebrow}
         title={headerTitle}
         description={headerDesc}
       />
 
-      <section className="py-12 sm:py-16 bg-canvas flex-1">
+      <section className="py-10 sm:py-14 bg-canvas flex-1">
         <Container>
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
             {/* Left 5 Cols: Management Office Info */}
             <div className="lg:col-span-5 flex flex-col gap-6">
               <div>
@@ -160,7 +146,7 @@ export function ContactPage() {
             </div>
 
             {/* Right 7 Cols: Public Contact Form */}
-            <div className="lg:col-span-7 bg-surface-subtle border border-border-subtle p-6 sm:p-8 rounded-sm">
+            <div className="lg:col-span-7 bg-surface-subtle border border-border-subtle p-6 sm:p-8 rounded-md">
               <div className="mb-6">
                 <h3 className="text-lg font-bold text-text-primary">Kirim Pesan atau Pertanyaan</h3>
                 <p className="text-xs text-text-secondary mt-1">

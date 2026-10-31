@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Clock, MessageCircle } from 'lucide-react';
 import { Container } from './Container';
 import { generateManagementWhatsAppLink } from '../../utils/whatsapp';
-import { fetchSiteSettings } from '../../services/api';
-import { useContent, useContentImage, useNavItems } from '../../hooks/useContent';
+import { useContent, useContentImage, useNavItems, useSiteSettings } from '../../hooks/useContent';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
@@ -17,7 +16,7 @@ const DEFAULT_FOOTER_NAV = [
 ];
 
 export function Footer() {
-  const [siteSettings, setSiteSettings] = useState(null);
+  const siteSettings = useSiteSettings();
 
   const mallDesc = useContent(
     'footer.mall_description',
@@ -29,18 +28,6 @@ export function Footer() {
     'Kantor manajemen berlokasi di Lantai Dasar (Pintu Timur). Melayani informasi kios, ketertiban, dan layanan pengunjung.'
   );
   const logoUrl = useContentImage('brand.logo', '/assets/main_logo_transparent_for_light_bg.webp');
-
-  useEffect(() => {
-    let isMounted = true;
-    fetchSiteSettings()
-      .then((settings) => {
-        if (isMounted) setSiteSettings(settings);
-      })
-      .catch(() => {});
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   const waLink = generateManagementWhatsAppLink(siteSettings?.management_whatsapp || '080000000000');
   const mallHours = siteSettings?.mall_opening_hours || '08.00 – 18.00 WITA';

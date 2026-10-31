@@ -19,23 +19,33 @@ export function Home() {
   const [retailTenants, setRetailTenants] = useState([]);
   const [culinaryTenants, setCulinaryTenants] = useState([]);
   const [latestEvents, setLatestEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let isCancelled = false;
     async function loadHomeData() {
       try {
+        setLoading(true);
         const [retailRes, culinaryRes, eventsRes] = await Promise.all([
           fetchTenants({ type: 'retail', featured: true, per_page: 4 }),
-          fetchTenants({ type: 'culinary', featured: true, per_page: 3 }),
+          fetchTenants({ type: 'culinary', featured: true, per_page: 4 }),
           fetchWhatsOn(),
         ]);
-        setRetailTenants(retailRes.data || []);
-        setCulinaryTenants(culinaryRes.data || []);
-        setLatestEvents(eventsRes.slice(0, 2) || []);
+        if (!isCancelled) {
+          setRetailTenants(retailRes.data || []);
+          setCulinaryTenants(culinaryRes.data || []);
+          setLatestEvents(eventsRes?.slice(0, 2) || []);
+        }
       } catch (err) {
         console.error('Failed to load home data:', err);
+      } finally {
+        if (!isCancelled) setLoading(false);
       }
     }
     loadHomeData();
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   return (
@@ -47,6 +57,7 @@ export function Home() {
       <FeaturedSection
         retailTenants={retailTenants}
         culinaryTenants={culinaryTenants}
+        loading={loading}
       />
 
       {/* 3. Whats On / Event & Promo Highlights */}

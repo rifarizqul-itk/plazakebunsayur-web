@@ -14,9 +14,10 @@ import {
 } from 'lucide-react';
 import { Container } from '../components/layout/Container';
 import { Button } from '../components/ui/Button';
-import { fetchWhatsOnBySlug, fetchSiteSettings } from '../services/api';
+import { fetchWhatsOnBySlug } from '../services/api';
 import { generateEventWhatsAppLink } from '../utils/whatsapp';
 import { formatDateRange } from '../utils/date';
+import { useSiteSettings } from '../hooks/useContent';
 
 const FALLBACK_BANNERS = {
   event: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=1200&q=80',
@@ -27,7 +28,7 @@ export function EventDetail() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const [eventItem, setEventItem] = useState(null);
-  const [siteSettings, setSiteSettings] = useState(null);
+  const siteSettings = useSiteSettings();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
@@ -39,13 +40,9 @@ export function EventDetail() {
       setLoading(true);
       setError(null);
       try {
-        const [data, settings] = await Promise.all([
-          fetchWhatsOnBySlug(slug),
-          fetchSiteSettings().catch(() => null),
-        ]);
+        const data = await fetchWhatsOnBySlug(slug);
         if (!isCancelled) {
           setEventItem(data);
-          setSiteSettings(settings);
           const fallback = FALLBACK_BANNERS[data?.type] || FALLBACK_BANNERS.event;
           setBannerSrc(data?.banner_url || fallback);
         }

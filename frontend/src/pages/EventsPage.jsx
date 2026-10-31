@@ -24,7 +24,6 @@ export function EventsPage() {
   const [filterType, setFilterType] = useState('all');
   const [loading, setLoading] = useState(true);
 
-  const headerEyebrow = useContent('header.agenda.eyebrow', 'Agenda & Informasi Resmi');
   const headerTitle = useContent('header.agenda.title', 'Pameran Budaya, Bazar & Promo Kios');
   const headerDesc = useContent(
     'header.agenda.description',
@@ -50,12 +49,11 @@ export function EventsPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <PageHeader
-        eyebrow={headerEyebrow}
         title={headerTitle}
         description={headerDesc}
       />
 
-      <section className="py-8 bg-canvas flex-1">
+      <section className="py-10 sm:py-14 bg-canvas flex-1">
         <Container>
           {/* Filter Pills */}
           <div className="pb-6 border-b border-border-subtle">

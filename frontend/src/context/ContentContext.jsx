@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { fetchPageContents, fetchNavItems } from '../services/api';
-import { MOCK_PAGE_CONTENTS, MOCK_NAV_ITEMS } from '../data/mockData';
+import { fetchPageContents, fetchNavItems, fetchSiteSettings } from '../services/api';
+import { MOCK_PAGE_CONTENTS, MOCK_NAV_ITEMS, MOCK_SITE_SETTINGS } from '../data/mockData';
 import { ContentContext } from './contentContextInstance';
 
 export function ContentProvider({ children }) {
   const [contents, setContents] = useState(MOCK_PAGE_CONTENTS);
   const [navItems, setNavItems] = useState(MOCK_NAV_ITEMS);
+  const [siteSettings, setSiteSettings] = useState(MOCK_SITE_SETTINGS);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
-    Promise.allSettled([fetchPageContents(), fetchNavItems()]).then(([contentsRes, navRes]) => {
+    Promise.allSettled([fetchPageContents(), fetchNavItems(), fetchSiteSettings()]).then(([contentsRes, navRes, settingsRes]) => {
       if (!isMounted) return;
       if (contentsRes.status === 'fulfilled' && contentsRes.value && Object.keys(contentsRes.value).length > 0) {
         setContents((prev) => ({ ...prev, ...contentsRes.value }));
@@ -20,6 +21,9 @@ export function ContentProvider({ children }) {
           header: navRes.value.header?.length > 0 ? navRes.value.header : MOCK_NAV_ITEMS.header,
           footer: navRes.value.footer?.length > 0 ? navRes.value.footer : MOCK_NAV_ITEMS.footer,
         });
+      }
+      if (settingsRes.status === 'fulfilled' && settingsRes.value && Object.keys(settingsRes.value).length > 0) {
+        setSiteSettings((prev) => ({ ...prev, ...settingsRes.value }));
       }
       setLoading(false);
     });
@@ -46,7 +50,7 @@ export function ContentProvider({ children }) {
   };
 
   return (
-    <ContentContext.Provider value={{ contents, navItems, getContent, getContentImage, loading }}>
+    <ContentContext.Provider value={{ contents, navItems, siteSettings, getContent, getContentImage, loading }}>
       {children}
     </ContentContext.Provider>
   );

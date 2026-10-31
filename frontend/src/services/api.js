@@ -71,6 +71,7 @@ export async function fetchTenants(params = {}) {
   if (params.category_slug) query.set('category_slug', params.category_slug);
   if (params.floor_id) query.set('floor_id', params.floor_id);
   if (params.q) query.set('q', params.q);
+  if (params.sort) query.set('sort', params.sort);
   if (params.featured) query.set('featured', '1');
   if (params.page) query.set('page', params.page);
   if (params.per_page) query.set('per_page', params.per_page);
@@ -124,6 +125,14 @@ function getMockPaginatedTenants(params) {
         (t.description && t.description.toLowerCase().includes(q)) ||
         (t.unit_number && t.unit_number.toLowerCase().includes(q))
     );
+  }
+
+  if (params.sort === 'name_desc') {
+    list.sort((a, b) => b.name.localeCompare(a.name));
+  } else if (params.sort === 'floor') {
+    list.sort((a, b) => (a.floor?.order_index || 0) - (b.floor?.order_index || 0) || a.name.localeCompare(b.name));
+  } else {
+    list.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   const perPage = Number(params.per_page) || 12;
