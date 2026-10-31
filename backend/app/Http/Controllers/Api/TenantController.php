@@ -55,11 +55,24 @@ class TenantController extends Controller
             $query->where('is_featured', true);
         }
 
+        // Sorting options
+        $sort = $request->query('sort', 'name_asc');
+
+        if ($sort === 'name_desc') {
+            $query->orderBy('name', 'desc');
+        } elseif ($sort === 'floor') {
+            $query->orderBy(
+                \App\Models\Floor::select('order_index')
+                    ->whereColumn('floors.id', 'tenants.floor_id')
+            )->orderBy('name', 'asc');
+        } else {
+            // Default: name_asc (tetap prioritaskan featured jika diminta)
+            $query->orderBy('name', 'asc');
+        }
+
         $perPage = min((int) $request->query('per_page', 12), 500);
 
-        $paginated = $query->orderBy('is_featured', 'desc')
-            ->orderBy('name', 'asc')
-            ->paginate($perPage);
+        $paginated = $query->paginate($perPage);
 
         return response()->json([
             'success' => true,

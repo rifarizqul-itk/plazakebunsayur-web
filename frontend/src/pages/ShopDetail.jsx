@@ -144,10 +144,11 @@ export function ShopDetail() {
                 <button
                   type="button"
                   onClick={handleShare}
-                  className="inline-flex items-center gap-1 text-xs text-text-muted hover:text-text-primary transition-colors cursor-pointer"
+                  className="inline-flex items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] px-3 py-2 text-xs font-medium text-text-muted hover:text-text-primary hover:bg-surface-subtle active:bg-surface-muted transition-colors rounded-sm cursor-pointer"
                   title="Bagikan tautan kios"
+                  aria-label="Bagikan tautan kios"
                 >
-                  <Share2 size={13} />
+                  <Share2 size={15} />
                   <span>{copied ? 'Tersalin' : 'Bagikan'}</span>
                 </button>
               </div>
@@ -167,9 +168,9 @@ export function ShopDetail() {
             </div>
 
             {/* Operating Hours in WITA */}
-            <div className="flex items-center gap-2 text-xs sm:text-sm text-text-secondary">
+            <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-text-secondary">
               <Clock size={15} className="text-mono-400 shrink-0" />
-              <span>{hours.hoursText}</span>
+              <span>{tenant.days_open ? `${tenant.days_open} • ` : ''}{hours.hoursText}</span>
               {hours.statusLabel && (
                 <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${hours.isOpen ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-surface-muted text-text-muted'}`}>
                   {hours.statusLabel}

@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Container } from '../layout/Container';
 import { TenantCard } from '../directory/TenantCard';
+import { SkeletonCard } from '../ui/SkeletonCard';
 import { useContent } from '../../hooks/useContent';
 
-export function FeaturedSection({ retailTenants = [], culinaryTenants = [] }) {
+export function FeaturedSection({ retailTenants = [], culinaryTenants = [], loading = false }) {
   const featuredRetail = retailTenants.slice(0, 4);
   const featuredCulinary = culinaryTenants.slice(0, 4);
   const retailTitle = useContent('home.featured.title', 'Kios Belanja Pilihan');
@@ -23,15 +24,25 @@ export function FeaturedSection({ retailTenants = [], culinaryTenants = [] }) {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredRetail.map((tenant) => (
-              <TenantCard key={tenant.id} tenant={tenant} basePath="/belanja" />
-            ))}
+            {loading ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <SkeletonCard key={i} />
+              ))
+            ) : featuredRetail.length > 0 ? (
+              featuredRetail.map((tenant) => (
+                <TenantCard key={tenant.id} tenant={tenant} basePath="/belanja" />
+              ))
+            ) : (
+              <div className="col-span-full py-8 text-center text-xs text-text-muted">
+                Belum ada kios pilihan yang ditampilkan.
+              </div>
+            )}
           </div>
 
           <div className="pt-2">
             <Link
               to="/belanja"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-primary hover:text-brand-primary-hover transition-colors"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-primary hover:text-brand-primary-hover transition-colors min-h-[44px] py-2"
             >
               <span>Lihat semua kios belanja</span>
               <ArrowRight size={15} />
@@ -48,15 +59,25 @@ export function FeaturedSection({ retailTenants = [], culinaryTenants = [] }) {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredCulinary.map((tenant) => (
-              <TenantCard key={tenant.id} tenant={tenant} basePath="/kuliner" />
-            ))}
+            {loading ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <SkeletonCard key={i} />
+              ))
+            ) : featuredCulinary.length > 0 ? (
+              featuredCulinary.map((tenant) => (
+                <TenantCard key={tenant.id} tenant={tenant} basePath="/kuliner" />
+              ))
+            ) : (
+              <div className="col-span-full py-8 text-center text-xs text-text-muted">
+                Belum ada stan kuliner pilihan yang ditampilkan.
+              </div>
+            )}
           </div>
 
           <div className="pt-2">
             <Link
               to="/kuliner"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-primary hover:text-brand-primary-hover transition-colors"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-primary hover:text-brand-primary-hover transition-colors min-h-[44px] py-2"
             >
               <span>Lihat semua kuliner</span>
               <ArrowRight size={15} />

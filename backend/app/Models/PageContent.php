@@ -87,7 +87,7 @@ class PageContent extends Model
                 'group' => 'home',
                 'label' => 'Kios Unggulan: Judul',
                 'help' => 'Judul bagian kios pilihan beranda.',
-                'default' => 'Kios Pilihan & Rekomendasi Unggulan',
+                'default' => 'Rekomendasi Kios Pilihan',
             ],
             'home.featured.description' => [
                 'type' => 'textarea',

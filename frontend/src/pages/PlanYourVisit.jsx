@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Clock, MapPin, Navigation, ShieldAlert, Sparkles, Building2, ExternalLink } from 'lucide-react';
 import { Container } from '../components/layout/Container';
 import { PageHeader } from '../components/layout/PageHeader';
-import { fetchFacilities, fetchSiteSettings, fetchVisitGuide } from '../services/api';
+import { fetchFacilities, fetchVisitGuide } from '../services/api';
 import { ACCESS_ROUTES, SHOPPING_TIPS, BUILDING_RULES } from '../content/visitGuide';
-import { useContent } from '../hooks/useContent';
+import { useContent, useSiteSettings } from '../hooks/useContent';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 
 export function PlanYourVisit() {
@@ -13,10 +13,9 @@ export function PlanYourVisit() {
   useDocumentMeta(metaTitle, metaDesc);
 
   const [facilities, setFacilities] = useState([]);
-  const [siteSettings, setSiteSettings] = useState(null);
   const [visitGuide, setVisitGuide] = useState(null);
+  const siteSettings = useSiteSettings();
 
-  const headerEyebrow = useContent('header.panduan.eyebrow', 'Panduan & Informasi Gedung');
   const headerTitle = useContent('header.panduan.title', 'Rencanakan Kunjungan Anda');
   const headerDesc = useContent(
     'header.panduan.description',
@@ -27,14 +26,12 @@ export function PlanYourVisit() {
     let isCancelled = false;
     async function loadData() {
       try {
-        const [facs, settings, guide] = await Promise.all([
+        const [facs, guide] = await Promise.all([
           fetchFacilities(),
-          fetchSiteSettings(),
           fetchVisitGuide(),
         ]);
         if (!isCancelled) {
           setFacilities(facs);
-          setSiteSettings(settings);
           setVisitGuide(guide);
         }
       } catch (err) {
@@ -59,22 +56,18 @@ export function PlanYourVisit() {
     <div className="flex flex-col min-h-screen bg-canvas">
       {/* 1. Standard Page Header per DESIGN.md */}
       <PageHeader
-        eyebrow={headerEyebrow}
         title={headerTitle}
         description={headerDesc}
       />
 
       {/* 3. Main Reading Guide Content (Reading layout per DESIGN.md: titles, text, subtle dividers) */}
-      <div className="py-16 md:py-24 flex-1">
+      <section className="py-10 sm:py-14 bg-canvas flex-1">
         <Container>
-          <div className="max-w-4xl mx-auto flex flex-col gap-16 md:gap-20">
+          <div className="flex flex-col gap-12 sm:gap-16">
 
             {/* Section A: Jam Operasional & Titik Lokasi (Dua Kolom di Desktop) */}
             <section>
               <div className="border-b border-border-subtle pb-4 mb-8">
-                <span className="text-xs font-bold uppercase tracking-wider text-brand-primary block mb-1">
-                  Operasional
-                </span>
                 <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary">
                   Waktu Operasional & Lokasi Mall
                 </h2>
@@ -113,7 +106,7 @@ export function PlanYourVisit() {
                           href={mapsUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-primary hover:text-brand-primary-hover underline"
+                          className="inline-flex items-center gap-1.5 min-h-[44px] py-2 text-xs font-semibold text-brand-primary hover:text-brand-primary-hover underline"
                         >
                           <Navigation size={14} />
                           <span>Buka Petunjuk Arah di Google Maps</span>
@@ -141,11 +134,11 @@ export function PlanYourVisit() {
                   href={mapsUrl || 'https://maps.google.com/?q=Plaza+Kebun+Sayur+Balikpapan'}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-dark/90 hover:bg-brand-primary active:bg-brand-primary-pressed text-white text-xs font-bold uppercase tracking-wider rounded-sm backdrop-blur-sm border border-white/20 transition-all shadow-subtle"
+                  className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 min-h-[44px] px-3.5 py-2 bg-surface-dark/90 hover:bg-brand-primary active:bg-brand-primary-pressed text-white text-xs font-bold uppercase tracking-wider rounded-sm backdrop-blur-sm border border-white/20 transition-all shadow-subtle cursor-pointer"
                   title="Buka rute navigasi di Google Maps"
                 >
                   <span>Buka Petunjuk Arah di Google Maps</span>
-                  <ExternalLink size={12} />
+                  <ExternalLink size={14} />
                 </a>
               </div>
             </section>
@@ -153,9 +146,6 @@ export function PlanYourVisit() {
             {/* Section B: Rute Transportasi (Daftar Baris dengan Divider) */}
             <section>
               <div className="border-b border-border-subtle pb-4 mb-6">
-                <span className="text-xs font-bold uppercase tracking-wider text-brand-primary block mb-1">
-                  Aksesibilitas
-                </span>
                 <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary">
                   Panduan Menuju Lokasi
                 </h2>
@@ -188,9 +178,6 @@ export function PlanYourVisit() {
             {/* Section C: Fasilitas Gedung (Daftar Baris dengan Divider) */}
             <section>
               <div className="border-b border-border-subtle pb-4 mb-6">
-                <span className="text-xs font-bold uppercase tracking-wider text-brand-primary block mb-1">
-                  Fasilitas Umum
-                </span>
                 <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary">
                   Fasilitas Gedung Plaza
                 </h2>
@@ -224,9 +211,6 @@ export function PlanYourVisit() {
             {/* Section D: Tips Berbelanja Cerdas (Daftar Baris dengan Divider) */}
             <section>
               <div className="border-b border-border-subtle pb-4 mb-6">
-                <span className="text-xs font-bold uppercase tracking-wider text-brand-primary block mb-1">
-                  Saran Pengunjung
-                </span>
                 <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary">
                   Tips Berbelanja Cerdas
                 </h2>
@@ -257,9 +241,6 @@ export function PlanYourVisit() {
             {/* Section E: Tata Tertib Gedung */}
             <section>
               <div className="border-b border-border-subtle pb-4 mb-6">
-                <span className="text-xs font-bold uppercase tracking-wider text-brand-primary block mb-1">
-                  Ketertiban Bersama
-                </span>
                 <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary">
                   Tata Tertib & Keamanan
                 </h2>
@@ -286,7 +267,7 @@ export function PlanYourVisit() {
 
           </div>
         </Container>
-      </div>
+      </section>
     </div>
   );
 }

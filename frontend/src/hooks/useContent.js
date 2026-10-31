@@ -27,6 +27,14 @@ export function useNavItems(location = 'header') {
 }
 
 /**
+ * Hook to access centralized site settings
+ */
+export function useSiteSettings() {
+  const context = useContext(ContentContext);
+  return context?.siteSettings || null;
+}
+
+/**
  * Hook to access the full content context
  */
 export function usePageContents() {

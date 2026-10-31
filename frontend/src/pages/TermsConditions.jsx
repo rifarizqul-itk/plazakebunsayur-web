@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { FileText, Calendar, ArrowLeft } from 'lucide-react';
 import { Container } from '../components/layout/Container';
 import { PageHeader } from '../components/layout/PageHeader';
-import { fetchSiteSettings, fetchLegalPage } from '../services/api';
-import { useContent } from '../hooks/useContent';
+import { fetchLegalPage } from '../services/api';
+import { useContent, useSiteSettings } from '../hooks/useContent';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import { formatDate } from '../utils/date';
 
@@ -13,7 +13,7 @@ export function TermsConditions() {
   const metaDesc = useContent('seo.terms.description', 'Syarat dan ketentuan penggunaan situs direktori dan layanan informasi Plaza Kebun Sayur Balikpapan.');
   useDocumentMeta(metaTitle, metaDesc);
 
-  const [siteSettings, setSiteSettings] = useState(null);
+  const siteSettings = useSiteSettings();
   const [legalPage, setLegalPage] = useState(null);
 
   const headerEyebrow = useContent('header.terms.eyebrow', 'Informasi Legal & Kepatuhan');
@@ -25,18 +25,13 @@ export function TermsConditions() {
 
   useEffect(() => {
     let isMounted = true;
-    Promise.allSettled([
-      fetchSiteSettings(),
-      fetchLegalPage('syarat-ketentuan'),
-    ]).then(([settingsRes, pageRes]) => {
-      if (!isMounted) return;
-      if (settingsRes.status === 'fulfilled' && settingsRes.value) {
-        setSiteSettings(settingsRes.value);
-      }
-      if (pageRes.status === 'fulfilled' && pageRes.value) {
-        setLegalPage(pageRes.value);
-      }
-    });
+    fetchLegalPage('syarat-ketentuan')
+      .then((page) => {
+        if (isMounted && page) {
+          setLegalPage(page);
+        }
+      })
+      .catch(() => {});
 
     return () => {
       isMounted = false;
@@ -53,7 +48,7 @@ export function TermsConditions() {
         description={headerDesc}
       />
 
-      <section className="py-12 sm:py-16 flex-1">
+      <section className="py-10 sm:py-14 flex-1">
         <Container>
           {/* Breadcrumb */}
           <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-text-muted mb-8 max-w-3xl mx-auto">

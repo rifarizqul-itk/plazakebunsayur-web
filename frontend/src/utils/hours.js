@@ -40,6 +40,7 @@ export function getWitaOperatingStatus(openingTime, closingTime) {
     return {
       hasHours: true,
       isOpen,
+      statusLabel: isOpen ? 'Buka Sekarang' : 'Tutup',
       hoursText: `${openStr} – ${closeStr} WITA`,
     };
   } catch {

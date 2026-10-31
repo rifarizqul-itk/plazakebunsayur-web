@@ -15,6 +15,7 @@ export function FilterPills({
             key={String(opt.value)}
             type="button"
             onClick={() => onSelect(opt.value)}
+            aria-pressed={isSelected}
             className={`px-4 py-2 min-h-[44px] text-xs font-semibold rounded-full whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
               isSelected
                 ? 'bg-brand-primary text-white'

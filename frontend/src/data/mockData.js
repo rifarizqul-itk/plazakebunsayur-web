@@ -273,7 +273,7 @@ export const MOCK_PAGE_CONTENTS = {
   'home.hero.cta_secondary': 'Sentra Kuliner Khas',
   'home.hero.image': '/assets/Photograph_of_plaza_building.webp',
   'home.featured.eyebrow': 'Pilihan Pengunjung',
-  'home.featured.title': 'Kios Pilihan & Rekomendasi Unggulan',
+  'home.featured.title': 'Rekomendasi Kios Pilihan',
   'home.featured.description': 'Rekomendasi kios kerajinan, perhiasan, dan kuliner terfavorit yang wajib Anda kunjungi saat berada di Plaza Kebun Sayur.',
   'home.history.eyebrow': 'Warisan Budaya Balikpapan',
   'home.history.title': 'Sejarah & Perjalanan Plaza Kebun Sayur',

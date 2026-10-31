@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Search, RotateCcw } from 'lucide-react';
+import { useSearchParams, Link } from 'react-router-dom';
+import { Search, RotateCcw, X, AlertCircle } from 'lucide-react';
 import { Container } from '../components/layout/Container';
 import { TenantCard } from '../components/directory/TenantCard';
 import { CategoryFilter } from '../components/directory/CategoryFilter';
@@ -29,6 +29,8 @@ export function CulinaryDirectory() {
   const [tenants, setTenants] = useState([]);
   const [meta, setMeta] = useState({ current_page: 1, last_page: 1, total: 0 });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   // Filters
   const [selectedCatId, setSelectedCatId] = useState(null);
@@ -60,35 +62,30 @@ export function CulinaryDirectory() {
     loadMeta();
   }, []);
 
-  // Load Tenants
+  // Load Tenants with server-side sorting & pagination
   useEffect(() => {
     let isCancelled = false;
     async function loadTenants() {
       setLoading(true);
+      setError(null);
       try {
         const res = await fetchTenants({
           type: 'culinary',
           category_id: selectedCatId || undefined,
           floor_id: selectedFloorId || undefined,
           q: searchQuery || undefined,
+          sort: sortOrder,
           page: currentPage,
           per_page: 12,
         });
         if (!isCancelled) {
-          let tenantList = res.data || [];
-          if (sortOrder === 'name_desc') {
-            tenantList = [...tenantList].sort((a, b) => b.name.localeCompare(a.name));
-          } else if (sortOrder === 'floor') {
-            tenantList = [...tenantList].sort((a, b) => (a.floor?.order_index || 0) - (b.floor?.order_index || 0));
-          } else {
-            tenantList = [...tenantList].sort((a, b) => a.name.localeCompare(b.name));
-          }
-          setTenants(tenantList);
+          setTenants(res.data || []);
           setMeta(res.meta || { current_page: 1, last_page: 1, total: 0 });
         }
       } catch (err) {
         if (!isCancelled) {
           console.error('Failed to load culinary tenants:', err);
+          setError('Gagal memuat data kuliner. Periksa koneksi internet Anda atau coba lagi.');
           setTenants([]);
         }
       } finally {
@@ -104,7 +101,17 @@ export function CulinaryDirectory() {
       isCancelled = true;
       clearTimeout(timer);
     };
-  }, [selectedCatId, selectedFloorId, searchQuery, currentPage, sortOrder]);
+  }, [selectedCatId, selectedFloorId, searchQuery, currentPage, sortOrder, retryCount]);
+
+  const handleSearchChange = (val) => {
+    setSearchQuery(val);
+    setCurrentPage(1);
+    if (val) {
+      setSearchParams({ q: val });
+    } else {
+      setSearchParams({});
+    }
+  };
 
   const handleResetFilters = () => {
     setSelectedCatId(null);
@@ -130,30 +137,40 @@ export function CulinaryDirectory() {
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
               {/* Keyword Input */}
               <div className="md:col-span-8 flex flex-col gap-1.5">
-                <label className="text-xs font-semibold uppercase tracking-wider text-text-secondary">
+                <label htmlFor="culinary-search" className="text-xs font-semibold uppercase tracking-wider text-text-secondary cursor-pointer">
                   Kata Kunci Pencarian
                 </label>
                 <div className="relative">
                   <input
+                    id="culinary-search"
                     type="text"
                     value={searchQuery}
-                    onChange={(e) => {
-                      setSearchQuery(e.target.value);
-                      setCurrentPage(1);
-                    }}
+                    onChange={(e) => handleSearchChange(e.target.value)}
                     placeholder="Cari menu, stan kuliner, atau nomor unit..."
-                    className="w-full px-3.5 py-2.5 min-h-[44px] text-xs bg-canvas border border-border-input text-text-primary placeholder:text-text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-primary focus:border-brand-primary rounded-sm"
+                    className="w-full pl-3.5 pr-10 py-2.5 min-h-[44px] text-xs bg-canvas border border-border-input text-text-primary placeholder:text-text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-primary focus:border-brand-primary rounded-sm"
                   />
-                  <Search size={15} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+                  {searchQuery ? (
+                    <button
+                      type="button"
+                      onClick={() => handleSearchChange('')}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-text-muted hover:text-text-primary transition-colors cursor-pointer"
+                      aria-label="Hapus pencarian"
+                    >
+                      <X size={16} />
+                    </button>
+                  ) : (
+                    <Search size={15} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+                  )}
                 </div>
               </div>
 
               {/* Floor Dropdown */}
               <div className="md:col-span-3 flex flex-col gap-1.5">
-                <label className="text-xs font-semibold uppercase tracking-wider text-text-secondary">
+                <label htmlFor="culinary-floor" className="text-xs font-semibold uppercase tracking-wider text-text-secondary cursor-pointer">
                   Lantai Gedung
                 </label>
                 <select
+                  id="culinary-floor"
                   value={selectedFloorId || ''}
                   onChange={(e) => {
                     setSelectedFloorId(e.target.value ? Number(e.target.value) : null);
@@ -212,10 +229,16 @@ export function CulinaryDirectory() {
             </div>
 
             <div className="flex items-center gap-2 self-end sm:self-auto">
-              <span className="font-medium text-text-muted">Urutan:</span>
+              <label htmlFor="culinary-sort" className="font-medium text-text-muted cursor-pointer">
+                Urutan:
+              </label>
               <select
+                id="culinary-sort"
                 value={sortOrder}
-                onChange={(e) => setSortOrder(e.target.value)}
+                onChange={(e) => {
+                  setSortOrder(e.target.value);
+                  setCurrentPage(1);
+                }}
                 className="py-1.5 px-2.5 text-xs bg-canvas border border-border-input text-text-primary focus:outline-none focus:border-brand-primary rounded-sm cursor-pointer"
               >
                 <option value="name_asc">Alfabet A ke Z</option>
@@ -231,6 +254,19 @@ export function CulinaryDirectory() {
               {Array.from({ length: 8 }).map((_, i) => (
                 <SkeletonCard key={i} />
               ))}
+            </div>
+          ) : error ? (
+            <div className="text-center py-12 px-4 bg-surface-subtle border border-border-subtle rounded-md my-6 flex flex-col items-center gap-3">
+              <AlertCircle size={28} className="text-brand-primary" />
+              <h3 className="font-bold text-base text-text-primary">Gagal Memuat Data Kuliner</h3>
+              <p className="text-sm text-text-secondary max-w-md">{error}</p>
+              <button
+                type="button"
+                onClick={() => setRetryCount((c) => c + 1)}
+                className="mt-2 inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] text-xs font-bold uppercase tracking-wider text-white bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed rounded-sm cursor-pointer transition-colors"
+              >
+                Muat Ulang Data
+              </button>
             </div>
           ) : tenants.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 pt-2">
@@ -251,6 +287,18 @@ export function CulinaryDirectory() {
               >
                 Reset Semua Filter
               </button>
+
+              {searchQuery && (
+                <div className="mt-5 pt-4 border-t border-border-subtle text-xs text-text-secondary max-w-sm mx-auto">
+                  <span>Mencari perhiasan, batu permata, atau cinderamata? </span>
+                  <Link
+                    to={`/belanja?q=${encodeURIComponent(searchQuery)}`}
+                    className="font-semibold text-brand-primary hover:underline inline-block mt-1"
+                  >
+                    Cari &ldquo;{searchQuery}&rdquo; di Sentra Belanja & Permata &rarr;
+                  </Link>
+                </div>
+              )}
             </div>
           )}
 

@@ -11,8 +11,7 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { Container } from '../layout/Container';
-import { fetchSiteSettings } from '../../services/api';
-import { useContent, useContentImage } from '../../hooks/useContent';
+import { useContent, useContentImage, useSiteSettings } from '../../hooks/useContent';
 
 const slides = [
   {
@@ -21,6 +20,8 @@ const slides = [
     tag: 'Fasad Utama Gedung',
     title: 'Gedung Plaza Kebun Sayur Balikpapan',
     desc: 'Pusat perdagangan batu mulia dan kerajinan tradisional Kalimantan Timur.',
+    ctaText: 'Pelajari Panduan Kunjungan',
+    ctaHref: '/panduan-kunjungan',
   },
   {
     id: 2,
@@ -28,6 +29,8 @@ const slides = [
     tag: 'Sentra Batu Mulia Borneo',
     title: 'Koleksi Akik, Permata & Cangkang Perak',
     desc: 'Pengrajin ikat cincin dan ragam batu mulia khas Kalimantan terpercaya.',
+    ctaText: 'Jelajahi Kios Batu Mulia',
+    ctaHref: '/belanja',
   },
   {
     id: 3,
@@ -35,6 +38,8 @@ const slides = [
     tag: 'Cinderamata & Etnik Dayak',
     title: 'Kerajinan Manik, Tenun & Suvenir Tradisional',
     desc: 'Karya seni ukir Dayak, manik-manik, mandau, dan cenderamata khas Borneo.',
+    ctaText: 'Lihat Cinderamata & Tenun',
+    ctaHref: '/belanja',
   },
   {
     id: 4,
@@ -42,6 +47,8 @@ const slides = [
     tag: 'Sentra Kuliner Kaltim',
     title: 'Soto Banjar, Mantau & Amplang Renyah',
     desc: 'Sajian kuliner otentik serta panganan khas siap kemas untuk bagasi pesawat.',
+    ctaText: 'Cari Stan Kuliner & Oleh-Oleh',
+    ctaHref: '/kuliner',
   },
   {
     id: 5,
@@ -49,6 +56,8 @@ const slides = [
     tag: 'Suasana Kios Plaza Kebun Sayur',
     title: 'Ratusan Kios Resmi Pengrajin Lokal',
     desc: 'Keramahan interaksi perniagaan dan belanja cinderamata yang nyaman dan terpercaya.',
+    ctaText: 'Buka Direktori Lengkap',
+    ctaHref: '/belanja',
   },
 ];
 
@@ -84,7 +93,7 @@ export function HeroSection() {
   const [isPaused, setIsPaused] = useState(false);
   const [copiedAddress, setCopiedAddress] = useState(false);
   const [witaTime, setWitaTime] = useState('');
-  const [siteSettings, setSiteSettings] = useState(null);
+  const siteSettings = useSiteSettings();
 
   const heroImage = useContentImage('home.hero.image', '/assets/Photograph_of_plaza_building.webp');
   const heroTitle = useContent('home.hero.title', 'Gedung Plaza Kebun Sayur Balikpapan');
@@ -110,18 +119,6 @@ export function HeroSection() {
     { ...actionCards[1], btnText: ctaSecondaryText },
     actionCards[2],
   ];
-
-  useEffect(() => {
-    let isMounted = true;
-    fetchSiteSettings()
-      .then((settings) => {
-        if (isMounted) setSiteSettings(settings);
-      })
-      .catch(() => {});
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % activeSlides.length);
@@ -213,12 +210,30 @@ export function HeroSection() {
             <div className="absolute bottom-0 left-0 right-0 z-20 pb-8 sm:pb-12 pt-16">
               <Container>
                 <div className="max-w-xl flex flex-col gap-1.5 text-white">
-                  <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white leading-tight">
-                    {slide.title}
-                  </h2>
+                  <span className="text-xs font-semibold tracking-wider uppercase text-gold">
+                    {slide.tag}
+                  </span>
+                  {idx === 0 ? (
+                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white leading-tight">
+                      {slide.title}
+                    </h1>
+                  ) : (
+                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white leading-tight">
+                      {slide.title}
+                    </h2>
+                  )}
                   <p className="text-xs sm:text-sm text-mono-200 line-clamp-2 mt-0.5">
                     {slide.desc}
                   </p>
+                  {slide.ctaHref && (
+                    <Link
+                      to={slide.ctaHref}
+                      className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-white hover:text-gold transition-colors self-start group/link min-h-[44px] py-2"
+                    >
+                      <span>{slide.ctaText}</span>
+                      <ArrowRight size={14} className="transition-transform group-hover/link:translate-x-1" />
+                    </Link>
+                  )}
                 </div>
               </Container>
             </div>
@@ -245,42 +260,46 @@ export function HeroSection() {
         </button>
 
         {/* Slide Controls: Play/Pause, Counter & Progress Indicator */}
-        <div className="absolute bottom-8 sm:bottom-12 right-4 sm:right-8 z-30 flex items-center gap-2.5 bg-surface-dark/85 backdrop-blur-sm px-3 py-1.5 border border-white/10 rounded-sm shadow-subtle">
+        <div className="absolute bottom-8 sm:bottom-12 right-4 sm:right-8 z-30 flex items-center gap-2 bg-surface-dark/85 backdrop-blur-sm px-2.5 py-1 border border-white/10 rounded-sm shadow-subtle">
           <button
             type="button"
             onClick={() => setIsPaused((prev) => !prev)}
-            className="w-7 h-7 flex items-center justify-center text-white hover:text-gold active:text-gold-text transition-colors rounded-sm cursor-pointer"
+            className="w-10 h-10 min-h-[44px] min-w-[44px] flex items-center justify-center text-white hover:text-gold active:text-gold-text transition-colors rounded-sm cursor-pointer focus:outline-none"
             aria-label={isPaused ? 'Putar otomatis slider' : 'Jeda otomatis slider'}
             title={isPaused ? 'Putar slider' : 'Jeda slider'}
           >
-            {isPaused ? <Play size={14} className="fill-current" /> : <Pause size={14} className="fill-current" />}
+            {isPaused ? <Play size={16} className="fill-current" /> : <Pause size={16} className="fill-current" />}
           </button>
-          <span className="text-xs font-mono font-bold text-white tracking-widest tabular-nums border-l border-white/20 pl-2.5">
+          <span className="text-xs font-mono font-bold text-white tracking-widest tabular-nums border-l border-white/20 pl-2 pr-1">
             0{currentSlide + 1} / 0{activeSlides.length}
           </span>
-          <div className="flex items-center gap-1.5" role="tablist" aria-label="Navigasi Slide">
+          <div className="flex items-center gap-1" role="group" aria-label="Navigasi Slide">
             {activeSlides.map((_, idx) => (
               <button
                 key={idx}
                 type="button"
                 onClick={() => setCurrentSlide(idx)}
-                className={`h-1.5 overflow-hidden transition-all rounded-sm cursor-pointer relative ${
-                  idx === currentSlide
-                    ? 'w-8 bg-white/20'
-                    : 'w-2.5 bg-white/40 hover:bg-white/80'
-                }`}
+                className="min-h-[44px] flex items-center px-1 cursor-pointer focus:outline-none"
                 aria-label={`Buka slide ${idx + 1}`}
                 aria-current={idx === currentSlide ? 'true' : 'false'}
               >
-                {idx === currentSlide && (
-                  <span
-                    key={`progress-${currentSlide}`}
-                    className="absolute inset-y-0 left-0 bg-brand-primary animate-slide-progress"
-                    style={{
-                      animationPlayState: isPaused ? 'paused' : 'running',
-                    }}
-                  />
-                )}
+                <span
+                  className={`h-1.5 overflow-hidden transition-all rounded-sm relative block ${
+                    idx === currentSlide
+                      ? 'w-8 bg-white/20'
+                      : 'w-2.5 bg-white/40 hover:bg-white/80'
+                  }`}
+                >
+                  {idx === currentSlide && (
+                    <span
+                      key={`progress-${currentSlide}`}
+                      className="absolute inset-y-0 left-0 bg-brand-primary animate-slide-progress"
+                      style={{
+                        animationPlayState: isPaused ? 'paused' : 'running',
+                      }}
+                    />
+                  )}
+                </span>
               </button>
             ))}
           </div>
@@ -300,34 +319,33 @@ export function HeroSection() {
           {/* Trio Action Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
             {activeActionCards.map((card) => (
-              <div
+              <Link
                 key={card.id}
-                className="group relative rounded-md overflow-hidden bg-surface-dark border border-mono-800 flex flex-col justify-end p-6 min-h-[300px] sm:min-h-[340px] h-full"
+                to={card.href}
+                className="group relative rounded-md overflow-hidden bg-surface-dark border border-mono-800 flex flex-col justify-end p-6 min-h-[300px] sm:min-h-[340px] h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-primary transition-all duration-300 hover:border-mono-600 cursor-pointer"
               >
-                {/* Background Ambient Image */}
+                {/* Background Ambient Image - full opacity for clear visibility */}
                 <img
                   src={card.image}
                   alt=""
-                  className="absolute inset-0 w-full h-full object-cover group-hover:opacity-45 transition-all duration-700 ease-out z-0 pointer-events-none"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all duration-700 ease-out z-0 pointer-events-none"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-mono-900 via-mono-900/80 to-mono-900/40 z-1 pointer-events-none" />
+                {/* Balanced dark gradient: reduced from 100%/80%/40% to 90%/60%/20% */}
+                <div className="absolute inset-0 bg-gradient-to-t from-mono-900/90 via-mono-900/60 to-mono-900/20 z-1 pointer-events-none" />
 
                 <div className="relative z-10 flex flex-col gap-2">
-                  <span className="text-xs font-bold uppercase tracking-wider text-gold">
+                  <span className="text-xs font-bold uppercase tracking-wider text-gold drop-shadow-sm">
                     {card.category}
                   </span>
-                  <h3 className="text-xl sm:text-2xl font-bold text-white leading-snug mb-3">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white leading-snug mb-3 drop-shadow-sm">
                     {card.title}
                   </h3>
-                  <Link
-                    to={card.href}
-                    className="group/btn w-full py-3 px-4 min-h-[44px] bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white font-bold text-xs uppercase tracking-wider text-center transition-all flex items-center justify-center gap-2 rounded-sm"
-                  >
+                  <div className="w-full py-3 px-4 min-h-[44px] bg-brand-primary group-hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white font-bold text-xs uppercase tracking-wider text-center transition-all flex items-center justify-center gap-2 rounded-sm shadow-sm">
                     <span>{card.btnText}</span>
-                    <ArrowRight size={14} className="transition-transform duration-200 group-hover/btn:translate-x-1" />
-                  </Link>
+                    <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-1" />
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 
@@ -348,7 +366,7 @@ export function HeroSection() {
               )}
               <Link
                 to="/panduan-kunjungan"
-                className="inline-flex items-center gap-1 text-xs font-semibold text-brand-primary hover:underline mt-1 self-start"
+                className="inline-flex items-center gap-1 min-h-[44px] py-2 text-xs font-semibold text-brand-primary hover:underline mt-1 self-start"
               >
                 <span>Lihat jadwal operasional lengkap</span>
                 <ArrowRight size={13} />
@@ -366,17 +384,17 @@ export function HeroSection() {
                   <button
                     type="button"
                     onClick={handleCopyAddress}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-text-primary hover:text-brand-primary active:bg-surface-muted bg-canvas border border-border-subtle rounded-sm transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1.5 min-h-[44px] px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-text-primary hover:text-brand-primary active:bg-surface-muted bg-canvas border border-border-subtle rounded-sm transition-all cursor-pointer"
                     title="Salin alamat lengkap untuk navigasi GPS / ojek online"
                   >
                     {copiedAddress ? (
                       <>
-                        <Check size={12} className="text-emerald-600" />
+                        <Check size={14} className="text-emerald-600" />
                         <span className="text-emerald-700">Tersalin!</span>
                       </>
                     ) : (
                       <>
-                        <Copy size={12} className="text-text-muted" />
+                        <Copy size={14} className="text-text-muted" />
                         <span>Salin Alamat</span>
                       </>
                     )}
@@ -385,11 +403,11 @@ export function HeroSection() {
                     href={mapsUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-text-primary hover:text-brand-primary active:bg-surface-muted bg-canvas border border-border-subtle rounded-sm transition-all"
+                    className="inline-flex items-center gap-1.5 min-h-[44px] px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-text-primary hover:text-brand-primary active:bg-surface-muted bg-canvas border border-border-subtle rounded-sm transition-all"
                     title="Buka rute navigasi langsung di Google Maps"
                   >
                     <span>Buka Maps</span>
-                    <ExternalLink size={12} />
+                    <ExternalLink size={14} />
                   </a>
                 </div>
               </div>
@@ -398,7 +416,7 @@ export function HeroSection() {
               </p>
               <Link
                 to="/panduan-kunjungan"
-                className="inline-flex items-center gap-1 text-xs font-semibold text-brand-primary hover:underline mt-1 self-start"
+                className="inline-flex items-center gap-1 min-h-[44px] py-2 text-xs font-semibold text-brand-primary hover:underline mt-1 self-start"
               >
                 <span>Lihat rute dari bandara & pelabuhan</span>
                 <ArrowRight size={13} />

@@ -45,24 +45,15 @@ export function HistorySection() {
           </div>
 
           {/* Authentic Heritage Visual Showcase (5 cols) */}
-          <div className="lg:col-span-5 flex flex-col gap-4">
-            <div className="relative w-full aspect-[4/3] overflow-hidden border border-border-subtle bg-surface-muted rounded-md group">
+          <div className="lg:col-span-5">
+            <div className="relative w-full aspect-[4/3] overflow-hidden border border-border-subtle bg-surface-muted rounded-md shadow-card">
               <img
                 src={historyImage}
                 alt="Gedung Plaza Kebun Sayur Balikpapan"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                className="w-full h-full object-cover"
                 loading="lazy"
                 decoding="async"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-mono-900/80 via-transparent to-transparent pointer-events-none" />
-              <div className="absolute bottom-3 left-3 right-3 text-white">
-                <span className="text-xs font-bold uppercase tracking-wider text-gold block">
-                  Pusat Cinderamata Tradisional
-                </span>
-                <p className="text-xs text-mono-200 mt-0.5 font-medium">
-                  Kawasan perniagaan batu akik & budaya Kalimantan sejak era 1980-an
-                </p>
-              </div>
             </div>
           </div>
         </div>
