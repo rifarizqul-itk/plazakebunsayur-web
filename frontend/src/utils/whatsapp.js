@@ -50,3 +50,11 @@ export function generateEventWhatsAppLink(rawPhone = '080000000000', eventTitle 
   return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(greeting)}`;
 }
 
+export function buildContactWaLink(contactPhone, contactPerson, title, defaultPhone) {
+  const raw = contactPhone || defaultPhone || '080000000000';
+  const cleanPhone = String(raw).replace(/[^0-9]/g, '').replace(/^0/, '62');
+  const name = contactPerson || 'Panitia Informasi';
+  const msg = `Halo ${name}, saya ingin bertanya mengenai informasi "${title}" di Plaza Kebun Sayur.`;
+  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`;
+}
+
