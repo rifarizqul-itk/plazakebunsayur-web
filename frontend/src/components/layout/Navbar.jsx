@@ -3,25 +3,46 @@ import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Search, MessageCircle } from 'lucide-react';
 import { Container } from './Container';
 import { generateManagementWhatsAppLink } from '../../utils/whatsapp';
-import { useContentImage, useNavItems, useSiteSettings } from '../../hooks/useContent';
+import { useContent, useContentImage, useNavItems, useSiteSettings } from '../../hooks/useContent';
 
 const DEFAULT_HEADER_NAV = [
-  { id: 1, label: 'BERANDA', path: '/', is_external: false },
-  { id: 2, label: 'BELANJA', path: '/belanja', is_external: false },
-  { id: 3, label: 'KULINER', path: '/kuliner', is_external: false },
-  { id: 4, label: 'AGENDA', path: '/agenda', is_external: false },
-  { id: 5, label: 'PANDUAN', path: '/panduan-kunjungan', is_external: false },
-  { id: 6, label: 'KONTAK', path: '/kontak', is_external: false },
+  { id: 1, label: 'BERANDA', path: '/', is_external: false, is_cta: false },
+  { id: 2, label: 'BELANJA', path: '/belanja', is_external: false, is_cta: false },
+  { id: 3, label: 'FASHION', path: '/fashion', is_external: false, is_cta: false },
+  { id: 4, label: 'INFORMASI', path: '/informasi', is_external: false, is_cta: false },
+  { id: 5, label: 'PANDUAN', path: '/panduan-kunjungan', is_external: false, is_cta: false },
+  { id: 6, label: 'KONTAK', path: '/kontak', is_external: false, is_cta: false },
 ];
 
+function resolveItemPathAndLabel(item) {
+  if (item.path === '/kuliner') {
+    const label = item.label === 'KULINER' ? 'FASHION' : item.label;
+    return { ...item, path: '/fashion', label };
+  }
+  if (item.path === '/agenda') {
+    const label = item.label === 'AGENDA' ? 'INFORMASI' : item.label;
+    return { ...item, path: '/informasi', label };
+  }
+  return item;
+}
+
+function normalizeNavItems(rawItems) {
+  return rawItems.map(resolveItemPathAndLabel);
+}
+
 function DesktopNavItem({ item }) {
+  const isCta = Boolean(item.is_cta);
+  const classes = isCta
+    ? 'inline-flex items-center justify-center px-4 py-2 bg-brand-primary text-white hover:bg-brand-primary-hover active:bg-brand-primary-pressed rounded-sm font-semibold text-xs xl:text-sm tracking-wide transition-colors shadow-subtle ml-2 whitespace-nowrap'
+    : 'px-2.5 xl:px-3.5 py-2 text-xs xl:text-sm font-semibold tracking-wide transition-colors whitespace-nowrap';
+
   if (item.is_external) {
     return (
       <a
         href={item.path}
         target="_blank"
         rel="noopener noreferrer"
-        className="px-2.5 xl:px-3.5 py-2 text-xs xl:text-sm font-semibold tracking-wide transition-colors whitespace-nowrap text-text-primary hover:text-brand-primary"
+        className={classes}
       >
         {item.label}
       </a>
@@ -32,9 +53,9 @@ function DesktopNavItem({ item }) {
     <NavLink
       to={item.path}
       className={({ isActive }) =>
-        `px-2.5 xl:px-3.5 py-2 text-xs xl:text-sm font-semibold tracking-wide transition-colors whitespace-nowrap ${
-          isActive ? 'text-brand-primary' : 'text-text-primary hover:text-brand-primary'
-        }`
+        isCta
+          ? classes
+          : `${classes} ${isActive ? 'text-brand-primary' : 'text-text-primary hover:text-brand-primary'}`
       }
     >
       {item.label}
@@ -43,6 +64,11 @@ function DesktopNavItem({ item }) {
 }
 
 function MobileNavItem({ item, onClose }) {
+  const isCta = Boolean(item.is_cta);
+  const classes = isCta
+    ? 'inline-flex items-center justify-center w-full my-1.5 px-4 py-3 bg-brand-primary text-white font-bold text-sm tracking-wide rounded-sm hover:bg-brand-primary-hover active:bg-brand-primary-pressed transition-colors min-h-[44px]'
+    : 'px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide rounded-sm flex items-center transition-colors text-white hover:bg-mono-800';
+
   if (item.is_external) {
     return (
       <a
@@ -50,9 +76,9 @@ function MobileNavItem({ item, onClose }) {
         target="_blank"
         rel="noopener noreferrer"
         onClick={onClose}
-        className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-sm flex items-center"
+        className={classes}
       >
-        {item.label}
+        <span>{item.label}</span>
       </a>
     );
   }
@@ -62,11 +88,9 @@ function MobileNavItem({ item, onClose }) {
       to={item.path}
       onClick={onClose}
       className={({ isActive }) =>
-        `px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide rounded-sm flex items-center transition-colors ${
-          isActive
-            ? 'bg-mono-800 text-gold font-bold border-l-2 border-gold pl-2.5'
-            : 'text-white hover:bg-mono-800'
-        }`
+        isCta
+          ? classes
+          : `${classes} ${isActive ? 'bg-mono-800 text-gold font-bold border-l-2 border-gold pl-2.5' : ''}`
       }
     >
       <span>{item.label}</span>
@@ -74,39 +98,26 @@ function MobileNavItem({ item, onClose }) {
   );
 }
 
-export function Navbar() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+function useNavSearch(isFashionPage, setMobileMenuOpen, mobileMenuOpen) {
   const [searchNavInput, setSearchNavInput] = useState('');
   const searchInputRef = useRef(null);
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const siteSettings = useSiteSettings();
-  const waNumber = siteSettings?.management_whatsapp || '080000000000';
-  const logoUrl = useContentImage('brand.logo', '/assets/main_logo_transparent_for_light_bg.webp');
-  const waLink = generateManagementWhatsAppLink(waNumber);
-  const headerNavItems = useNavItems('header');
-  const navItems = headerNavItems?.length > 0 ? headerNavItems : DEFAULT_HEADER_NAV;
-
-  const isKulinerPage = location.pathname.startsWith('/kuliner');
-  const searchPlaceholder = isKulinerPage ? 'Cari menu / kuliner...' : 'Cari kios / produk...';
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        if (mobileMenuOpen) {
-          setMobileMenuOpen(false);
-          return;
-        }
-        if (document.activeElement === searchInputRef.current) {
-          searchInputRef.current?.blur();
-          return;
-        }
+      if (e.key === 'Escape' && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+        return;
+      }
+      if (e.key === 'Escape' && document.activeElement === searchInputRef.current) {
+        searchInputRef.current?.blur();
+        return;
       }
 
       const isInput =
         ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName) || e.target.isContentEditable;
-      if (!isInput && (e.key === '/' || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k'))) {
+      const isSearchShortcut = e.key === '/' || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k');
+      if (!isInput && isSearchShortcut) {
         e.preventDefault();
         searchInputRef.current?.focus();
       }
@@ -114,166 +125,258 @@ export function Navbar() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [mobileMenuOpen]);
+  }, [mobileMenuOpen, setMobileMenuOpen]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     const query = searchNavInput.trim();
     if (query) {
-      const targetPath = isKulinerPage ? '/kuliner' : '/belanja';
+      const targetPath = isFashionPage ? '/fashion' : '/belanja';
       navigate(`${targetPath}?q=${encodeURIComponent(query)}`);
       setSearchNavInput('');
       setMobileMenuOpen(false);
     }
   };
 
+  return {
+    searchNavInput,
+    setSearchNavInput,
+    searchInputRef,
+    handleSearchSubmit,
+  };
+}
+
+function NavbarBrand({ logoUrl, brandName, brandSubLocation }) {
+  return (
+    <Link
+      to="/"
+      className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-sm p-1 shrink-0"
+    >
+      <img
+        src={logoUrl}
+        alt="Logo Plaza Kebun Sayur"
+        className="h-10 sm:h-12 w-auto object-contain transition-transform group-hover:scale-102"
+        onError={(e) => {
+          e.target.style.display = 'none';
+        }}
+      />
+      <div className="flex flex-col">
+        <span className="font-bold text-sm sm:text-base tracking-tight text-text-primary group-hover:text-brand-primary transition-colors whitespace-nowrap">
+          {brandName}
+        </span>
+        <span className="text-[10px] sm:text-xs tracking-wider uppercase text-text-muted font-medium">
+          {brandSubLocation}
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+function DesktopSearchAndHotline({
+  searchInputRef,
+  searchPlaceholder,
+  searchNavInput,
+  setSearchNavInput,
+  handleSearchSubmit,
+  isFashionPage,
+  waLink,
+}) {
+  return (
+    <div className="hidden lg:flex items-center gap-3">
+      <form onSubmit={handleSearchSubmit} className="relative w-44 xl:w-56" role="search">
+        <input
+          ref={searchInputRef}
+          type="text"
+          placeholder={searchPlaceholder}
+          aria-label={isFashionPage ? 'Cari busana atau batik' : 'Cari nama kios atau produk'}
+          value={searchNavInput}
+          onChange={(e) => setSearchNavInput(e.target.value)}
+          className="w-full py-1.5 pl-2.5 pr-14 text-xs bg-surface-subtle border-b-2 border-border-strong text-text-primary placeholder:text-text-muted focus:outline-none focus:bg-canvas focus:border-brand-primary transition-all duration-200 rounded-sm"
+        />
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-1">
+          <kbd
+            aria-hidden="true"
+            className="hidden xl:inline-flex items-center justify-center px-1.5 py-0.5 text-[9px] font-mono font-semibold text-text-muted bg-surface-muted border border-border-subtle rounded-sm select-none pointer-events-none"
+            title="Tekan / untuk fokus pencarian"
+          >
+            /
+          </kbd>
+          <button
+            type="submit"
+            aria-label="Kirim pencarian"
+            className="p-1 text-text-primary hover:text-brand-primary transition-colors cursor-pointer"
+          >
+            <Search size={14} />
+          </button>
+        </div>
+      </form>
+
+      <a
+        href={waLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-text-primary bg-surface-subtle hover:bg-surface-muted hover:border-brand-primary border border-border-subtle rounded-sm transition-colors min-h-[44px] whitespace-nowrap shrink-0"
+      >
+        <MessageCircle size={14} className="text-whatsapp" />
+        <span>Hotline Pengelola</span>
+      </a>
+    </div>
+  );
+}
+
+function MobileActions({ waLink, mobileMenuOpen, setMobileMenuOpen }) {
+  return (
+    <div className="flex lg:hidden items-center gap-1">
+      <a
+        href={waLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="w-11 h-11 flex items-center justify-center rounded-sm text-whatsapp hover:bg-surface-subtle focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+        aria-label="WhatsApp Hotline Pengelola"
+        title="WhatsApp Hotline Pengelola"
+      >
+        <MessageCircle size={22} />
+      </a>
+
+      <button
+        type="button"
+        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        className="w-11 h-11 flex items-center justify-center rounded-sm text-text-primary hover:bg-surface-subtle focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary cursor-pointer"
+        aria-label={mobileMenuOpen ? 'Tutup Menu' : 'Buka Menu'}
+        aria-expanded={mobileMenuOpen}
+      >
+        {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+      </button>
+    </div>
+  );
+}
+
+function MobileDrawer({
+  navItems,
+  searchPlaceholder,
+  searchNavInput,
+  setSearchNavInput,
+  handleSearchSubmit,
+  isFashionPage,
+  waLink,
+  onClose,
+}) {
+  return (
+    <div className="lg:hidden border-b border-mono-800 bg-surface-dark text-white px-4 pt-4 pb-6 flex flex-col gap-2 shadow-card animate-fadeIn">
+      <form onSubmit={handleSearchSubmit} className="relative mb-2">
+        <input
+          type="text"
+          placeholder={searchPlaceholder}
+          aria-label={isFashionPage ? 'Cari busana atau batik' : 'Cari nama kios atau produk'}
+          value={searchNavInput}
+          onChange={(e) => setSearchNavInput(e.target.value)}
+          className="w-full py-2.5 pl-3 pr-9 min-h-[44px] text-xs border border-mono-700 rounded-sm bg-mono-900 text-white placeholder:text-mono-400 focus:outline-none focus:border-gold"
+        />
+        <button
+          type="submit"
+          aria-label="Kirim pencarian"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-mono-400 hover:text-gold"
+        >
+          <Search size={16} />
+        </button>
+      </form>
+
+      {navItems.map((item) => (
+        <MobileNavItem
+          key={item.id || item.path}
+          item={item}
+          onClose={onClose}
+        />
+      ))}
+
+      <div className="pt-3 border-t border-mono-800 mt-2">
+        <a
+          href={waLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={onClose}
+          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed rounded-sm min-h-[44px]"
+        >
+          <MessageCircle size={16} />
+          <span>WhatsApp Hotline Pengelola</span>
+        </a>
+      </div>
+    </div>
+  );
+}
+
+export function Navbar() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
+
+  const siteSettings = useSiteSettings();
+  const waNumber = siteSettings?.management_whatsapp || '080000000000';
+  const logoUrl = useContentImage('brand.logo', '/assets/main_logo_transparent_for_light_bg.webp');
+  const brandName = useContent('brand.name', 'PLAZA KEBUN SAYUR');
+  const brandSubLocation = useContent('brand.sub_location', 'Balikpapan Barat');
+  const waLink = generateManagementWhatsAppLink(waNumber);
+  const headerNavItems = useNavItems('header');
+
+  const rawNavItems = headerNavItems?.length > 0 ? headerNavItems : DEFAULT_HEADER_NAV;
+  const navItems = normalizeNavItems(rawNavItems);
+
+  const isFashionPage = location.pathname.startsWith('/fashion');
+  const searchPlaceholder = isFashionPage ? 'Cari busana / batik...' : 'Cari kios / produk...';
+
+  const {
+    searchNavInput,
+    setSearchNavInput,
+    searchInputRef,
+    handleSearchSubmit,
+  } = useNavSearch(isFashionPage, setMobileMenuOpen, mobileMenuOpen);
+
   return (
     <header className="sticky top-0 z-50 bg-canvas transition-colors shadow-sm">
-      {/* Main Navigation Bar */}
       <div className="relative border-b border-border-subtle bg-canvas">
         <Container>
           <div className="flex items-center justify-between h-16 lg:h-20">
-            {/* Logo & Mall Title */}
-            <Link
-              to="/"
-              className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-sm p-1 shrink-0"
-            >
-              <img
-                src={logoUrl}
-                alt="Logo Plaza Kebun Sayur"
-                className="h-10 sm:h-12 w-auto object-contain transition-transform group-hover:scale-102"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                }}
-              />
-              <div className="flex flex-col">
-                <span className="font-bold text-sm sm:text-base tracking-tight text-text-primary group-hover:text-brand-primary transition-colors whitespace-nowrap">
-                  PLAZA KEBUN SAYUR
-                </span>
-                <span className="text-xs text-text-muted uppercase tracking-wider font-semibold whitespace-nowrap">
-                  Balikpapan Barat
-                </span>
-              </div>
-            </Link>
+            <NavbarBrand
+              logoUrl={logoUrl}
+              brandName={brandName}
+              brandSubLocation={brandSubLocation}
+            />
 
-            {/* Desktop Navigation Links (Flat Navigation) */}
-            <nav className="hidden lg:flex items-center gap-1 xl:gap-3 2xl:gap-5 h-full" aria-label="Navigasi Utama">
+            <nav className="hidden lg:flex items-center space-x-1" aria-label="Navigasi Utama">
               {navItems.map((item) => (
                 <DesktopNavItem key={item.id || item.path} item={item} />
               ))}
             </nav>
 
-            {/* Desktop Right Search Field & Hotline Pengelola */}
-            <div className="hidden lg:flex items-center gap-3 xl:gap-4 shrink-0">
-              <form onSubmit={handleSearchSubmit} className="relative flex items-center">
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  placeholder={searchPlaceholder}
-                  aria-label={isKulinerPage ? 'Cari stan kuliner atau menu' : 'Cari nama kios atau produk'}
-                  value={searchNavInput}
-                  onChange={(e) => setSearchNavInput(e.target.value)}
-                  className="w-24 focus:w-44 xl:w-36 2xl:w-48 py-1.5 pl-2 pr-11 text-xs border-b border-border-strong bg-transparent text-text-primary placeholder:text-text-muted focus:outline-none focus:border-brand-primary transition-all duration-200 rounded-sm"
-                />
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                  <kbd
-                    aria-hidden="true"
-                    className="hidden xl:inline-flex items-center justify-center px-1.5 py-0.5 text-[9px] font-mono font-semibold text-text-muted bg-surface-muted border border-border-subtle rounded-sm select-none pointer-events-none"
-                    title="Tekan / untuk fokus pencarian"
-                  >
-                    /
-                  </kbd>
-                  <button
-                    type="submit"
-                    aria-label="Kirim pencarian"
-                    className="p-1 text-text-primary hover:text-brand-primary transition-colors cursor-pointer"
-                  >
-                    <Search size={14} />
-                  </button>
-                </div>
-              </form>
+            <DesktopSearchAndHotline
+              searchInputRef={searchInputRef}
+              searchPlaceholder={searchPlaceholder}
+              searchNavInput={searchNavInput}
+              setSearchNavInput={setSearchNavInput}
+              handleSearchSubmit={handleSearchSubmit}
+              isFashionPage={isFashionPage}
+              waLink={waLink}
+            />
 
-              <a
-                href={waLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-text-primary bg-surface-subtle hover:bg-surface-muted hover:border-brand-primary border border-border-subtle rounded-sm transition-colors min-h-[44px] whitespace-nowrap shrink-0"
-              >
-                <MessageCircle size={14} className="text-whatsapp" />
-                <span>Hotline Pengelola</span>
-              </a>
-            </div>
-
-            {/* Mobile Actions: Hotline WhatsApp & Hamburger Button */}
-            <div className="flex lg:hidden items-center gap-1">
-              <a
-                href={waLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-11 h-11 flex items-center justify-center rounded-sm text-whatsapp hover:bg-surface-subtle focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
-                aria-label="WhatsApp Hotline Pengelola"
-                title="WhatsApp Hotline Pengelola"
-              >
-                <MessageCircle size={22} />
-              </a>
-
-              <button
-                type="button"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="w-11 h-11 flex items-center justify-center rounded-sm text-text-primary hover:bg-surface-subtle focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary cursor-pointer"
-                aria-label={mobileMenuOpen ? 'Tutup Menu' : 'Buka Menu'}
-                aria-expanded={mobileMenuOpen}
-              >
-                {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-              </button>
-            </div>
+            <MobileActions
+              waLink={waLink}
+              mobileMenuOpen={mobileMenuOpen}
+              setMobileMenuOpen={setMobileMenuOpen}
+            />
           </div>
         </Container>
       </div>
 
-      {/* 3. Mobile Navigation Drawer (surface-dark per DESIGN.md) */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-b border-mono-800 bg-surface-dark text-white px-4 pt-4 pb-6 flex flex-col gap-2 shadow-card animate-fadeIn">
-          {/* Mobile Search Input */}
-          <form onSubmit={handleSearchSubmit} className="relative mb-2">
-            <input
-              type="text"
-              placeholder={searchPlaceholder}
-              aria-label={isKulinerPage ? 'Cari stan kuliner atau menu' : 'Cari nama kios atau produk'}
-              value={searchNavInput}
-              onChange={(e) => setSearchNavInput(e.target.value)}
-              className="w-full py-2.5 pl-3 pr-9 min-h-[44px] text-xs border border-mono-700 rounded-sm bg-mono-900 text-white placeholder:text-mono-400 focus:outline-none focus:border-gold"
-            />
-            <button
-              type="submit"
-              aria-label="Kirim pencarian"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-mono-400 hover:text-gold"
-            >
-              <Search size={16} />
-            </button>
-          </form>
-
-          {navItems.map((item) => (
-            <MobileNavItem
-              key={item.id || item.path}
-              item={item}
-              onClose={() => setMobileMenuOpen(false)}
-            />
-          ))}
-
-          <div className="pt-3 border-t border-mono-800 mt-2">
-            <a
-              href={waLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed rounded-sm min-h-[44px]"
-            >
-              <MessageCircle size={16} />
-              <span>WhatsApp Hotline Pengelola</span>
-            </a>
-          </div>
-        </div>
+        <MobileDrawer
+          navItems={navItems}
+          searchPlaceholder={searchPlaceholder}
+          searchNavInput={searchNavInput}
+          setSearchNavInput={setSearchNavInput}
+          handleSearchSubmit={handleSearchSubmit}
+          isFashionPage={isFashionPage}
+          waLink={waLink}
+          onClose={() => setMobileMenuOpen(false)}
+        />
       )}
     </header>
   );

@@ -28,7 +28,9 @@ class WhatsOn extends Model
     public function getBannerUrlAttribute(): ?string
     {
         if ($this->banner_image_path) {
-            return Storage::disk('public')->url($this->banner_image_path);
+            return str_starts_with($this->banner_image_path, 'http')
+                ? $this->banner_image_path
+                : Storage::disk('public')->url($this->banner_image_path);
         }
 
         return $this->banner_image ?? null;

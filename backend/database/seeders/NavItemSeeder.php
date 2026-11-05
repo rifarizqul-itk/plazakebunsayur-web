@@ -12,8 +12,28 @@ class NavItemSeeder extends Seeder
      */
     public function run(): void
     {
-        $items = [
-            // Header items
+        // Clean up legacy paths
+        NavItem::whereIn('path', ['/kuliner', '/agenda'])->delete();
+
+        $items = array_merge(
+            $this->getHeaderNavItems(),
+            $this->getFooterNavItems(),
+        );
+
+        foreach ($items as $item) {
+            NavItem::updateOrCreate(
+                [
+                    'location' => $item['location'],
+                    'path' => $item['path'],
+                ],
+                $item
+            );
+        }
+    }
+
+    protected function getHeaderNavItems(): array
+    {
+        return [
             [
                 'label' => 'BERANDA',
                 'path' => '/',
@@ -33,8 +53,8 @@ class NavItemSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'label' => 'KULINER',
-                'path' => '/kuliner',
+                'label' => 'FASHION',
+                'path' => '/fashion',
                 'location' => 'header',
                 'is_external' => false,
                 'is_cta' => false,
@@ -42,8 +62,8 @@ class NavItemSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'label' => 'AGENDA',
-                'path' => '/agenda',
+                'label' => 'INFORMASI',
+                'path' => '/informasi',
                 'location' => 'header',
                 'is_external' => false,
                 'is_cta' => false,
@@ -68,8 +88,12 @@ class NavItemSeeder extends Seeder
                 'order_index' => 6,
                 'is_active' => true,
             ],
+        ];
+    }
 
-            // Footer items
+    protected function getFooterNavItems(): array
+    {
+        return [
             [
                 'label' => 'Direktori Kios Belanja',
                 'path' => '/belanja',
@@ -80,8 +104,8 @@ class NavItemSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'label' => 'Sentra Kuliner Tradisional',
-                'path' => '/kuliner',
+                'label' => 'Sentra Fashion & Batik',
+                'path' => '/fashion',
                 'location' => 'footer',
                 'is_external' => false,
                 'is_cta' => false,
@@ -89,8 +113,8 @@ class NavItemSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'label' => 'Agenda & Promo Plaza',
-                'path' => '/agenda',
+                'label' => 'Informasi & Promo Plaza',
+                'path' => '/informasi',
                 'location' => 'footer',
                 'is_external' => false,
                 'is_cta' => false,
@@ -116,15 +140,5 @@ class NavItemSeeder extends Seeder
                 'is_active' => true,
             ],
         ];
-
-        foreach ($items as $item) {
-            NavItem::updateOrCreate(
-                [
-                    'location' => $item['location'],
-                    'path' => $item['path'],
-                ],
-                $item
-            );
-        }
     }
 }

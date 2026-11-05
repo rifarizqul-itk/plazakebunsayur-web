@@ -54,7 +54,63 @@ class ImageOptimizerService
     }
 
     /**
-     * Core processing method.
+     * Optimize general image (building photos, hero sliders, page contents)
+     * by scaling down preserving aspect ratio if width exceeds $maxWidth,
+     * and converting to WebP format.
+     */
+    public function optimizeGeneralImage(
+        UploadedFile|string $file,
+        string $directory = 'uploads',
+        int $maxWidth = 1920,
+        int $quality = 80,
+        ?string $customFilename = null
+    ): string {
+        $name = $customFilename ?: Str::random(32);
+        $relativePath = trim($directory, '/') . '/' . $name . '.webp';
+        $disk = Storage::disk('public');
+
+        // Ensure storage directory exists
+        if (!$disk->exists($directory)) {
+            $disk->makeDirectory($directory);
+        }
+
+        $sourceContent = $file instanceof UploadedFile
+            ? ($file->getRealPath() ? file_get_contents($file->getRealPath()) : $file->get())
+            : (file_exists($file) ? file_get_contents($file) : $file);
+
+        if ($this->manager !== null) {
+            try {
+                // Read image into intervention
+                $image = $this->manager->read($sourceContent);
+
+                // Scale down preserving aspect ratio if wider than maxWidth
+                if ($image->width() > $maxWidth) {
+                    $image->scaleDown(width: $maxWidth);
+                }
+
+                // Convert to WebP format
+                $encoded = $image->toWebp($quality);
+
+                $disk->put($relativePath, (string) $encoded);
+
+                return $relativePath;
+            } catch (\Throwable $e) {
+                Log::warning("ImageOptimizerService optimizeGeneralImage failed: " . $e->getMessage() . ". Falling back to direct save.");
+            }
+        } else {
+            Log::info("No GD or Imagick extension available. Storing file directly.");
+        }
+
+        // Fallback: store raw content directly
+        $extension = $file instanceof UploadedFile ? ($file->getClientOriginalExtension() ?: 'jpg') : 'jpg';
+        $fallbackPath = trim($directory, '/') . '/' . $name . '.' . $extension;
+        $disk->put($fallbackPath, $sourceContent);
+
+        return $fallbackPath;
+    }
+
+    /**
+     * Core processing method with exact cover cropping.
      */
     public function processAndStore(
         UploadedFile|string $file,
@@ -74,7 +130,7 @@ class ImageOptimizerService
         }
 
         $sourceContent = $file instanceof UploadedFile
-            ? file_get_contents($file->getRealPath())
+            ? ($file->getRealPath() ? file_get_contents($file->getRealPath()) : $file->get())
             : (file_exists($file) ? file_get_contents($file) : $file);
 
         if ($this->manager !== null) {

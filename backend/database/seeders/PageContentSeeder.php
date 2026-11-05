@@ -17,28 +17,65 @@ class PageContentSeeder extends Seeder
 
         foreach ($defaults as $key => $meta) {
             $order++;
-            $existing = PageContent::where('key', $key)->first();
+            $this->syncPageContent($key, $meta, $order);
+        }
+    }
 
-            if (!$existing) {
-                PageContent::create([
-                    'key' => $key,
-                    'value' => $meta['default'],
-                    'type' => $meta['type'],
-                    'group' => $meta['group'],
-                    'label' => $meta['label'],
-                    'help' => $meta['help'] ?? null,
-                    'order_index' => $order,
-                ]);
-            } else {
-                // Ensure metadata matches without overwriting admin's custom value
-                $existing->update([
-                    'type' => $meta['type'],
-                    'group' => $meta['group'],
-                    'label' => $meta['label'],
-                    'help' => $meta['help'] ?? null,
-                    'order_index' => $order,
-                ]);
+    protected function syncPageContent(string $key, array $meta, int $order): void
+    {
+        $existing = PageContent::where('key', $key)->first();
+
+        if (!$existing) {
+            PageContent::create([
+                'key' => $key,
+                'value' => $meta['default'],
+                'type' => $meta['type'],
+                'group' => $meta['group'],
+                'label' => $meta['label'],
+                'help' => $meta['help'] ?? null,
+                'order_index' => $order,
+            ]);
+            return;
+        }
+
+        $updates = [
+            'type' => $meta['type'],
+            'group' => $meta['group'],
+            'label' => $meta['label'],
+            'help' => $meta['help'] ?? null,
+            'order_index' => $order,
+        ];
+
+        if ($this->isLegacyDefaultValue($existing->value)) {
+            $updates['value'] = $meta['default'];
+        }
+
+        $existing->update($updates);
+    }
+
+    protected function isLegacyDefaultValue(mixed $value): bool
+    {
+        $str = is_array($value) ? json_encode($value) : (string) $value;
+
+        if ($str === 'Akses Cepat Direktori') {
+            return true;
+        }
+
+        $legacyKeywords = [
+            'Sentra Kuliner',
+            'kuliner tradisional',
+            'Agenda Kegiatan',
+            'Agenda & Pengumuman',
+            'Agenda & Kegiatan',
+            'stan kuliner khas',
+        ];
+
+        foreach ($legacyKeywords as $keyword) {
+            if (str_contains($str, $keyword)) {
+                return true;
             }
         }
+
+        return false;
     }
 }

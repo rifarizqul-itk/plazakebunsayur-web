@@ -1,0 +1,387 @@
+{
+    "header.belanja.eyebrow": {
+        "type": "text",
+        "group": "header",
+        "label": "Hal. Belanja: Eyebrow",
+        "help": "Eyebrow header halaman belanja.",
+        "default": "Katalog Pedagang"
+    },
+    "header.belanja.title": {
+        "type": "text",
+        "group": "header",
+        "label": "Hal. Belanja: Judul",
+        "help": "Judul header halaman belanja.",
+        "default": "Direktori Kios Belanja"
+    },
+    "header.belanja.description": {
+        "type": "textarea",
+        "group": "header",
+        "label": "Hal. Belanja: Deskripsi",
+        "help": "Deskripsi header halaman belanja.",
+        "default": "Jelajahi kios batu mulia, perhiasan emas dan perak, cinderamata khas Dayak, serta batik Kalimantan di Plaza Kebun Sayur."
+    },
+    "header.fashion.eyebrow": {
+        "type": "text",
+        "group": "header",
+        "label": "Hal. Fashion: Eyebrow",
+        "help": "Eyebrow header halaman fashion & busana.",
+        "default": "Koleksi Busana Khas"
+    },
+    "header.fashion.title": {
+        "type": "text",
+        "group": "header",
+        "label": "Hal. Fashion: Judul",
+        "help": "Judul header halaman fashion & busana.",
+        "default": "Sentra Fashion & Batik Kaltim"
+    },
+    "header.fashion.description": {
+        "type": "textarea",
+        "group": "header",
+        "label": "Hal. Fashion: Deskripsi",
+        "help": "Deskripsi header halaman fashion & busana.",
+        "default": "Jelajahi koleksi busana etnik Dayak, batik khas Kalimantan Timur, kain tenun, dan aneka perlengkapan pakaian tradisional."
+    },
+    "header.kuliner.eyebrow": {
+        "type": "text",
+        "group": "header",
+        "label": "Hal. Fashion (Legacy): Eyebrow",
+        "help": "Eyebrow header halaman fashion.",
+        "default": "Koleksi Busana Khas"
+    },
+    "header.kuliner.title": {
+        "type": "text",
+        "group": "header",
+        "label": "Hal. Fashion (Legacy): Judul",
+        "help": "Judul header halaman fashion.",
+        "default": "Sentra Fashion & Batik Kaltim"
+    },
+    "header.kuliner.description": {
+        "type": "textarea",
+        "group": "header",
+        "label": "Hal. Fashion (Legacy): Deskripsi",
+        "help": "Deskripsi header halaman fashion.",
+        "default": "Jelajahi koleksi busana etnik Dayak, batik khas Kalimantan Timur, kain tenun, dan aneka perlengkapan pakaian tradisional."
+    },
+    "header.informasi.eyebrow": {
+        "type": "text",
+        "group": "header",
+        "label": "Hal. Informasi: Eyebrow",
+        "help": "Eyebrow header halaman informasi & promo.",
+        "default": "Informasi & Acara"
+    },
+    "header.informasi.title": {
+        "type": "text",
+        "group": "header",
+        "label": "Hal. Informasi: Judul",
+        "help": "Judul header halaman informasi & promo.",
+        "default": "Informasi Kegiatan & Promo Plaza"
+    },
+    "header.informasi.description": {
+        "type": "textarea",
+        "group": "header",
+        "label": "Hal. Informasi: Deskripsi",
+        "help": "Deskripsi header halaman informasi & promo.",
+        "default": "Temukan agenda kegiatan pameran, pentas seni budaya Dayak, serta berbagai promo menarik dari kios pedagang Plaza Kebun Sayur."
+    },
+    "header.agenda.eyebrow": {
+        "type": "text",
+        "group": "header",
+        "label": "Hal. Informasi (Legacy): Eyebrow",
+        "help": "Eyebrow header halaman agenda/informasi.",
+        "default": "Informasi & Acara"
+    },
+    "header.agenda.title": {
+        "type": "text",
+        "group": "header",
+        "label": "Hal. Informasi (Legacy): Judul",
+        "help": "Judul header halaman agenda/informasi.",
+        "default": "Informasi Kegiatan & Promo Plaza"
+    },
+    "header.agenda.description": {
+        "type": "textarea",
+        "group": "header",
+        "label": "Hal. Informasi (Legacy): Deskripsi",
+        "help": "Deskripsi header halaman agenda/informasi.",
+        "default": "Temukan agenda kegiatan pameran, pentas seni budaya Dayak, serta berbagai promo menarik dari kios pedagang Plaza Kebun Sayur."
+    },
+    "header.panduan.eyebrow": {
+        "type": "text",
+        "group": "header",
+        "label": "Hal. Panduan: Eyebrow",
+        "help": "Eyebrow header halaman panduan.",
+        "default": "Panduan & Informasi Gedung"
+    },
+    "header.panduan.title": {
+        "type": "text",
+        "group": "header",
+        "label": "Hal. Panduan: Judul",
+        "help": "Judul header halaman panduan.",
+        "default": "Rencanakan Kunjungan Anda"
+    },
+    "header.panduan.description": {
+        "type": "textarea",
+        "group": "header",
+        "label": "Hal. Panduan: Deskripsi",
+        "help": "Deskripsi header halaman panduan.",
+        "default": "Panduan terpadu jam operasional, rute transportasi dari bandara dan pelabuhan, fasilitas umum, serta tata tertib di Plaza Kebun Sayur Balikpapan."
+    },
+    "header.kontak.eyebrow": {
+        "type": "text",
+        "group": "header",
+        "label": "Hal. Kontak: Eyebrow",
+        "help": "Eyebrow header halaman kontak.",
+        "default": "Pusat Bantuan & Pengaduan"
+    },
+    "header.kontak.title": {
+        "type": "text",
+        "group": "header",
+        "label": "Hal. Kontak: Judul",
+        "help": "Judul header halaman kontak.",
+        "default": "Hubungi Pengelola Gedung"
+    },
+    "header.kontak.description": {
+        "type": "textarea",
+        "group": "header",
+        "label": "Hal. Kontak: Deskripsi",
+        "help": "Deskripsi header halaman kontak.",
+        "default": "Layanan informasi sewa kios, informasi pameran, kehilangan barang, serta saran dan kritik untuk kenyamanan pengunjung Plaza Kebun Sayur."
+    },
+    "header.privacy.eyebrow": {
+        "type": "text",
+        "group": "header",
+        "label": "Hal. Kebijakan Privasi: Eyebrow",
+        "help": "Eyebrow header halaman privasi.",
+        "default": "Informasi Legal & Kepatuhan"
+    },
+    "header.privacy.title": {
+        "type": "text",
+        "group": "header",
+        "label": "Hal. Kebijakan Privasi: Judul",
+        "help": "Judul header halaman privasi.",
+        "default": "Kebijakan Privasi"
+    },
+    "header.privacy.description": {
+        "type": "textarea",
+        "group": "header",
+        "label": "Hal. Kebijakan Privasi: Deskripsi",
+        "help": "Deskripsi header halaman privasi.",
+        "default": "Komitmen Plaza Kebun Sayur dalam melindungi data pribadi pengunjung dan transparansi pemrosesan data sesuai Undang-Undang No. 27 Tahun 2022 (UU PDP)."
+    },
+    "header.terms.eyebrow": {
+        "type": "text",
+        "group": "header",
+        "label": "Hal. Syarat & Ketentuan: Eyebrow",
+        "help": "Eyebrow header halaman syarat & ketentuan.",
+        "default": "Informasi Legal & Kepatuhan"
+    },
+    "header.terms.title": {
+        "type": "text",
+        "group": "header",
+        "label": "Hal. Syarat & Ketentuan: Judul",
+        "help": "Judul header halaman syarat & ketentuan.",
+        "default": "Syarat & Ketentuan"
+    },
+    "header.terms.description": {
+        "type": "textarea",
+        "group": "header",
+        "label": "Hal. Syarat & Ketentuan: Deskripsi",
+        "help": "Deskripsi header halaman syarat & ketentuan.",
+        "default": "Ketentuan penggunaan portal direktori komersial dan layanan informasi publik Plaza Kebun Sayur Balikpapan."
+    },
+    "footer.mall_description": {
+        "type": "textarea",
+        "group": "footer",
+        "label": "Footer: Deskripsi Mall",
+        "help": "Teks ringkas profil mall di kolom pertama footer.",
+        "default": "Pusat perniagaan Plaza Kebun Sayur di Balikpapan Barat. Sentra batu mulia, perhiasan emas dan perak, kerajinan Dayak, sentra fashion & batik, dan cenderamata khas."
+    },
+    "footer.management_title": {
+        "type": "text",
+        "group": "footer",
+        "label": "Footer: Judul Kolom Manajemen",
+        "help": "Judul kolom kantor pengelola di footer.",
+        "default": "Kantor Pengelola"
+    },
+    "footer.management_description": {
+        "type": "textarea",
+        "group": "footer",
+        "label": "Footer: Keterangan Layanan Manajemen",
+        "help": "Deskripsi singkat layanan operasional pengelola di footer.",
+        "default": "Kantor manajemen berlokasi di Lantai Dasar (Pintu Timur). Melayani informasi kios, ketertiban, dan layanan pengunjung."
+    },
+    "panduan.hours_title": {
+        "type": "text",
+        "group": "panduan",
+        "label": "Panduan: Judul Jam Operasional & Lokasi",
+        "help": "Judul bagian jam buka dan lokasi gedung.",
+        "default": "Waktu Operasional & Lokasi Mall"
+    },
+    "panduan.hours_detail": {
+        "type": "textarea",
+        "group": "panduan",
+        "label": "Panduan: Keterangan Jam Buka",
+        "help": "Paragraf penjelasan jam buka dan operasional kios.",
+        "default": "Kios cinderamata, batu mulia, pakaian adat, dan batik beroperasi optimal pukul 09.00 – 17.30 WITA. Kios depan dan pedagang oleh-oleh mulai melayani pengunjung sejak pagi hari."
+    },
+    "panduan.hours_tip": {
+        "type": "text",
+        "group": "panduan",
+        "label": "Panduan: Tips Waktu Kunjungan",
+        "help": "Catatan waktu kunjungan yang paling nyaman.",
+        "default": "Waktu kunjungan paling nyaman disarankan antara pukul 10.00 hingga 16.00 WITA."
+    },
+    "panduan.location_title": {
+        "type": "text",
+        "group": "panduan",
+        "label": "Panduan: Judul Titik Temu Lokasi",
+        "help": "Subjudul alamat dan titik temu.",
+        "default": "Alamat & Titik Temu"
+    },
+    "panduan.location_detail": {
+        "type": "textarea",
+        "group": "panduan",
+        "label": "Panduan: Keterangan Titik Lokasi",
+        "help": "Paragraf keterangan letak strategis gedung.",
+        "default": "Terletak di pusat perniagaan Kebun Sayur, Balikpapan Barat, berhadapan langsung dengan koridor jalan raya utama dan dekat kawasan permukiman Kampung Baru."
+    },
+    "panduan.facilities_title": {
+        "type": "text",
+        "group": "panduan",
+        "label": "Panduan: Judul Fasilitas Gedung",
+        "help": "Judul bagian fasilitas gedung plaza.",
+        "default": "Fasilitas Gedung Plaza"
+    },
+    "panduan.facilities_description": {
+        "type": "textarea",
+        "group": "panduan",
+        "label": "Panduan: Deskripsi Fasilitas Gedung",
+        "help": "Keterangan pengantar fasilitas gedung.",
+        "default": "Fasilitas penunjang kenyamanan belanja dan ibadah yang tersedia di lingkungan gedung Plaza Kebun Sayur."
+    },
+    "panduan.routes_title": {
+        "type": "text",
+        "group": "panduan",
+        "label": "Panduan: Judul Rute Akses Transportasi",
+        "help": "Judul bagian rute perjalanan transportasi.",
+        "default": "Akses Transportasi Menuju Lokasi"
+    },
+    "panduan.routes_description": {
+        "type": "textarea",
+        "group": "panduan",
+        "label": "Panduan: Deskripsi Rute Transportasi",
+        "help": "Keterangan pengantar panduan rute perjalanan.",
+        "default": "Panduan rute perjalanan dari bandara, pelabuhan, dan angkutan kota menuju Plaza Kebun Sayur."
+    },
+    "panduan.tips_title": {
+        "type": "text",
+        "group": "panduan",
+        "label": "Panduan: Judul Tips Berbelanja",
+        "help": "Judul bagian tips berbelanja.",
+        "default": "Tips Berbelanja Cerdas"
+    },
+    "panduan.tips_description": {
+        "type": "textarea",
+        "group": "panduan",
+        "label": "Panduan: Deskripsi Tips Berbelanja",
+        "help": "Keterangan pengantar tips belanja suvenir dan kerajinan.",
+        "default": "Praktik terbaik saat berbelanja suvenir, kerajinan etnik, dan batu mulia di Plaza Kebun Sayur."
+    },
+    "panduan.rules_title": {
+        "type": "text",
+        "group": "panduan",
+        "label": "Panduan: Judul Tata Tertib",
+        "help": "Judul bagian tata tertib dan keamanan gedung.",
+        "default": "Tata Tertib & Keamanan"
+    },
+    "panduan.rules_description": {
+        "type": "textarea",
+        "group": "panduan",
+        "label": "Panduan: Deskripsi Tata Tertib",
+        "help": "Keterangan pengantar tata tertib pengunjung.",
+        "default": "Panduan ketertiban demi kenyamanan, kebersihan, dan keselamatan bersama selama berada di Plaza Kebun Sayur."
+    },
+    "event.callout.title": {
+        "type": "text",
+        "group": "event",
+        "label": "Event: Judul Callout Sewa Tempat",
+        "help": "Judul kotak informasi sewa ruang event di sidebar.",
+        "default": "Ingin Menggelar Event di Bunsay?"
+    },
+    "event.callout.description": {
+        "type": "textarea",
+        "group": "event",
+        "label": "Event: Deskripsi Callout Sewa Tempat",
+        "help": "Deskripsi kotak informasi sewa ruang event di sidebar.",
+        "default": "Area Atrium dan Koridor Plaza Kebun Sayur terbuka untuk pameran batu mulia, pentas seni, maupun bazar UMKM."
+    },
+    "event.callout.cta_label": {
+        "type": "text",
+        "group": "event",
+        "label": "Event: Teks Tombol Callout",
+        "help": "Label tombol hubungi pengelola di sidebar event.",
+        "default": "Hubungi Manajemen Pengelola →"
+    },
+    "contact.office_eyebrow": {
+        "type": "text",
+        "group": "contact",
+        "label": "Kontak: Eyebrow Kantor Pengelola",
+        "help": "Teks kecil di atas judul kantor pengelola.",
+        "default": "Kantor Pengelola"
+    },
+    "contact.office_title": {
+        "type": "text",
+        "group": "contact",
+        "label": "Kontak: Judul Kantor Pengelola",
+        "help": "Judul kolom informasi kantor pengelola.",
+        "default": "Informasi Kontak Resmi"
+    },
+    "contact.office_description": {
+        "type": "textarea",
+        "group": "contact",
+        "label": "Kontak: Deskripsi Kantor Pengelola",
+        "help": "Keterangan di bawah judul informasi kontak pengelola.",
+        "default": "Kunjungi kantor manajemen mall di lantai dasar atau hubungi pusat layanan terpadu berikut."
+    },
+    "contact.form_title": {
+        "type": "text",
+        "group": "contact",
+        "label": "Kontak: Judul Formulir Pesan",
+        "help": "Judul bagian formulir kirim pesan.",
+        "default": "Kirim Pesan atau Pertanyaan"
+    },
+    "contact.form_description": {
+        "type": "textarea",
+        "group": "contact",
+        "label": "Kontak: Deskripsi Formulir Pesan",
+        "help": "Keterangan pengantar formulir pesan publik.",
+        "default": "Sampaikan pertanyaan Anda kepada tim pengelola mall. Kami akan membalas pesan Anda sesegera mungkin."
+    },
+    "not_found.title": {
+        "type": "text",
+        "group": "system",
+        "label": "404: Judul Halaman",
+        "help": "Judul halaman tidak ditemukan (404).",
+        "default": "Halaman Tidak Ditemukan"
+    },
+    "not_found.description": {
+        "type": "textarea",
+        "group": "system",
+        "label": "404: Deskripsi Halaman",
+        "help": "Penjelasan halaman tidak ditemukan (404).",
+        "default": "Halaman yang Anda tuju mungkin telah dipindahkan atau tautan yang Anda masukkan salah."
+    },
+    "not_found.cta_home": {
+        "type": "text",
+        "group": "system",
+        "label": "404: Teks Tombol Beranda",
+        "help": "Label tombol kembali ke beranda pada halaman 404.",
+        "default": "Kembali ke Beranda"
+    },
+    "not_found.cta_directory": {
+        "type": "text",
+        "group": "system",
+        "label": "404: Teks Tombol Direktori",
+        "help": "Label tombol menuju direktori belanja pada halaman 404.",
+        "default": "Direktori Belanja"
+    }
+}

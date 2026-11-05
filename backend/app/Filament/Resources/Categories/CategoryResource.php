@@ -50,14 +50,30 @@ class CategoryResource extends Resource
                     ->label('Tipe Zona')
                     ->options([
                         'retail' => 'Belanja (Retail / Kerajinan / Permata)',
-                        'culinary' => 'Kuliner (Sentra Makanan & Minuman)',
+                        'fashion' => 'Fashion (Busana, Batik & Pakaian Adat)',
+                        'culinary' => 'Kuliner (Legacy / Arsip)',
                     ])
                     ->required()
                     ->default('retail'),
-                TextInput::make('icon_name')
-                    ->label('Nama Ikon (Frontend)')
-                    ->helperText('Contoh: Sparkles, ShoppingBag, UtensilsCrossed, Gem')
-                    ->placeholder('Sparkles'),
+                Select::make('icon_name')
+                    ->label('Ikon Kategori (Lucide)')
+                    ->searchable()
+                    ->options([
+                        'Gem' => 'Batu Permata & Akik (Gem)',
+                        'Sparkles' => 'Aksesoris & Kilau (Sparkles)',
+                        'ShoppingBag' => 'Belanja Umum (ShoppingBag)',
+                        'PackageOpen' => 'Cinderamata / Oleh-Oleh (PackageOpen)',
+                        'Package' => 'Kerajinan Tangan (Package)',
+                        'Shirt' => 'Busana / Fashion (Shirt)',
+                        'Crown' => 'Perhiasan & Emas (Crown)',
+                        'Scissors' => 'Penjahit & Tekstil (Scissors)',
+                        'Watch' => 'Jam & Aksesoris (Watch)',
+                        'Gift' => 'Souvenir & Hadiah (Gift)',
+                        'Palette' => 'Seni & Kerajinan (Palette)',
+                        'Store' => 'Kios & Toko (Store)',
+                        'UtensilsCrossed' => 'Kuliner Tradisional (UtensilsCrossed)',
+                    ])
+                    ->helperText('Pilih ikon Lucide representatif untuk kategori ini (opsional).'),
                 TextInput::make('order_index')
                     ->label('Urutan Tampilan')
                     ->required()
@@ -85,11 +101,13 @@ class CategoryResource extends Resource
                     ->badge()
                     ->color(fn (?string $state): string => match ($state) {
                         'retail' => 'info',
+                        'fashion' => 'success',
                         'culinary' => 'warning',
                         default => 'gray',
                     })
                     ->formatStateUsing(fn (?string $state): string => match ($state) {
                         'retail' => 'Belanja (Retail)',
+                        'fashion' => 'Fashion (Busana & Batik)',
                         'culinary' => 'Kuliner (F&B)',
                         default => $state ?? '-',
                     }),

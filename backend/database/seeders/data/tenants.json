@@ -1,0 +1,455 @@
+[
+    {
+        "category_id": "batu-mulia-dan-akik",
+        "floor_id": "GF",
+        "name": "Permata Borneo Gems",
+        "slug": "permata-borneo-gems",
+        "unit_number": "Blok A No. 04",
+        "description": "Menyediakan aneka batu akik asli Kalimantan, Red Borneo, Kecubung Pangkalan Bun, Giok Sojol, serta jasa ikat cincin perak titanium.",
+        "phone_whatsapp": "081234567801",
+        "instagram": "@permataborneo.bunsay",
+        "tiktok": "@permataborneo",
+        "facebook": "Permata Borneo Gems Balikpapan",
+        "website": null,
+        "images": [
+            "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80"
+        ],
+        "opening_time": "09:00:00",
+        "closing_time": "18:00:00",
+        "days_open": "Setiap Hari (Senin - Minggu)",
+        "is_featured": true
+    },
+    {
+        "category_id": "batu-mulia-dan-akik",
+        "floor_id": "GF",
+        "name": "Galeri Mustika Safir",
+        "slug": "galeri-mustika-safir",
+        "unit_number": "Blok A No. 11",
+        "description": "Spesialis batu mulia natural: Safir Ceylon, Zamrud Kolombia, Ruby Burma, dan pengujian keaslian lab gemologi.",
+        "phone_whatsapp": "081234567802",
+        "instagram": "@mustikasafir_kaltim",
+        "tiktok": null,
+        "facebook": null,
+        "website": null,
+        "images": [
+            "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=800&q=80"
+        ],
+        "opening_time": "09:30:00",
+        "closing_time": "17:30:00",
+        "days_open": "Setiap Hari (Senin - Minggu)",
+        "is_featured": true
+    },
+    {
+        "category_id": "batu-mulia-dan-akik",
+        "floor_id": "GF",
+        "name": "Kios Akik Tuah Borneo",
+        "slug": "kios-akik-tuah-borneo",
+        "unit_number": "Blok A No. 18",
+        "description": "Koleksi akik antik, pirus Persia, badar besi kristal, dan jasa poles kilap batu mulia berkualitas tinggi.",
+        "phone_whatsapp": "081234567803",
+        "instagram": null,
+        "tiktok": null,
+        "facebook": null,
+        "website": null,
+        "images": [
+            "https://images.unsplash.com/photo-1615655406736-b37c4fabf923?auto=format&fit=crop&w=800&q=80"
+        ],
+        "opening_time": "09:00:00",
+        "closing_time": "18:00:00",
+        "days_open": "Setiap Hari (Senin - Minggu)",
+        "is_featured": false
+    },
+    {
+        "category_id": "perhiasan-emas-dan-perak",
+        "floor_id": "GF",
+        "name": "Toko Emas Sejahtera Sayur",
+        "slug": "toko-emas-sejahtera-sayur",
+        "unit_number": "Blok B No. 01 - 02",
+        "description": "Pusat jual beli perhiasan emas kadar 700, 750, dan 999. Model kalung, gelang, dan cincin pengantin terkini dengan sertifikat resmi.",
+        "phone_whatsapp": "081234567804",
+        "instagram": "@emas_sejahterabunsay",
+        "tiktok": null,
+        "facebook": "Toko Emas Sejahtera Balikpapan",
+        "website": null,
+        "images": [
+            "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80"
+        ],
+        "opening_time": "08:30:00",
+        "closing_time": "17:00:00",
+        "days_open": "Senin - Sabtu",
+        "is_featured": true
+    },
+    {
+        "category_id": "perhiasan-emas-dan-perak",
+        "floor_id": "GF",
+        "name": "Toko Perak Borneo Silver",
+        "slug": "toko-perak-borneo-silver",
+        "unit_number": "Blok B No. 08",
+        "description": "Kerajinan perak 925 khas pengrajin lokal, custom emban cincin ukir etnik, gelang perak rantai, dan liontin nama.",
+        "phone_whatsapp": "081234567805",
+        "instagram": "@borneosilver.craft",
+        "tiktok": null,
+        "facebook": null,
+        "website": null,
+        "images": [
+            "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&fit=crop&w=800&q=80"
+        ],
+        "opening_time": "09:00:00",
+        "closing_time": "17:30:00",
+        "days_open": "Setiap Hari (Senin - Minggu)",
+        "is_featured": false
+    },
+    {
+        "category_id": "kerajinan-dayak-dan-souvenir",
+        "floor_id": "L1",
+        "name": "Art Shop Dayak Kenyah",
+        "slug": "art-shop-dayak-kenyah",
+        "unit_number": "Blok C No. 08",
+        "description": "Pusat kerajinan seni suku Dayak terlengkap: Mandau tradisional gagang tanduk rusa, tameng motif etnik, tas anyaman manik, dan gelang kayu ulin asli.",
+        "phone_whatsapp": "081234567806",
+        "instagram": "@dayakart_kebunsayur",
+        "tiktok": "@dayakartkenyah",
+        "facebook": null,
+        "website": null,
+        "images": [
+            "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80"
+        ],
+        "opening_time": "09:00:00",
+        "closing_time": "18:00:00",
+        "days_open": "Setiap Hari (Senin - Minggu)",
+        "is_featured": true
+    },
+    {
+        "category_id": "kerajinan-dayak-dan-souvenir",
+        "floor_id": "L1",
+        "name": "Galeri Etnik Pedalaman Apo Kayan",
+        "slug": "galeri-etnik-apo-kayan",
+        "unit_number": "Blok C No. 12",
+        "description": "Karya seni ukir kayu gaharu dan ulin asli suku Dayak Apo Kayan, kalung manik ba’ik, rompi tari tradisional, dan topi saung etnik.",
+        "phone_whatsapp": "081234567807",
+        "instagram": "@apokayan_craft",
+        "tiktok": null,
+        "facebook": null,
+        "website": null,
+        "images": [
+            "https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&w=800&q=80"
+        ],
+        "opening_time": "09:00:00",
+        "closing_time": "18:00:00",
+        "days_open": "Setiap Hari (Senin - Minggu)",
+        "is_featured": true
+    },
+    {
+        "category_id": "kerajinan-dayak-dan-souvenir",
+        "floor_id": "L1",
+        "name": "Mandau Pusaka Borneo",
+        "slug": "mandau-pusaka-borneo",
+        "unit_number": "Blok C No. 20",
+        "description": "Koleksi mandau senjata pusaka khas Dayak berbagai ukuran, anak mandau penyerang, dan sarung kayu sungkai berhias bulu burung enggang.",
+        "phone_whatsapp": "081234567808",
+        "instagram": null,
+        "tiktok": null,
+        "facebook": null,
+        "website": null,
+        "images": [
+            "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80"
+        ],
+        "opening_time": "09:30:00",
+        "closing_time": "17:30:00",
+        "days_open": "Setiap Hari (Senin - Minggu)",
+        "is_featured": false
+    },
+    {
+        "category_id": "oleh-oleh-khas-kaltim",
+        "floor_id": "GF",
+        "name": "Oleh-Oleh Amplang Kuku Macan Ibu Ani",
+        "slug": "oleh-oleh-amplang-ibu-ani",
+        "unit_number": "Blok E No. 01",
+        "description": "Amplang tenggiri khas Balikpapan gurih dan renyah tanpa bahan pengawet. Tersedia juga lempok durian asli kutai, mantau mini, dan abon kepiting.",
+        "phone_whatsapp": "081234567813",
+        "instagram": "@amplangkukumacani",
+        "tiktok": "@amplangibuani",
+        "facebook": "Amplang Ibu Ani Balikpapan",
+        "website": null,
+        "images": [
+            "https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80"
+        ],
+        "opening_time": "08:00:00",
+        "closing_time": "20:00:00",
+        "days_open": "Setiap Hari (Senin - Minggu)",
+        "is_featured": true
+    },
+    {
+        "category_id": "oleh-oleh-khas-kaltim",
+        "floor_id": "GF",
+        "name": "Mantau Sapi Rasa Borneo",
+        "slug": "mantau-sapi-rasa-borneo",
+        "unit_number": "Blok E No. 04",
+        "description": "Mantau lembut khas Balikpapan dengan saus daging sapi lada hitam pekat. Dikemas frozen siap kukus atau goreng untuk bekal perjalanan pesawat.",
+        "phone_whatsapp": "081234567814",
+        "instagram": "@mantaurasaborneo",
+        "tiktok": "@mantauborneo",
+        "facebook": null,
+        "website": null,
+        "images": [
+            "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=800&q=80"
+        ],
+        "opening_time": "08:30:00",
+        "closing_time": "19:30:00",
+        "days_open": "Setiap Hari (Senin - Minggu)",
+        "is_featured": true
+    },
+    {
+        "category_id": "oleh-oleh-khas-kaltim",
+        "floor_id": "GF",
+        "name": "Sentra Lempok Durian Paser",
+        "slug": "sentra-lempok-durian-paser",
+        "unit_number": "Blok E No. 07",
+        "description": "Dodol lempok durian asli 100% daging durian legit tanpa campuran tepung. Sedia pula peyek kepiting dan stik cumi renyah.",
+        "phone_whatsapp": "081234567815",
+        "instagram": null,
+        "tiktok": null,
+        "facebook": null,
+        "website": null,
+        "images": [
+            "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80"
+        ],
+        "opening_time": "08:30:00",
+        "closing_time": "19:00:00",
+        "days_open": "Setiap Hari (Senin - Minggu)",
+        "is_featured": false
+    },
+    {
+        "category_id": "cinderamata-dan-aksesoris",
+        "floor_id": "L1",
+        "name": "Kios Cinderamata Mahakam",
+        "slug": "kios-cinderamata-mahakam",
+        "unit_number": "Blok C No. 15",
+        "description": "Aneka miniatur rumah betang, gantungan kunci manik, kaos Balikpapan Beriman, dan gelang akar bahar asli laut Kaltim.",
+        "phone_whatsapp": "081234567811",
+        "instagram": "@souvenirs_kebunsayur",
+        "tiktok": null,
+        "facebook": null,
+        "website": null,
+        "images": [
+            "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80"
+        ],
+        "opening_time": "09:00:00",
+        "closing_time": "18:30:00",
+        "days_open": "Setiap Hari (Senin - Minggu)",
+        "is_featured": false
+    },
+    {
+        "category_id": "cinderamata-dan-aksesoris",
+        "floor_id": "L1",
+        "name": "Borneo Souvenir Center",
+        "slug": "borneo-souvenir-center",
+        "unit_number": "Blok C No. 25",
+        "description": "Grosir suvenir oleh-oleh pernak-pernik murah: dompet manik Dayak, tempelan kulkas IKN, topi rimba Borneo, dan tas anjat rotan.",
+        "phone_whatsapp": "081234567812",
+        "instagram": null,
+        "tiktok": null,
+        "facebook": null,
+        "website": null,
+        "images": [
+            "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80"
+        ],
+        "opening_time": "08:30:00",
+        "closing_time": "18:00:00",
+        "days_open": "Setiap Hari (Senin - Minggu)",
+        "is_featured": false
+    },
+    {
+        "category_id": "batik-dan-tenun-kaltim",
+        "floor_id": "L1",
+        "name": "Batik Ampiek Khas Balikpapan",
+        "slug": "batik-ampiek-khas-balikpapan",
+        "unit_number": "Blok D No. 03",
+        "description": "Pelopor batik khas Balikpapan bermotif kepiting, mangrove, dan corak etnik Kalimantan. Bahan katun primisima halus dan sutra ATBM.",
+        "phone_whatsapp": "081234567809",
+        "instagram": "@batikampiek.official",
+        "tiktok": "@batikampiek",
+        "facebook": "Batik Ampiek Balikpapan",
+        "website": "https://batikampiek.id",
+        "images": [
+            "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1523381294911-8d3cead13475?auto=format&fit=crop&w=800&q=80"
+        ],
+        "opening_time": "09:00:00",
+        "closing_time": "18:00:00",
+        "days_open": "Setiap Hari (Senin - Minggu)",
+        "is_featured": true
+    },
+    {
+        "category_id": "batik-dan-tenun-kaltim",
+        "floor_id": "L1",
+        "name": "Tenun Mahakam Indah",
+        "slug": "tenun-mahakam-indah",
+        "unit_number": "Blok D No. 09",
+        "description": "Sarung tenun Samarinda asli benang sutra, kain songket khas Kutai Kartanegara, dan kemeja tenun pria formal.",
+        "phone_whatsapp": "081234567810",
+        "instagram": "@tenunmahakam_bunsay",
+        "tiktok": "@tenunmahakam",
+        "facebook": null,
+        "website": null,
+        "images": [
+            "https://images.unsplash.com/photo-1607344645866-009c320c5ab8?auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=800&q=80"
+        ],
+        "opening_time": "09:00:00",
+        "closing_time": "17:30:00",
+        "days_open": "Setiap Hari (Senin - Minggu)",
+        "is_featured": false
+    },
+    {
+        "category_id": "batik-dan-tenun-kaltim",
+        "floor_id": "L1",
+        "name": "Batik Mahakam Jaya",
+        "slug": "batik-mahakam-jaya",
+        "unit_number": "Blok D No. 14",
+        "description": "Koleksi busana batik tulis dan cap Kalimantan motif batang garing Dayak, selendang sutra, dan seragam batik kantor elegan.",
+        "phone_whatsapp": "081234567822",
+        "instagram": "@batikmahakam_jaya",
+        "tiktok": "@batikmahakam",
+        "facebook": "Batik Mahakam Jaya Plaza Bunsay",
+        "website": null,
+        "images": [
+            "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1523381294911-8d3cead13475?auto=format&fit=crop&w=800&q=80"
+        ],
+        "opening_time": "09:00:00",
+        "closing_time": "18:00:00",
+        "days_open": "Setiap Hari (Senin - Minggu)",
+        "is_featured": true
+    },
+    {
+        "category_id": "busana-adat-dan-etnik-dayak",
+        "floor_id": "L1",
+        "name": "Galeri Busana Dayak Kenyah",
+        "slug": "galeri-busana-dayak-kenyah",
+        "unit_number": "Blok D No. 18",
+        "description": "Pakaian adat Dayak Kenyah lengkap dengan rompi manik, ikat kepala bulu enggang, gelang taring, dan kain cawat etnik untuk acara festival.",
+        "phone_whatsapp": "081234567823",
+        "instagram": "@busanadayak.kenyah",
+        "tiktok": "@busanadayak",
+        "facebook": "Galeri Busana Dayak Kenyah Balikpapan",
+        "website": null,
+        "images": [
+            "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80"
+        ],
+        "opening_time": "09:00:00",
+        "closing_time": "18:00:00",
+        "days_open": "Setiap Hari (Senin - Minggu)",
+        "is_featured": true
+    },
+    {
+        "category_id": "busana-adat-dan-etnik-dayak",
+        "floor_id": "L1",
+        "name": "Pakaian Tradisional Adat Kutai",
+        "slug": "pakaian-tradisional-adat-kutai",
+        "unit_number": "Blok D No. 22",
+        "description": "Busana pengantin adat Kutai (Baju Kustin), baju antakusuma, kain songket berhias benang emas, dan perlengkapan pakaian adat resmi.",
+        "phone_whatsapp": "081234567824",
+        "instagram": "@busana_adatkutai",
+        "tiktok": "@adatkutai",
+        "facebook": null,
+        "website": null,
+        "images": [
+            "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=800&q=80"
+        ],
+        "opening_time": "09:00:00",
+        "closing_time": "17:30:00",
+        "days_open": "Setiap Hari (Senin - Minggu)",
+        "is_featured": false
+    },
+    {
+        "category_id": "pakaian-dan-aksesoris-modern",
+        "floor_id": "L1",
+        "name": "Butik Etnik Borneo Modern",
+        "slug": "butik-etnik-borneo-modern",
+        "unit_number": "Blok D No. 26",
+        "description": "Kombinasi rancangan modern dengan sentuhan kain etnik Dayak dan batik Balikpapan: blazer etnik, outer tenun wanita, dan dress santai.",
+        "phone_whatsapp": "081234567825",
+        "instagram": "@borneoetnik.modern",
+        "tiktok": "@borneomodern",
+        "facebook": "Butik Etnik Borneo Modern",
+        "website": null,
+        "images": [
+            "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=800&q=80"
+        ],
+        "opening_time": "09:30:00",
+        "closing_time": "18:30:00",
+        "days_open": "Setiap Hari (Senin - Minggu)",
+        "is_featured": true
+    },
+    {
+        "category_id": "pakaian-dan-aksesoris-modern",
+        "floor_id": "L1",
+        "name": "Gamis & Busana Modest Etnik",
+        "slug": "gamis-busana-modest-etnik",
+        "unit_number": "Blok D No. 30",
+        "description": "Busana muslimah motif batik Kaltim, gamis syari tenun, jilbab bordir etnik, dan aneka perlengkapan busana muslimah elegan.",
+        "phone_whatsapp": "081234567826",
+        "instagram": "@modest_etnikkaltim",
+        "tiktok": null,
+        "facebook": null,
+        "website": null,
+        "images": [
+            "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80"
+        ],
+        "opening_time": "09:00:00",
+        "closing_time": "18:00:00",
+        "days_open": "Setiap Hari (Senin - Minggu)",
+        "is_featured": false
+    },
+    {
+        "category_id": "pakaian-dan-aksesoris-modern",
+        "floor_id": "L1",
+        "name": "Kemeja & Busana Pria Borneo",
+        "slug": "kemeja-busana-pria-borneo",
+        "unit_number": "Blok D No. 34",
+        "description": "Kemeja pria lengan panjang dan pendek motif batik mangrove, kemeja tenun ikat Samarinda, dan rompi formal kantor.",
+        "phone_whatsapp": "081234567827",
+        "instagram": "@pria_borneofashion",
+        "tiktok": "@kemejaborneo",
+        "facebook": null,
+        "website": null,
+        "images": [
+            "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80"
+        ],
+        "opening_time": "09:00:00",
+        "closing_time": "18:00:00",
+        "days_open": "Setiap Hari (Senin - Minggu)",
+        "is_featured": false
+    },
+    {
+        "category_id": "pakaian-dan-aksesoris-modern",
+        "floor_id": "L1",
+        "name": "Kios Aksesoris & Manik Busana",
+        "slug": "kios-aksesoris-manik-busana",
+        "unit_number": "Blok D No. 38",
+        "description": "Aneka sabuk tenun, bros etnik manik Dayak, selendang songket, kancing ukir kayu ulin, dan pernak-pernik pelengkap busana adat.",
+        "phone_whatsapp": "081234567828",
+        "instagram": null,
+        "tiktok": null,
+        "facebook": null,
+        "website": null,
+        "images": [
+            "https://images.unsplash.com/photo-1611591475155-426c043e4042?auto=format&fit=crop&w=800&q=80"
+        ],
+        "opening_time": "09:30:00",
+        "closing_time": "17:30:00",
+        "days_open": "Setiap Hari (Senin - Minggu)",
+        "is_featured": false
+    }
+]

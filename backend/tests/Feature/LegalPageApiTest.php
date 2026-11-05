@@ -26,6 +26,7 @@ class LegalPageApiTest extends TestCase
             ->assertJsonPath('success', true)
             ->assertJsonPath('data.slug', 'kebijakan-privasi')
             ->assertJsonPath('data.title', 'Kebijakan Privasi')
+            ->assertJsonPath('data.intro', 'Ringkasan privasi')
             ->assertJsonPath('data.updated_label', '11 Oktober 2026')
             ->assertJsonPath('data.body', '<h2>1. Pendahuluan</h2><p>Teks kebijakan</p>');
     }

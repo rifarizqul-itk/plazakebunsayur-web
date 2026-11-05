@@ -106,6 +106,10 @@ class NavItemResource extends Resource
                         'footer' => 'gray',
                         default => 'secondary',
                     }),
+                IconColumn::make('is_cta')
+                    ->label('Tombol CTA')
+                    ->boolean()
+                    ->sortable(),
                 IconColumn::make('is_external')
                     ->label('Tab Baru')
                     ->boolean(),

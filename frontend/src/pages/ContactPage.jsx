@@ -9,36 +9,19 @@ import { generateManagementWhatsAppLink } from '../utils/whatsapp';
 import { useContent, useSiteSettings } from '../hooks/useContent';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 
-export function ContactPage() {
-  const metaTitle = useContent('seo.kontak.title', 'Kontak & Pengaduan | Plaza Kebun Sayur Balikpapan');
-  const metaDesc = useContent('seo.kontak.description', 'Hubungi kantor manajemen Plaza Kebun Sayur Balikpapan untuk informasi sewa tempat, perizinan acara, dan layanan pengaduan.');
-  useDocumentMeta(metaTitle, metaDesc);
-
-  const headerTitle = useContent('header.kontak.title', 'Hubungi Pengelola Plaza Kebun Sayur');
-  const headerDesc = useContent(
-    'header.kontak.description',
-    'Punya pertanyaan seputar fasilitas gedung, agenda kunjungan rombongan, atau barang tertinggal? Tim pengelola mall siap membantu Anda.'
-  );
-
+function useContactForm() {
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
     phone_number: '',
     subject: '',
     message: '',
-    bot_check: '', // Honeypot field
+    bot_check: '',
   });
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
-  const siteSettings = useSiteSettings();
-
-  const waLink = generateManagementWhatsAppLink(siteSettings?.management_whatsapp || '080000000000');
-  const officeAddress = siteSettings?.office_address || 'Lantai Dasar (Dekat Pintu Masuk Timur), Jl. Letjen Suprapto, Kebun Sayur, Balikpapan Barat 76131';
-  const mallHours = siteSettings?.mall_opening_hours || '08.00 – 18.00 WITA';
-  const securityPhone = siteSettings?.security_phone || '(0542) 734567';
-  const managementEmail = siteSettings?.management_email || 'pengelola@plazakebunsayur.com';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -69,6 +52,250 @@ export function ContactPage() {
     }
   };
 
+  return {
+    formData,
+    loading,
+    success,
+    errorMsg,
+    handleChange,
+    handleSubmit,
+  };
+}
+
+function OfficeInfoColumn({
+  officeEyebrow,
+  officeTitle,
+  officeDesc,
+  officeAddress,
+  mallHours,
+  securityPhone,
+  managementEmail,
+  waLink,
+}) {
+  return (
+    <div className="lg:col-span-5 flex flex-col gap-6">
+      <div>
+        {officeEyebrow && (
+          <span className="text-xs font-semibold text-text-muted block mb-1.5">
+            {officeEyebrow}
+          </span>
+        )}
+        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary">
+          {officeTitle}
+        </h2>
+        {officeDesc && (
+          <p className="text-xs sm:text-sm text-text-secondary mt-1">
+            {officeDesc}
+          </p>
+        )}
+      </div>
+
+      <div className="divide-y divide-border-subtle text-xs sm:text-sm">
+        <div className="py-4 first:pt-0 flex items-start gap-3.5">
+          <MapPin size={18} className="text-brand-primary shrink-0 mt-0.5" />
+          <div>
+            <strong className="block text-text-primary text-sm font-semibold">Alamat Kantor Manajemen</strong>
+            <span className="text-text-secondary mt-0.5 block leading-relaxed">
+              {officeAddress}
+            </span>
+          </div>
+        </div>
+
+        <div className="py-4 flex items-start gap-3.5">
+          <Clock size={18} className="text-brand-primary shrink-0 mt-0.5" />
+          <div>
+            <strong className="block text-text-primary text-sm font-semibold">Waktu Operasional Mall & Kantor</strong>
+            <span className="text-text-secondary mt-0.5 block">
+              {mallHours}
+            </span>
+          </div>
+        </div>
+
+        <div className="py-4 flex items-start gap-3.5">
+          <Phone size={18} className="text-brand-primary shrink-0 mt-0.5" />
+          <div>
+            <strong className="block text-text-primary text-sm font-semibold">Telepon Pos Keamanan & Pengaduan</strong>
+            <span className="text-text-secondary mt-0.5 block tabular-nums">
+              {securityPhone}
+            </span>
+          </div>
+        </div>
+
+        <div className="py-4 flex items-start gap-3.5">
+          <Mail size={18} className="text-brand-primary shrink-0 mt-0.5" />
+          <div>
+            <strong className="block text-text-primary text-sm font-semibold">Surat Elektronik (Email)</strong>
+            <span className="text-text-secondary mt-0.5 block">
+              {managementEmail}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div className="pt-2">
+        <a
+          href={waLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-sm bg-whatsapp hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-bold uppercase tracking-wider transition-colors min-h-[44px]"
+        >
+          <MessageCircle size={18} />
+          <span>Chat WhatsApp Siaga Pengelola</span>
+        </a>
+      </div>
+    </div>
+  );
+}
+
+function ContactFormCard({
+  formTitle,
+  formDesc,
+  formData,
+  loading,
+  success,
+  errorMsg,
+  handleChange,
+  handleSubmit,
+}) {
+  return (
+    <div className="lg:col-span-7 bg-surface-subtle border border-border-subtle p-6 sm:p-8 rounded-md">
+      <div className="mb-6">
+        <h3 className="text-lg font-bold text-text-primary">{formTitle}</h3>
+        {formDesc && (
+          <p className="text-xs text-text-secondary mt-1">
+            {formDesc}
+          </p>
+        )}
+      </div>
+
+      {success && (
+        <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-sm flex items-start gap-3 text-xs sm:text-sm">
+          <CheckCircle2 size={18} className="shrink-0 mt-0.5" />
+          <div>
+            <span className="font-bold block">Pesan Berhasil Terkirim!</span>
+            Terima kasih atas pesan Anda. Tim pengelola Plaza Kebun Sayur akan segera menindaklanjuti.
+          </div>
+        </div>
+      )}
+
+      {errorMsg && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-sm flex items-start gap-3 text-xs sm:text-sm">
+          <AlertCircle size={18} className="shrink-0 mt-0.5" />
+          <div>
+            <span className="font-bold block">Terjadi Kendala</span>
+            {errorMsg}
+          </div>
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <div className="hidden" aria-hidden="true">
+          <input
+            type="text"
+            name="bot_check"
+            value={formData.bot_check}
+            onChange={handleChange}
+            tabIndex="-1"
+            autoComplete="off"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Input
+            label="Nama Lengkap *"
+            name="full_name"
+            required
+            value={formData.full_name}
+            onChange={handleChange}
+            placeholder="Nama Anda"
+          />
+          <Input
+            label="Nomor WhatsApp / HP *"
+            name="phone_number"
+            required
+            type="tel"
+            value={formData.phone_number}
+            onChange={handleChange}
+            placeholder="Contoh: 081234567890"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Input
+            label="Email (Opsional)"
+            name="email"
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="nama@email.com"
+          />
+          <Input
+            label="Subjek Pesan *"
+            name="subject"
+            required
+            value={formData.subject}
+            onChange={handleChange}
+            placeholder="Contoh: Info Kunjungan Rombongan"
+          />
+        </div>
+
+        <Textarea
+          label="Isi Pesan *"
+          name="message"
+          required
+          rows={4}
+          value={formData.message}
+          onChange={handleChange}
+          placeholder="Tuliskan pertanyaan, saran, atau keperluan Anda secara jelas..."
+        />
+
+        <Button
+          type="submit"
+          variant="primary"
+          size="md"
+          disabled={loading}
+          className="mt-2 w-full sm:w-auto self-start"
+        >
+          <Send size={16} className="mr-2" />
+          <span>{loading ? 'Mengirim pesan...' : 'Kirim pesan'}</span>
+        </Button>
+      </form>
+    </div>
+  );
+}
+
+export function ContactPage() {
+  const metaTitle = useContent('seo.kontak.title', 'Kontak & Pengaduan | Plaza Kebun Sayur Balikpapan');
+  const metaDesc = useContent('seo.kontak.description', 'Hubungi kantor manajemen Plaza Kebun Sayur Balikpapan untuk informasi sewa tempat, perizinan acara, dan layanan pengaduan.');
+  useDocumentMeta(metaTitle, metaDesc);
+
+  const headerTitle = useContent('header.kontak.title', 'Hubungi Pengelola Plaza Kebun Sayur');
+  const headerDesc = useContent(
+    'header.kontak.description',
+    'Punya pertanyaan seputar fasilitas gedung, agenda kunjungan rombongan, atau barang tertinggal? Tim pengelola mall siap membantu Anda.'
+  );
+
+  const officeEyebrow = useContent('contact.office_eyebrow', 'Kantor Pengelola');
+  const officeTitle = useContent('contact.office_title', 'Informasi Kontak Resmi');
+  const officeDesc = useContent(
+    'contact.office_description',
+    'Kunjungi kantor manajemen mall di lantai dasar atau hubungi pusat layanan terpadu berikut.'
+  );
+  const formTitle = useContent('contact.form_title', 'Kirim Pesan atau Pertanyaan');
+  const formDesc = useContent(
+    'contact.form_description',
+    'Sampaikan pertanyaan Anda kepada tim pengelola mall. Kami akan membalas pesan Anda sesegera mungkin.'
+  );
+
+  const siteSettings = useSiteSettings();
+  const waLink = generateManagementWhatsAppLink(siteSettings?.management_whatsapp || '080000000000');
+  const officeAddress = siteSettings?.office_address || 'Lantai Dasar (Dekat Pintu Masuk Timur), Jl. Letjen Suprapto, Kebun Sayur, Balikpapan Barat 76131';
+  const mallHours = siteSettings?.mall_opening_hours || '08.00 – 18.00 WITA';
+  const securityPhone = siteSettings?.security_phone || '(0542) 734567';
+  const managementEmail = siteSettings?.management_email || 'pengelola@plazakebunsayur.com';
+
+  const formState = useContactForm();
+
   return (
     <div className="flex flex-col min-h-screen">
       <PageHeader
@@ -79,175 +306,27 @@ export function ContactPage() {
       <section className="py-10 sm:py-14 bg-canvas flex-1">
         <Container>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
-            {/* Left 5 Cols: Management Office Info */}
-            <div className="lg:col-span-5 flex flex-col gap-6">
-              <div>
-                <span className="text-xs font-semibold text-text-muted block mb-1.5">
-                  Kantor Pengelola
-                </span>
-                <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary">
-                  Informasi Kontak Resmi
-                </h2>
-                <p className="text-xs sm:text-sm text-text-secondary mt-1">
-                  Kunjungi kantor manajemen mall di lantai dasar atau hubungi pusat layanan terpadu berikut.
-                </p>
-              </div>
+            <OfficeInfoColumn
+              officeEyebrow={officeEyebrow}
+              officeTitle={officeTitle}
+              officeDesc={officeDesc}
+              officeAddress={officeAddress}
+              mallHours={mallHours}
+              securityPhone={securityPhone}
+              managementEmail={managementEmail}
+              waLink={waLink}
+            />
 
-              <div className="divide-y divide-border-subtle text-xs sm:text-sm">
-                <div className="py-4 first:pt-0 flex items-start gap-3.5">
-                  <MapPin size={18} className="text-brand-primary shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="block text-text-primary text-sm font-semibold">Kantor Pengelola Gedung</strong>
-                    <span className="text-text-secondary leading-relaxed text-xs sm:text-sm">
-                      {officeAddress}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="py-4 flex items-start gap-3.5">
-                  <Clock size={18} className="text-brand-primary shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="block text-text-primary text-sm font-semibold">Jam Operasional Mall</strong>
-                    <span className="text-text-secondary">
-                      {mallHours}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="py-4 flex items-start gap-3.5">
-                  <Phone size={18} className="text-brand-primary shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="block text-text-primary text-sm font-semibold">Telepon Pos Keamanan</strong>
-                    <span className="text-text-secondary">{securityPhone}</span>
-                  </div>
-                </div>
-
-                <div className="py-4 last:pb-0 flex items-start gap-3.5">
-                  <Mail size={18} className="text-brand-primary shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="block text-text-primary text-sm font-semibold">Email Resmi Pengelola</strong>
-                    <span className="text-text-secondary">{managementEmail}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Direct WhatsApp Action Button */}
-              <div className="pt-2">
-                <a
-                  href={waLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-sm bg-whatsapp hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-bold uppercase tracking-wider transition-colors min-h-[44px]"
-                >
-                  <MessageCircle size={18} />
-                  <span>Chat WhatsApp Siaga Pengelola</span>
-                </a>
-              </div>
-            </div>
-
-            {/* Right 7 Cols: Public Contact Form */}
-            <div className="lg:col-span-7 bg-surface-subtle border border-border-subtle p-6 sm:p-8 rounded-md">
-              <div className="mb-6">
-                <h3 className="text-lg font-bold text-text-primary">Kirim Pesan atau Pertanyaan</h3>
-                <p className="text-xs text-text-secondary mt-1">
-                  Sampaikan pertanyaan Anda kepada tim pengelola mall. Kami akan membalas pesan Anda sesegera mungkin.
-                </p>
-              </div>
-
-              {success && (
-                <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-sm flex items-start gap-3 text-xs sm:text-sm">
-                  <CheckCircle2 size={18} className="shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-bold block">Pesan Berhasil Terkirim!</span>
-                    Terima kasih atas pesan Anda. Tim pengelola Plaza Kebun Sayur akan segera menindaklanjuti.
-                  </div>
-                </div>
-              )}
-
-              {errorMsg && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-sm flex items-start gap-3 text-xs sm:text-sm">
-                  <AlertCircle size={18} className="shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-bold block">Terjadi Kendala</span>
-                    {errorMsg}
-                  </div>
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                {/* Honeypot field (hidden from real users, traps spam bots) */}
-                <div className="hidden" aria-hidden="true">
-                  <input
-                    type="text"
-                    name="bot_check"
-                    value={formData.bot_check}
-                    onChange={handleChange}
-                    tabIndex="-1"
-                    autoComplete="off"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <Input
-                    label="Nama Lengkap *"
-                    name="full_name"
-                    required
-                    value={formData.full_name}
-                    onChange={handleChange}
-                    placeholder="Nama Anda"
-                  />
-                  <Input
-                    label="Nomor WhatsApp / HP *"
-                    name="phone_number"
-                    required
-                    type="tel"
-                    value={formData.phone_number}
-                    onChange={handleChange}
-                    placeholder="Contoh: 081234567890"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <Input
-                    label="Email (Opsional)"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="nama@email.com"
-                  />
-                  <Input
-                    label="Subjek Pesan *"
-                    name="subject"
-                    required
-                    value={formData.subject}
-                    onChange={handleChange}
-                    placeholder="Contoh: Info Kunjungan Rombongan"
-                  />
-                </div>
-
-                <Textarea
-                  label="Isi Pesan *"
-                  name="message"
-                  required
-                  rows={4}
-                  value={formData.message}
-                  onChange={handleChange}
-                  placeholder="Tuliskan pertanyaan, saran, atau keperluan Anda secara jelas..."
-                />
-
-                <Button
-                  type="submit"
-                  variant="primary"
-                  size="md"
-                  disabled={loading}
-                  className="mt-2 w-full sm:w-auto self-start"
-                >
-                  <Send size={16} className="mr-2" />
-                  <span>{loading ? 'Mengirim pesan...' : 'Kirim pesan'}</span>
-                </Button>
-              </form>
-            </div>
+            <ContactFormCard
+              formTitle={formTitle}
+              formDesc={formDesc}
+              formData={formState.formData}
+              loading={formState.loading}
+              success={formState.success}
+              errorMsg={formState.errorMsg}
+              handleChange={formState.handleChange}
+              handleSubmit={formState.handleSubmit}
+            />
           </div>
         </Container>
       </section>
