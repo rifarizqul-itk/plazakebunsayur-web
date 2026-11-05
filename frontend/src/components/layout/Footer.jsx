@@ -9,8 +9,8 @@ const CURRENT_YEAR = new Date().getFullYear();
 
 const DEFAULT_FOOTER_NAV = [
   { id: 1, label: 'Direktori Kios Belanja', path: '/belanja', is_external: false },
-  { id: 2, label: 'Sentra Kuliner Tradisional', path: '/kuliner', is_external: false },
-  { id: 3, label: 'Agenda & Promo Plaza', path: '/agenda', is_external: false },
+  { id: 2, label: 'Sentra Fashion & Batik', path: '/fashion', is_external: false },
+  { id: 3, label: 'Informasi & Promo Plaza', path: '/informasi', is_external: false },
   { id: 4, label: 'Panduan Kunjungan Gedung', path: '/panduan-kunjungan', is_external: false },
   { id: 5, label: 'Kontak & Pengaduan', path: '/kontak', is_external: false },
 ];
@@ -20,7 +20,7 @@ export function Footer() {
 
   const mallDesc = useContent(
     'footer.mall_description',
-    'Pusat perniagaan Plaza Kebun Sayur di Balikpapan Barat. Sentra batu mulia, perhiasan emas dan perak, kerajinan Dayak, batik, dan kuliner khas.'
+    'Pusat perniagaan Plaza Kebun Sayur di Balikpapan Barat. Sentra batu mulia, perhiasan emas dan perak, kerajinan Dayak, batik, dan busana khas.'
   );
   const mgmtTitle = useContent('footer.management_title', 'Kantor Pengelola');
   const mgmtDesc = useContent(
@@ -28,13 +28,31 @@ export function Footer() {
     'Kantor manajemen berlokasi di Lantai Dasar (Pintu Timur). Melayani informasi kios, ketertiban, dan layanan pengunjung.'
   );
   const logoUrl = useContentImage('brand.logo', '/assets/main_logo_transparent_for_light_bg.webp');
+  const brandName = useContent('brand.name', 'Plaza Kebun Sayur');
+  const brandSubLocation = useContent('brand.sub_location', 'Balikpapan Barat');
 
   const waLink = generateManagementWhatsAppLink(siteSettings?.management_whatsapp || '080000000000');
   const mallHours = siteSettings?.mall_opening_hours || '08.00 – 18.00 WITA';
   const mallAddress = siteSettings?.office_address || 'Jl. Letjen Suprapto, Kebun Sayur, Balikpapan Barat 76131';
 
   const footerNavItems = useNavItems('footer');
-  const navItems = footerNavItems?.length > 0 ? footerNavItems : DEFAULT_FOOTER_NAV;
+  const rawNavItems = footerNavItems?.length > 0 ? footerNavItems : DEFAULT_FOOTER_NAV;
+  const navItems = rawNavItems.map((item) => {
+    let path = item.path;
+    let label = item.label;
+    if (path === '/kuliner') {
+      path = '/fashion';
+      if (label === 'Sentra Kuliner Tradisional' || label.toLowerCase().includes('kuliner')) {
+        label = 'Sentra Fashion & Batik';
+      }
+    } else if (path === '/agenda') {
+      path = '/informasi';
+      if (label === 'Agenda & Promo Plaza' || label.toLowerCase().includes('agenda')) {
+        label = 'Informasi & Promo Plaza';
+      }
+    }
+    return { ...item, path, label };
+  });
 
   return (
     <footer className="bg-surface-dark text-white border-t border-mono-800 mt-auto">
@@ -55,9 +73,9 @@ export function Footer() {
                 />
                 <div>
                   <h4 className="font-bold text-sm tracking-wider uppercase text-white">
-                    Plaza Kebun Sayur
+                    {brandName}
                   </h4>
-                  <p className="text-xs text-mono-300">Balikpapan Barat</p>
+                  <p className="text-xs text-mono-300">{brandSubLocation}</p>
                 </div>
               </div>
               <p className="text-xs text-mono-300 leading-relaxed">

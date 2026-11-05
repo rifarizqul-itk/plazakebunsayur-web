@@ -71,6 +71,12 @@ export function TermsConditions() {
               </span>
             </div>
 
+            {legalPage?.intro && (
+              <p className="text-base md:text-lg text-brand-dark/80 font-medium leading-relaxed mb-8 p-4 bg-brand-warm/30 rounded-sm border-l-4 border-brand-primary">
+                {legalPage.intro}
+              </p>
+            )}
+
             {legalPage?.body ? (
               <div
                 className="text-sm sm:text-base text-text-secondary leading-relaxed space-y-4 [&>h2]:text-lg [&>h2]:sm:text-xl [&>h2]:font-bold [&>h2]:text-text-primary [&>h2]:tracking-tight [&>h2]:pt-6 [&>h2]:border-t [&>h2]:border-border-subtle [&>h2:first-child]:pt-0 [&>h2:first-child]:border-0 [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:space-y-2 [&_strong]:text-text-primary [&_strong]:font-semibold [&_a]:text-brand-primary [&_a]:hover:underline"

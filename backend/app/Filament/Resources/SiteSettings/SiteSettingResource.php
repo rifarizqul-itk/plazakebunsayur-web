@@ -60,6 +60,7 @@ class SiteSettingResource extends Resource
                         'office_address' => 'Alamat Kantor Pengelola',
                         'management_email' => 'Email Resmi Pengelola',
                         'maps_url' => 'Tautan Google Maps',
+                        'maps_embed_url' => 'URL Embed Peta Google Maps (Iframe)',
                         default => $state,
                     })
                     ->badge()

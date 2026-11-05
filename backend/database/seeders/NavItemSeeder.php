@@ -12,6 +12,9 @@ class NavItemSeeder extends Seeder
      */
     public function run(): void
     {
+        // Clean up legacy paths
+        NavItem::whereIn('path', ['/kuliner', '/agenda'])->delete();
+
         $items = [
             // Header items
             [
@@ -33,8 +36,8 @@ class NavItemSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'label' => 'KULINER',
-                'path' => '/kuliner',
+                'label' => 'FASHION',
+                'path' => '/fashion',
                 'location' => 'header',
                 'is_external' => false,
                 'is_cta' => false,
@@ -42,8 +45,8 @@ class NavItemSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'label' => 'AGENDA',
-                'path' => '/agenda',
+                'label' => 'INFORMASI',
+                'path' => '/informasi',
                 'location' => 'header',
                 'is_external' => false,
                 'is_cta' => false,
@@ -80,8 +83,8 @@ class NavItemSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'label' => 'Sentra Kuliner Tradisional',
-                'path' => '/kuliner',
+                'label' => 'Sentra Fashion & Batik',
+                'path' => '/fashion',
                 'location' => 'footer',
                 'is_external' => false,
                 'is_cta' => false,
@@ -89,8 +92,8 @@ class NavItemSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'label' => 'Agenda & Promo Plaza',
-                'path' => '/agenda',
+                'label' => 'Informasi & Promo Plaza',
+                'path' => '/informasi',
                 'location' => 'footer',
                 'is_external' => false,
                 'is_cta' => false,

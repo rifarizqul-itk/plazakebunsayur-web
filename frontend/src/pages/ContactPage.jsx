@@ -20,6 +20,18 @@ export function ContactPage() {
     'Punya pertanyaan seputar fasilitas gedung, agenda kunjungan rombongan, atau barang tertinggal? Tim pengelola mall siap membantu Anda.'
   );
 
+  const officeEyebrow = useContent('contact.office_eyebrow', 'Kantor Pengelola');
+  const officeTitle = useContent('contact.office_title', 'Informasi Kontak Resmi');
+  const officeDesc = useContent(
+    'contact.office_description',
+    'Kunjungi kantor manajemen mall di lantai dasar atau hubungi pusat layanan terpadu berikut.'
+  );
+  const formTitle = useContent('contact.form_title', 'Kirim Pesan atau Pertanyaan');
+  const formDesc = useContent(
+    'contact.form_description',
+    'Sampaikan pertanyaan Anda kepada tim pengelola mall. Kami akan membalas pesan Anda sesegera mungkin.'
+  );
+
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
@@ -82,15 +94,19 @@ export function ContactPage() {
             {/* Left 5 Cols: Management Office Info */}
             <div className="lg:col-span-5 flex flex-col gap-6">
               <div>
-                <span className="text-xs font-semibold text-text-muted block mb-1.5">
-                  Kantor Pengelola
-                </span>
+                {officeEyebrow && (
+                  <span className="text-xs font-semibold text-text-muted block mb-1.5">
+                    {officeEyebrow}
+                  </span>
+                )}
                 <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary">
-                  Informasi Kontak Resmi
+                  {officeTitle}
                 </h2>
-                <p className="text-xs sm:text-sm text-text-secondary mt-1">
-                  Kunjungi kantor manajemen mall di lantai dasar atau hubungi pusat layanan terpadu berikut.
-                </p>
+                {officeDesc && (
+                  <p className="text-xs sm:text-sm text-text-secondary mt-1">
+                    {officeDesc}
+                  </p>
+                )}
               </div>
 
               <div className="divide-y divide-border-subtle text-xs sm:text-sm">
@@ -148,10 +164,12 @@ export function ContactPage() {
             {/* Right 7 Cols: Public Contact Form */}
             <div className="lg:col-span-7 bg-surface-subtle border border-border-subtle p-6 sm:p-8 rounded-md">
               <div className="mb-6">
-                <h3 className="text-lg font-bold text-text-primary">Kirim Pesan atau Pertanyaan</h3>
-                <p className="text-xs text-text-secondary mt-1">
-                  Sampaikan pertanyaan Anda kepada tim pengelola mall. Kami akan membalas pesan Anda sesegera mungkin.
-                </p>
+                <h3 className="text-lg font-bold text-text-primary">{formTitle}</h3>
+                {formDesc && (
+                  <p className="text-xs text-text-secondary mt-1">
+                    {formDesc}
+                  </p>
+                )}
               </div>
 
               {success && (

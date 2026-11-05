@@ -35,9 +35,9 @@ class WhatsOnResource extends Resource
 
     protected static UnitEnum|string|null $navigationGroup = 'Informasi Pengunjung';
 
-    protected static ?string $modelLabel = 'Agenda & Acara';
+    protected static ?string $modelLabel = 'Informasi & Promo';
 
-    protected static ?string $pluralModelLabel = 'Daftar Agenda & Acara';
+    protected static ?string $pluralModelLabel = 'Daftar Informasi & Promo';
 
     public static function form(Schema $schema): Schema
     {
@@ -78,21 +78,32 @@ class WhatsOnResource extends Resource
                     ->label('Ketentuan Tiket / Biaya Masuk (HTM)')
                     ->placeholder('Contoh: Gratis (Terbuka untuk Umum)')
                     ->default('Gratis (Terbuka untuk Umum)'),
+                TextInput::make('contact_person')
+                    ->label('Nama Narahubung')
+                    ->placeholder('Contoh: Bpk. Syahril / Sekretariat Plaza'),
+                TextInput::make('contact_phone')
+                    ->label('Nomor WhatsApp Narahubung')
+                    ->placeholder('Contoh: 08125556789'),
                 FileUpload::make('banner_image_path')
-                    ->label('Banner Kegiatan (Rasio 16:9)')
+                    ->label('Banner Kegiatan / Promo (Rasio 16:9)')
                     ->disk('public')
                     ->directory('whats-on')
                     ->image()
-                    ->maxSize(10240)
-                    ->helperText('Rekomendasi rasio 16:9 (1600x900 px). Berkas maksimal 10 MB.'),
+                    ->saveUploadedFileUsing(fn ($file) => app(\App\Services\ImageOptimizerService::class)->optimizeWhatsOnBanner($file))
+                    ->helperText('Rekomendasi rasio 16:9 (1600x900 px). Ukuran berkas bebas, otomatis dikompres ke WebP.'),
                 Textarea::make('summary')
                     ->label('Ringkasan Singkat')
                     ->placeholder('Ringkasan 1-2 kalimat untuk kartu depan...')
                     ->columnSpanFull(),
                 Textarea::make('content')
                     ->label('Detail Lengkap & Jadwal')
-                    ->placeholder('Deskripsi acara, pengisi acara, syarat ketentuan promo...')
+                    ->placeholder('Deskripsi acara, pengisi acara, jadwal...')
                     ->rows(6)
+                    ->columnSpanFull(),
+                Textarea::make('terms')
+                    ->label('Ketentuan Acara / Promo')
+                    ->placeholder('Syarat & ketentuan berlaku, tata tertib partisipasi...')
+                    ->rows(3)
                     ->columnSpanFull(),
                 TagsInput::make('highlights')
                     ->label('Sorotan & Rangkaian Aktivitas Acara')

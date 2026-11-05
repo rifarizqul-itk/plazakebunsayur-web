@@ -12,6 +12,7 @@ export function CategoryFilter({
       value: cat.id,
       label: cat.name,
       count: cat.tenants_count,
+      icon_name: cat.icon_name,
     })),
   ];
 

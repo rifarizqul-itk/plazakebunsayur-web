@@ -74,6 +74,16 @@ class TenantResource extends Resource
                 TextInput::make('instagram')
                     ->label('Akun Instagram')
                     ->placeholder('@tokopermata'),
+                TextInput::make('tiktok')
+                    ->label('Akun TikTok')
+                    ->placeholder('@tokobatik'),
+                TextInput::make('facebook')
+                    ->label('Akun Facebook')
+                    ->placeholder('Nama Halaman / Profil Facebook'),
+                TextInput::make('website')
+                    ->label('Website / Tautan Linktree')
+                    ->url()
+                    ->placeholder('https://...'),
                 TextInput::make('opening_time')
                     ->label('Jam Buka')
                     ->placeholder('09:00')
@@ -87,12 +97,22 @@ class TenantResource extends Resource
                     ->default('Setiap Hari (Senin - Minggu)')
                     ->required(),
                 FileUpload::make('image_path')
-                    ->label('Foto Kios / Banner')
+                    ->label('Foto Kios / Banner Utama')
                     ->disk('public')
                     ->directory('tenants')
                     ->image()
-                    ->maxSize(10240)
-                    ->helperText('Rekomendasi rasio 4:3 (800x600 px). Berkas maksimal 10 MB.'),
+                    ->saveUploadedFileUsing(fn ($file) => app(\App\Services\ImageOptimizerService::class)->optimizeTenantPhoto($file))
+                    ->helperText('Rekomendasi rasio 4:3 (800x600 px). Ukuran berkas bebas, otomatis dikompres ke WebP.'),
+                FileUpload::make('images')
+                    ->label('Galeri Foto Kios / Produk (Bisa Geser / Swipe)')
+                    ->multiple()
+                    ->reorderable()
+                    ->disk('public')
+                    ->directory('tenants')
+                    ->image()
+                    ->saveUploadedFileUsing(fn ($file) => app(\App\Services\ImageOptimizerService::class)->optimizeTenantPhoto($file))
+                    ->helperText('Unggah 2–3+ foto suasana kios atau produk unggulan. Ukuran berkas bebas, otomatis dikompres ke WebP.')
+                    ->columnSpanFull(),
                 Textarea::make('description')
                     ->label('Profil & Deskripsi Lengkap')
                     ->placeholder('Ceritakan keunggulan kios, jenis produk/menu andalan, dan layanan spesifik...')
@@ -121,7 +141,11 @@ class TenantResource extends Resource
                 TextColumn::make('category.name')
                     ->label('Kategori')
                     ->badge()
-                    ->color(fn ($record) => $record?->category?->type === 'culinary' ? 'warning' : 'info')
+                    ->color(fn ($record) => match ($record?->category?->type) {
+                        'fashion' => 'success',
+                        'culinary' => 'warning',
+                        default => 'info',
+                    })
                     ->searchable(),
                 TextColumn::make('floor.code')
                     ->label('Lantai')

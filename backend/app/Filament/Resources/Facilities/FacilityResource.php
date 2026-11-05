@@ -11,6 +11,7 @@ use UnitEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
@@ -41,11 +42,28 @@ class FacilityResource extends Resource
                     ->label('Nama Fasilitas')
                     ->placeholder('Contoh: Musholla Al-Hidayah, Parkir Luas')
                     ->required(),
-                TextInput::make('icon_name')
-                    ->label('Nama Ikon (Frontend)')
-                    ->helperText('Contoh: Car, Shield, Accessibility, Sparkles, Building')
-                    ->required()
-                    ->default('Sparkles'),
+                Select::make('icon_name')
+                    ->label('Ikon Fasilitas (Lucide)')
+                    ->searchable()
+                    ->options([
+                        'Moon' => 'Musholla / Tempat Ibadah (Moon)',
+                        'Users' => 'Toilet / Fasilitas Umum (Users)',
+                        'CreditCard' => 'ATM Center / Finansial (CreditCard)',
+                        'Car' => 'Area Parkir (Car)',
+                        'ShieldCheck' => 'Pos Keamanan / Satpam (ShieldCheck)',
+                        'Building2' => 'Gedung / Pengelola (Building2)',
+                        'Wifi' => 'Wi-Fi Area (Wifi)',
+                        'Accessibility' => 'Akses Disabilitas / Kursi Roda (Accessibility)',
+                        'Baby' => 'Ruang Laktasi / Ibu & Anak (Baby)',
+                        'Utensils' => 'Area Kuliner / Kantin (Utensils)',
+                        'ShoppingBag' => 'Kios Belanja (ShoppingBag)',
+                        'Sparkles' => 'Layanan Khusus (Sparkles)',
+                        'Info' => 'Pusat Informasi (Info)',
+                        'HeartPulse' => 'P3K / Pos Kesehatan (HeartPulse)',
+                        'MapPin' => 'Titik Lokasi (MapPin)',
+                    ])
+                    ->default('Sparkles')
+                    ->helperText('Pilih ikon Lucide representatif untuk fasilitas ini.'),
                 TextInput::make('location_note')
                     ->label('Catatan Lokasi')
                     ->placeholder('Contoh: Lantai 1 & Lantai 2 Sayap Barat'),
@@ -55,7 +73,8 @@ class FacilityResource extends Resource
                     ->numeric()
                     ->default(1),
                 Textarea::make('description')
-                    ->label('Deskripsi Fasilitas')
+                    ->label('Deskripsi Fasilitas (Opsional)')
+                    ->nullable()
                     ->placeholder('Rincian fasilitas, jam operasional jika ada, dll.')
                     ->columnSpanFull(),
                 Toggle::make('is_active')

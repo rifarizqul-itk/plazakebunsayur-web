@@ -11,7 +11,7 @@ import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import { formatDateRange } from '../utils/date';
 
 function EventRow({ evt }) {
-  const typeLabel = evt.type === 'event' ? 'Pameran & Acara' : 'Promo Kios';
+  const typeLabel = evt.type === 'event' ? 'Agenda & Kegiatan' : 'Promo Kios';
 
   return (
     <div className="py-6 sm:py-8 flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-8 group">
@@ -28,7 +28,7 @@ function EventRow({ evt }) {
 
       {/* Right: Title, Summary & Action */}
       <div className="flex-1 flex flex-col gap-2">
-        <Link to={`/agenda/${evt.slug}`}>
+        <Link to={`/informasi/${evt.slug}`}>
           <h3 className="font-semibold text-lg text-text-primary group-hover:text-brand-primary transition-colors">
             {evt.title}
           </h3>
@@ -38,10 +38,10 @@ function EventRow({ evt }) {
         </p>
         <div className="pt-1">
           <Link
-            to={`/agenda/${evt.slug}`}
+            to={`/informasi/${evt.slug}`}
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-primary hover:underline"
           >
-            <span>Lihat detail agenda</span>
+            <span>Lihat detail informasi</span>
             <ArrowRight size={13} />
           </Link>
         </div>
@@ -63,10 +63,10 @@ function HomeEventsSection({ events, title }) {
             </h2>
           </div>
           <Link
-            to="/agenda"
+            to="/informasi"
             className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-text-primary hover:text-brand-primary transition-colors"
           >
-            <span>Lihat Semua Agenda</span>
+            <span>Lihat Semua Informasi</span>
             <ArrowRight size={15} />
           </Link>
         </div>
@@ -83,12 +83,15 @@ function HomeEventsSection({ events, title }) {
 
 export function Home() {
   const metaTitle = useContent('seo.home.title', 'Plaza Kebun Sayur Balikpapan | Sentra Kerajinan & Batu Mulia Borneo');
-  const metaDesc = useContent('seo.home.description', 'Situs resmi direktori kios Plaza Kebun Sayur Balikpapan. Sentra batu akik, kerajinan etnik Dayak, kain batik, dan kuliner khas Kalimantan Timur.');
+  const metaDesc = useContent(
+    'seo.home.description',
+    'Situs resmi direktori kios Plaza Kebun Sayur Balikpapan. Sentra batu akik, kerajinan etnik Dayak, kain batik, busana daerah, dan suvenir khas Kalimantan Timur.'
+  );
   useDocumentMeta(metaTitle, metaDesc);
 
-  const eventsTitle = useContent('home.events.title', 'Agenda & Kegiatan Mendatang');
-  const [retailTenants, setRetailTenants] = useState([]);
-  const [culinaryTenants, setCulinaryTenants] = useState([]);
+  const eventsTitle = useContent('home.events.title', 'Informasi & Kegiatan Mendatang');
+  const [promos, setPromos] = useState([]);
+  const [olehOlehTenants, setOlehOlehTenants] = useState([]);
   const [latestEvents, setLatestEvents] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -97,15 +100,35 @@ export function Home() {
     async function loadHomeData() {
       try {
         setLoading(true);
-        const [retailRes, culinaryRes, eventsRes] = await Promise.all([
-          fetchTenants({ type: 'retail', featured: true, per_page: 4 }),
-          fetchTenants({ type: 'culinary', featured: true, per_page: 4 }),
-          fetchWhatsOn(),
+        const [fashionRes, retailRes, whatsOnRes] = await Promise.all([
+          fetchTenants({ type: 'fashion', featured: true, per_page: 4 }).catch(() => ({ data: [] })),
+          fetchTenants({ type: 'retail', featured: true, per_page: 8 }).catch(() => ({ data: [] })),
+          fetchWhatsOn().catch(() => []),
         ]);
+
         if (!isCancelled) {
-          setRetailTenants(retailRes.data || []);
-          setCulinaryTenants(culinaryRes.data || []);
-          setLatestEvents(eventsRes?.slice(0, 2) || []);
+          const allWhatsOn = Array.isArray(whatsOnRes) ? whatsOnRes : [];
+          // Active promos for top section
+          const promoList = allWhatsOn.filter((item) => item.type === 'promo');
+          setPromos(promoList);
+
+          // Events / Information items for bottom section
+          const eventList = allWhatsOn.filter((item) => item.type === 'event' || item.type !== 'promo');
+          setLatestEvents(eventList.slice(0, 3));
+
+          // Oleh-oleh & cenderamata: prioritize fashion, fallback to retail souvenir/batik
+          let olehOlehList = fashionRes.data || [];
+          if (olehOlehList.length === 0 && retailRes.data?.length > 0) {
+            olehOlehList = retailRes.data.filter(
+              (t) =>
+                t.category?.slug?.includes('batik') ||
+                t.category?.slug?.includes('dayak') ||
+                t.category?.slug?.includes('souvenir') ||
+                t.category?.slug?.includes('cinderamata')
+            );
+            if (olehOlehList.length === 0) olehOlehList = retailRes.data;
+          }
+          setOlehOlehTenants(olehOlehList.slice(0, 4));
         }
       } catch (err) {
         console.error('Failed to load home data:', err);
@@ -124,14 +147,14 @@ export function Home() {
       {/* 1. Hero Section */}
       <HeroSection />
 
-      {/* 2. Featured Tenants & Culinary Section */}
+      {/* 2. Featured Promos & Oleh-Oleh Section */}
       <FeaturedSection
-        retailTenants={retailTenants}
-        culinaryTenants={culinaryTenants}
+        promos={promos}
+        olehOlehTenants={olehOlehTenants}
         loading={loading}
       />
 
-      {/* 3. Whats On / Event & Promo Highlights */}
+      {/* 3. Whats On / Event & Information Highlights */}
       <HomeEventsSection events={latestEvents} title={eventsTitle} />
 
       {/* 4. History & Culture Section */}

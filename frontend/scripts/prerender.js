@@ -52,6 +52,22 @@ function writeHtml(targetPath, content) {
   fs.writeFileSync(targetPath, content, 'utf8');
 }
 
+function writeRedirectHtml(targetPath, targetUrl) {
+  const content = `<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="0; url=${targetUrl}">
+  <link rel="canonical" href="${targetUrl}">
+  <title>Mengalihkan...</title>
+</head>
+<body>
+  <p>Mengalihkan ke <a href="${targetUrl}">${targetUrl}</a>...</p>
+</body>
+</html>`;
+  writeHtml(targetPath, content);
+}
+
 async function fetchTenants() {
   const apiUrl = process.env.VITE_API_URL || 'http://127.0.0.1:8000/api';
   const allTenants = [];
@@ -85,6 +101,32 @@ async function fetchTenants() {
     return mockModule.MOCK_TENANTS || mockModule.mockTenants || [];
   } catch (err) {
     console.warn('⚠️ Gagal membaca mockData:', err.message);
+    return [];
+  }
+}
+
+async function fetchWhatsOnItems() {
+  const apiUrl = process.env.VITE_API_URL || 'http://127.0.0.1:8000/api';
+  try {
+    const res = await fetch(`${apiUrl}/whats-on?per_page=100`, {
+      headers: { 'ngrok-skip-browser-warning': '1' },
+      signal: AbortSignal.timeout(3000),
+    });
+    if (res.ok) {
+      const json = await res.json();
+      if (json.data && Array.isArray(json.data) && json.data.length > 0) {
+        console.log(`📡 Berhasil mengambil ${json.data.length} agenda/informasi dari backend API`);
+        return json.data;
+      }
+    }
+  } catch {
+    // fallback
+  }
+
+  try {
+    const mockModule = await import('../src/data/mockData.js');
+    return mockModule.MOCK_WHATS_ON || [];
+  } catch {
     return [];
   }
 }
@@ -123,7 +165,7 @@ async function main() {
 
   // 0. Update Root Home index.html
   const homeTitle = contents['seo.home.title'] || 'Plaza Kebun Sayur Balikpapan | Sentra Kerajinan & Batu Mulia Borneo';
-  const homeDesc = contents['seo.home.description'] || 'Situs resmi direktori kios Plaza Kebun Sayur Balikpapan. Sentra batu akik, kerajinan etnik Dayak, kain batik, dan kuliner khas Kalimantan Timur.';
+  const homeDesc = contents['seo.home.description'] || 'Situs resmi direktori kios Plaza Kebun Sayur Balikpapan. Sentra batu akik, kerajinan etnik Dayak, kain batik, dan busana khas Kalimantan Timur.';
   const homeHtml = injectMeta(template, {
     title: homeTitle,
     description: homeDesc,
@@ -143,23 +185,23 @@ async function main() {
       url: 'https://plazakebunsayur.com/belanja',
     },
     {
-      route: 'kuliner',
-      title: contents['seo.kuliner.title'] || 'Sentra Kuliner Khas Kaltim - Plaza Kebun Sayur Balikpapan',
-      description: contents['seo.kuliner.description'] || 'Nikmati Soto Banjar legendaris, Mantau Sapi, kepiting Dandito, amplang kuku macan, dan kuliner khas Balikpapan di Sentra Kuliner Plaza Bunsay.',
-      image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200&q=80',
-      url: 'https://plazakebunsayur.com/kuliner',
+      route: 'fashion',
+      title: contents['seo.fashion.title'] || 'Sentra Fashion & Busana Khas - Plaza Kebun Sayur Balikpapan',
+      description: contents['seo.fashion.description'] || 'Temukan koleksi batik Kalimantan, tenun ikat, busana adat Dayak, pakaian modern, dan aksesoris pilihan di Plaza Kebun Sayur.',
+      image: 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1200&q=80',
+      url: 'https://plazakebunsayur.com/fashion',
     },
     {
-      route: 'agenda',
-      title: contents['seo.agenda.title'] || 'Agenda & Kegiatan Budaya - Plaza Kebun Sayur Balikpapan',
-      description: contents['seo.agenda.description'] || 'Informasi pameran batu mulia, pentas seni Dayak, festival kuliner, dan kegiatan terbaru di Plaza Kebun Sayur.',
+      route: 'informasi',
+      title: contents['seo.informasi.title'] || contents['seo.agenda.title'] || 'Pusat Informasi & Promo Plaza - Plaza Kebun Sayur Balikpapan',
+      description: contents['seo.informasi.description'] || contents['seo.agenda.description'] || 'Informasi pameran batu mulia, pentas seni Dayak, bazar cinderamata, serta pengumuman promo spesial kios di Plaza Kebun Sayur.',
       image: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=1200&q=80',
-      url: 'https://plazakebunsayur.com/agenda',
+      url: 'https://plazakebunsayur.com/informasi',
     },
     {
       route: 'panduan-kunjungan',
       title: contents['seo.panduan.title'] || 'Panduan Kunjungan & Fasilitas - Plaza Kebun Sayur Balikpapan',
-      description: contents['seo.panduan.description'] || 'Rute transportasi, tips menawar ramah, informasi parkir, musholla, dan fasilitas lengkap untuk wisatawan di Plaza Kebun Sayur.',
+      description: contents['seo.panduan.description'] || 'Informasi fasilitas gedung, jam operasional, pos keamanan, musholla, dan panduan lengkap untuk wisatawan di Plaza Kebun Sayur.',
       image: 'https://images.unsplash.com/photo-1582533561751-ef6f6ab93a2e?w=1200&q=80',
       url: 'https://plazakebunsayur.com/panduan-kunjungan',
     },
@@ -193,20 +235,25 @@ async function main() {
     console.log(`  📄 Pre-rendered /${page.route}`);
   }
 
+  // 1b. Legacy Static Redirects
+  writeRedirectHtml(path.join(distDir, 'kuliner', 'index.html'), 'https://plazakebunsayur.com/fashion');
+  writeRedirectHtml(path.join(distDir, 'agenda', 'index.html'), 'https://plazakebunsayur.com/informasi');
+  console.log('  🔄 Generated legacy redirects: /kuliner -> /fashion, /agenda -> /informasi');
+
   // 2. Tenant Dynamic Pages
   const tenants = await fetchTenants();
   let count = 0;
 
   for (const tenant of tenants) {
-    const isCulinary = tenant.category?.type === 'culinary';
-    const folder = isCulinary ? 'kuliner' : 'belanja';
+    const isFashion = tenant.category?.type === 'fashion' || tenant.category?.type === 'culinary';
+    const folder = isFashion ? 'fashion' : 'belanja';
     const pageUrl = `https://plazakebunsayur.com/${folder}/${tenant.slug}`;
     const cleanDesc = (tenant.description || `Kunjungi toko ${tenant.name} di ${tenant.floor?.name || 'Plaza Kebun Sayur Balikpapan'}`).replace(/\s+/g, ' ').slice(0, 155);
     const photoUrl = tenant.image_url || 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=1200&q=80';
 
     const schema = {
       '@context': 'https://schema.org',
-      '@type': isCulinary ? 'Restaurant' : 'Store',
+      '@type': isFashion ? 'ClothingStore' : 'Store',
       'name': tenant.name,
       'description': tenant.description,
       'image': photoUrl,
@@ -232,10 +279,69 @@ async function main() {
 
     const dest = path.join(distDir, folder, tenant.slug, 'index.html');
     writeHtml(dest, tenantHtml);
+
+    // If legacy culinary, also write redirect in old folder
+    if (isFashion) {
+      writeRedirectHtml(
+        path.join(distDir, 'kuliner', tenant.slug, 'index.html'),
+        `https://plazakebunsayur.com/fashion/${tenant.slug}`
+      );
+    }
     count++;
   }
 
+  // 3. Whats-On / Informasi Dynamic Pages
+  const whatsOnList = await fetchWhatsOnItems();
+  let infoCount = 0;
+
+  for (const item of whatsOnList) {
+    const pageUrl = `https://plazakebunsayur.com/informasi/${item.slug}`;
+    const cleanDesc = (item.summary || item.title).replace(/\s+/g, ' ').slice(0, 155);
+    const photoUrl = item.banner_url || 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=1200&q=80';
+
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': item.type === 'event' ? 'Event' : 'SaleEvent',
+      'name': item.title,
+      'description': item.summary,
+      'image': photoUrl,
+      'startDate': item.start_date,
+      'endDate': item.end_date,
+      'location': {
+        '@type': 'Place',
+        'name': 'Plaza Kebun Sayur',
+        'address': {
+          '@type': 'PostalAddress',
+          'streetAddress': 'Jl. Letjen Suprapto, Baru Ilir',
+          'addressLocality': 'Balikpapan Barat',
+          'addressRegion': 'Kalimantan Timur',
+          'postalCode': '76131',
+          'addressCountry': 'ID',
+        },
+      },
+    };
+
+    const itemHtml = injectMeta(template, {
+      title: `${item.title} - Plaza Kebun Sayur Balikpapan`,
+      description: cleanDesc,
+      image: photoUrl,
+      url: pageUrl,
+      schema,
+    });
+
+    const dest = path.join(distDir, 'informasi', item.slug, 'index.html');
+    writeHtml(dest, itemHtml);
+
+    // Legacy redirect from agenda
+    writeRedirectHtml(
+      path.join(distDir, 'agenda', item.slug, 'index.html'),
+      `https://plazakebunsayur.com/informasi/${item.slug}`
+    );
+    infoCount++;
+  }
+
   console.log(`✨ Sukses melakukan pre-rendering ${count} halaman kios/stan dinamis!`);
+  console.log(`✨ Sukses melakukan pre-rendering ${infoCount} halaman informasi/agenda dinamis!`);
   console.log('🎉 Pre-rendering selesai dengan sempurna!');
 }
 

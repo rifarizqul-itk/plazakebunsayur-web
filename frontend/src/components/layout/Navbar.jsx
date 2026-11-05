@@ -3,18 +3,45 @@ import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Search, MessageCircle } from 'lucide-react';
 import { Container } from './Container';
 import { generateManagementWhatsAppLink } from '../../utils/whatsapp';
-import { useContentImage, useNavItems, useSiteSettings } from '../../hooks/useContent';
+import { useContent, useContentImage, useNavItems, useSiteSettings } from '../../hooks/useContent';
 
 const DEFAULT_HEADER_NAV = [
-  { id: 1, label: 'BERANDA', path: '/', is_external: false },
-  { id: 2, label: 'BELANJA', path: '/belanja', is_external: false },
-  { id: 3, label: 'KULINER', path: '/kuliner', is_external: false },
-  { id: 4, label: 'AGENDA', path: '/agenda', is_external: false },
-  { id: 5, label: 'PANDUAN', path: '/panduan-kunjungan', is_external: false },
-  { id: 6, label: 'KONTAK', path: '/kontak', is_external: false },
+  { id: 1, label: 'BERANDA', path: '/', is_external: false, is_cta: false },
+  { id: 2, label: 'BELANJA', path: '/belanja', is_external: false, is_cta: false },
+  { id: 3, label: 'FASHION', path: '/fashion', is_external: false, is_cta: false },
+  { id: 4, label: 'INFORMASI', path: '/informasi', is_external: false, is_cta: false },
+  { id: 5, label: 'PANDUAN', path: '/panduan-kunjungan', is_external: false, is_cta: false },
+  { id: 6, label: 'KONTAK', path: '/kontak', is_external: false, is_cta: false },
 ];
 
 function DesktopNavItem({ item }) {
+  if (item.is_cta) {
+    const ctaClasses =
+      'inline-flex items-center justify-center px-4 py-2 bg-brand-primary text-white hover:bg-brand-primary-hover active:bg-brand-primary-pressed rounded-sm font-semibold text-xs xl:text-sm tracking-wide transition-colors shadow-subtle ml-2 whitespace-nowrap';
+
+    if (item.is_external) {
+      return (
+        <a
+          href={item.path}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={ctaClasses}
+        >
+          {item.label}
+        </a>
+      );
+    }
+
+    return (
+      <NavLink
+        to={item.path}
+        className={ctaClasses}
+      >
+        {item.label}
+      </NavLink>
+    );
+  }
+
   if (item.is_external) {
     return (
       <a
@@ -43,6 +70,35 @@ function DesktopNavItem({ item }) {
 }
 
 function MobileNavItem({ item, onClose }) {
+  if (item.is_cta) {
+    const mobileCtaClasses =
+      'inline-flex items-center justify-center w-full my-1.5 px-4 py-3 bg-brand-primary text-white font-bold text-sm tracking-wide rounded-sm hover:bg-brand-primary-hover active:bg-brand-primary-pressed transition-colors min-h-[44px]';
+
+    if (item.is_external) {
+      return (
+        <a
+          href={item.path}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={onClose}
+          className={mobileCtaClasses}
+        >
+          {item.label}
+        </a>
+      );
+    }
+
+    return (
+      <NavLink
+        to={item.path}
+        onClick={onClose}
+        className={mobileCtaClasses}
+      >
+        <span>{item.label}</span>
+      </NavLink>
+    );
+  }
+
   if (item.is_external) {
     return (
       <a
@@ -84,12 +140,26 @@ export function Navbar() {
   const siteSettings = useSiteSettings();
   const waNumber = siteSettings?.management_whatsapp || '080000000000';
   const logoUrl = useContentImage('brand.logo', '/assets/main_logo_transparent_for_light_bg.webp');
+  const brandName = useContent('brand.name', 'PLAZA KEBUN SAYUR');
+  const brandSubLocation = useContent('brand.sub_location', 'Balikpapan Barat');
   const waLink = generateManagementWhatsAppLink(waNumber);
   const headerNavItems = useNavItems('header');
-  const navItems = headerNavItems?.length > 0 ? headerNavItems : DEFAULT_HEADER_NAV;
+  const rawNavItems = headerNavItems?.length > 0 ? headerNavItems : DEFAULT_HEADER_NAV;
+  const navItems = rawNavItems.map((item) => {
+    let path = item.path;
+    let label = item.label;
+    if (path === '/kuliner') {
+      path = '/fashion';
+      if (label === 'KULINER') label = 'FASHION';
+    } else if (path === '/agenda') {
+      path = '/informasi';
+      if (label === 'AGENDA') label = 'INFORMASI';
+    }
+    return { ...item, path, label };
+  });
 
-  const isKulinerPage = location.pathname.startsWith('/kuliner');
-  const searchPlaceholder = isKulinerPage ? 'Cari menu / kuliner...' : 'Cari kios / produk...';
+  const isFashionPage = location.pathname.startsWith('/fashion');
+  const searchPlaceholder = isFashionPage ? 'Cari busana / batik...' : 'Cari kios / produk...';
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -120,7 +190,7 @@ export function Navbar() {
     e.preventDefault();
     const query = searchNavInput.trim();
     if (query) {
-      const targetPath = isKulinerPage ? '/kuliner' : '/belanja';
+      const targetPath = isFashionPage ? '/fashion' : '/belanja';
       navigate(`${targetPath}?q=${encodeURIComponent(query)}`);
       setSearchNavInput('');
       setMobileMenuOpen(false);
@@ -148,10 +218,10 @@ export function Navbar() {
               />
               <div className="flex flex-col">
                 <span className="font-bold text-sm sm:text-base tracking-tight text-text-primary group-hover:text-brand-primary transition-colors whitespace-nowrap">
-                  PLAZA KEBUN SAYUR
+                  {brandName}
                 </span>
                 <span className="text-xs text-text-muted uppercase tracking-wider font-semibold whitespace-nowrap">
-                  Balikpapan Barat
+                  {brandSubLocation}
                 </span>
               </div>
             </Link>
@@ -170,7 +240,7 @@ export function Navbar() {
                   ref={searchInputRef}
                   type="text"
                   placeholder={searchPlaceholder}
-                  aria-label={isKulinerPage ? 'Cari stan kuliner atau menu' : 'Cari nama kios atau produk'}
+                  aria-label={isFashionPage ? 'Cari busana atau batik' : 'Cari nama kios atau produk'}
                   value={searchNavInput}
                   onChange={(e) => setSearchNavInput(e.target.value)}
                   className="w-24 focus:w-44 xl:w-36 2xl:w-48 py-1.5 pl-2 pr-11 text-xs border-b border-border-strong bg-transparent text-text-primary placeholder:text-text-muted focus:outline-none focus:border-brand-primary transition-all duration-200 rounded-sm"
@@ -239,7 +309,7 @@ export function Navbar() {
             <input
               type="text"
               placeholder={searchPlaceholder}
-              aria-label={isKulinerPage ? 'Cari stan kuliner atau menu' : 'Cari nama kios atau produk'}
+              aria-label={isFashionPage ? 'Cari busana atau batik' : 'Cari nama kios atau produk'}
               value={searchNavInput}
               onChange={(e) => setSearchNavInput(e.target.value)}
               className="w-full py-2.5 pl-3 pr-9 min-h-[44px] text-xs border border-mono-700 rounded-sm bg-mono-900 text-white placeholder:text-mono-400 focus:outline-none focus:border-gold"

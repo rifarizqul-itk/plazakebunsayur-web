@@ -10,24 +10,27 @@ import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import { formatDateRange } from '../utils/date';
 
 const EVENT_FILTER_OPTIONS = [
-  { value: 'all', label: 'Semua Agenda' },
-  { value: 'event', label: 'Pameran & Acara' },
-  { value: 'promo', label: 'Promo Kios' },
+  { value: 'all', label: 'Semua Informasi' },
+  { value: 'event', label: 'Agenda & Kegiatan' },
+  { value: 'promo', label: 'Promo Plaza & Kios' },
 ];
 
 export function EventsPage() {
-  const metaTitle = useContent('seo.agenda.title', 'Agenda & Promo | Plaza Kebun Sayur Balikpapan');
-  const metaDesc = useContent('seo.agenda.description', 'Jadwal pameran batu akik, bazar cinderamata, pentas seni budaya Dayak, dan promo pedagang di Plaza Kebun Sayur.');
+  const metaTitle = useContent('seo.informasi.title', 'Pusat Informasi & Promo | Plaza Kebun Sayur Balikpapan');
+  const metaDesc = useContent(
+    'seo.informasi.description',
+    'Jadwal agenda kegiatan, pameran batu akik, bazar cinderamata, pentas seni budaya Dayak, dan promo menarik di Plaza Kebun Sayur.'
+  );
   useDocumentMeta(metaTitle, metaDesc);
 
   const [events, setEvents] = useState([]);
   const [filterType, setFilterType] = useState('all');
   const [loading, setLoading] = useState(true);
 
-  const headerTitle = useContent('header.agenda.title', 'Pameran Budaya, Bazar & Promo Kios');
+  const headerTitle = useContent('header.informasi.title', 'Pusat Informasi & Promo Plaza');
   const headerDesc = useContent(
-    'header.agenda.description',
-    'Ikuti agenda pameran batu mulia tingkat nusantara, kontes akik Borneo, pertunjukan seni tari Dayak, serta penawaran promo cinderamata terbaru di Plaza Kebun Sayur.'
+    'header.informasi.description',
+    'Temukan jadwal agenda kegiatan, pameran seni budaya Dayak, bazar cenderamata, serta pengumuman promo spesial kios di Plaza Kebun Sayur Balikpapan.'
   );
 
   useEffect(() => {
@@ -38,7 +41,7 @@ export function EventsPage() {
         const data = await fetchWhatsOn(typeParam);
         setEvents(data);
       } catch (err) {
-        console.error('Failed to load events:', err);
+        console.error('Failed to load events/promos:', err);
       } finally {
         setLoading(false);
       }
@@ -64,9 +67,9 @@ export function EventsPage() {
             />
           </div>
 
-          {/* List of Events as Rows per DESIGN.md */}
+          {/* List of Information as Rows */}
           {loading ? (
-            <div className="py-12 text-center text-text-muted">Memuat agenda...</div>
+            <div className="py-12 text-center text-text-muted">Memuat informasi...</div>
           ) : events.length > 0 ? (
             <div className="divide-y divide-border-subtle border-b border-border-subtle pt-2">
               {events.map((item) => (
@@ -77,7 +80,7 @@ export function EventsPage() {
                   {/* Left Column: Date & Type */}
                   <div className="w-full sm:w-56 shrink-0 flex sm:flex-col items-center sm:items-start justify-between sm:justify-start gap-1">
                     <span className="text-xs font-semibold uppercase tracking-wider text-text-muted">
-                      {item.type === 'event' ? 'Pameran & Acara' : 'Promo Belanja'}
+                      {item.type === 'event' ? 'Agenda & Kegiatan' : 'Promo Plaza & Kios'}
                     </span>
                     <div className="flex items-center gap-1.5 text-xs font-medium text-text-primary tabular-nums">
                       <Calendar size={13} className="text-brand-primary" />
@@ -87,7 +90,7 @@ export function EventsPage() {
 
                   {/* Right Column: Title, Summary & Read More */}
                   <div className="flex-1 flex flex-col gap-2">
-                    <Link to={`/agenda/${item.slug}`}>
+                    <Link to={`/informasi/${item.slug}`}>
                       <h2 className="font-bold text-lg sm:text-xl text-text-primary group-hover:text-brand-primary transition-colors">
                         {item.title}
                       </h2>
@@ -99,10 +102,10 @@ export function EventsPage() {
 
                     <div className="pt-2">
                       <Link
-                        to={`/agenda/${item.slug}`}
+                        to={`/informasi/${item.slug}`}
                         className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-primary hover:underline"
                       >
-                        <span>Lihat detail agenda</span>
+                        <span>Lihat detail informasi</span>
                         <ArrowRight size={13} />
                       </Link>
                     </div>
@@ -112,9 +115,9 @@ export function EventsPage() {
             </div>
           ) : (
             <div className="text-center py-16 bg-surface-subtle rounded-md border border-dashed border-border-subtle my-6">
-              <h3 className="font-bold text-base text-text-primary">Belum Ada Agenda Aktif</h3>
+              <h3 className="font-bold text-base text-text-primary">Belum Ada Informasi Aktif</h3>
               <p className="text-sm text-text-secondary mt-1">
-                Kunjungi kembali halaman ini untuk pembaruan jadwal event dan promo mendatang.
+                Kunjungi kembali halaman ini untuk pembaruan jadwal agenda dan promo mendatang.
               </p>
             </div>
           )}

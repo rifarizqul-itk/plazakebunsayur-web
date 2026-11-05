@@ -11,13 +11,13 @@ import {
   Navigation,
   MessageCircle,
   Info,
+  User,
 } from 'lucide-react';
 import { Container } from '../components/layout/Container';
 import { Button } from '../components/ui/Button';
 import { fetchWhatsOnBySlug } from '../services/api';
-import { generateEventWhatsAppLink } from '../utils/whatsapp';
 import { formatDateRange } from '../utils/date';
-import { useSiteSettings } from '../hooks/useContent';
+import { useContent, useSiteSettings } from '../hooks/useContent';
 
 const FALLBACK_BANNERS = {
   event: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=1200&q=80',
@@ -29,6 +29,12 @@ export function EventDetail() {
   const navigate = useNavigate();
   const [eventItem, setEventItem] = useState(null);
   const siteSettings = useSiteSettings();
+  const calloutTitle = useContent('event.callout.title', 'Ingin Menggelar Event di Bunsay?');
+  const calloutDesc = useContent(
+    'event.callout.description',
+    'Area Atrium dan Koridor Plaza Kebun Sayur terbuka untuk pameran batu mulia, pentas seni, maupun bazar UMKM.'
+  );
+  const calloutCta = useContent('event.callout.cta_label', 'Hubungi Manajemen Pengelola →');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
@@ -48,7 +54,7 @@ export function EventDetail() {
         }
       } catch (err) {
         if (!isCancelled) {
-          setError(err.message === 'NOT_FOUND' ? 'Agenda tidak ditemukan' : 'Gagal memuat agenda');
+          setError(err.message === 'NOT_FOUND' ? 'Informasi tidak ditemukan' : 'Gagal memuat informasi');
         }
       } finally {
         if (!isCancelled) setLoading(false);
@@ -71,7 +77,7 @@ export function EventDetail() {
   if (loading) {
     return (
       <div className="py-20 text-center text-text-muted">
-        Memuat detail agenda...
+        Memuat detail informasi...
       </div>
     );
   }
@@ -81,12 +87,12 @@ export function EventDetail() {
       <div className="py-20 text-center">
         <Container>
           <div className="max-w-md mx-auto p-8 bg-surface-subtle border border-border-subtle rounded-md">
-            <h2 className="text-xl font-bold text-text-primary tracking-tight">Agenda Tidak Ditemukan</h2>
+            <h2 className="text-xl font-bold text-text-primary tracking-tight">Informasi Tidak Ditemukan</h2>
             <p className="text-sm text-text-secondary mt-2">
               Agenda kegiatan atau promo yang Anda tuju mungkin sudah berakhir atau tautan tidak valid.
             </p>
-            <Button variant="primary" className="mt-6" onClick={() => navigate('/agenda')}>
-              Kembali ke Daftar Agenda
+            <Button variant="primary" className="mt-6" onClick={() => navigate('/informasi')}>
+              Kembali ke Daftar Informasi
             </Button>
           </div>
         </Container>
@@ -95,10 +101,27 @@ export function EventDetail() {
   }
 
   const fallbackBanner = FALLBACK_BANNERS[eventItem.type] || FALLBACK_BANNERS.event;
-  const waLink = generateEventWhatsAppLink(
-    siteSettings?.management_whatsapp || '080000000000',
-    eventItem.title
-  );
+
+  // Narahubung WhatsApp handling
+  const rawContactPhone = eventItem.contact_phone || siteSettings?.management_whatsapp || '080000000000';
+  const cleanPhone = rawContactPhone.replace(/[^0-9]/g, '').replace(/^0/, '62');
+  const contactName = eventItem.contact_person || 'Panitia Informasi';
+  const contactMessage = `Halo ${contactName}, saya ingin bertanya mengenai informasi "${eventItem.title}" di Plaza Kebun Sayur.`;
+  const contactWaLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(contactMessage)}`;
+
+  // Parse highlights
+  let highlightsList = [];
+  if (Array.isArray(eventItem.highlights)) {
+    highlightsList = eventItem.highlights;
+  } else if (typeof eventItem.highlights === 'string' && eventItem.highlights.trim().startsWith('[')) {
+    try {
+      highlightsList = JSON.parse(eventItem.highlights);
+    } catch {
+      highlightsList = [];
+    }
+  }
+
+  const termsText = eventItem.terms || eventItem.admission || (eventItem.type === 'event' ? 'Gratis (Terbuka untuk Umum)' : 'Promo Belanja Langsung');
 
   return (
     <div className="py-8 sm:py-12 bg-canvas min-h-screen">
@@ -109,8 +132,8 @@ export function EventDetail() {
             Beranda
           </Link>
           <span>/</span>
-          <Link to="/agenda" className="hover:text-text-primary transition-colors">
-            Agenda & Promo
+          <Link to="/informasi" className="hover:text-text-primary transition-colors">
+            Informasi & Promo
           </Link>
           <span>/</span>
           <span className="text-text-primary font-medium line-clamp-1">{eventItem.title}</span>
@@ -123,7 +146,7 @@ export function EventDetail() {
             {/* Category / Type & Date */}
             <div className="flex flex-wrap items-center gap-3">
               <span className="text-xs font-semibold uppercase tracking-wider text-text-muted">
-                {eventItem.type === 'event' ? 'Pameran & Acara' : 'Promo Belanja'}
+                {eventItem.type === 'event' ? 'Agenda & Kegiatan' : 'Promo Plaza & Kios'}
               </span>
               <span className="text-border-subtle" aria-hidden="true">•</span>
               <div className="flex items-center gap-1.5 text-xs text-text-secondary tabular-nums">
@@ -162,13 +185,13 @@ export function EventDetail() {
             </div>
 
             {/* Event Highlights Section */}
-            {Array.isArray(eventItem.highlights) && eventItem.highlights.length > 0 && (
+            {highlightsList.length > 0 && (
               <div className="p-6 bg-surface-subtle border border-border-subtle rounded-md space-y-4 mt-2">
                 <h2 className="text-base font-bold text-text-primary">
-                  Sorotan & Rangkaian Aktivitas
+                  Sorotan & Rangkaian Acara
                 </h2>
                 <ul className="space-y-3">
-                  {eventItem.highlights.map((highlight, idx) => (
+                  {highlightsList.map((highlight, idx) => (
                     <li key={idx} className="flex items-start gap-3 text-sm text-text-secondary leading-relaxed">
                       <Check size={16} className="text-brand-primary shrink-0 mt-0.5" />
                       <span>{highlight}</span>
@@ -181,11 +204,11 @@ export function EventDetail() {
             {/* Back Button */}
             <div className="pt-6 border-t border-border-subtle">
               <Link
-                to="/agenda"
+                to="/informasi"
                 className="inline-flex items-center gap-2 py-2.5 min-h-[44px] text-xs font-semibold text-text-secondary hover:text-brand-primary transition-colors"
               >
                 <ArrowLeft size={15} />
-                <span>Kembali ke Daftar Agenda</span>
+                <span>Kembali ke Daftar Informasi</span>
               </Link>
             </div>
           </article>
@@ -234,22 +257,40 @@ export function EventDetail() {
                   <div>
                     <div className="text-xs text-text-muted font-medium">Ketentuan / HTM</div>
                     <div className="font-semibold text-text-primary mt-0.5">
-                      {eventItem.admission || (eventItem.type === 'event' ? 'Gratis (Terbuka untuk Umum)' : 'Promo Belanja Langsung')}
+                      {termsText}
                     </div>
                   </div>
                 </div>
+
+                {/* Narahubung Acara */}
+                {(eventItem.contact_person || eventItem.contact_phone) && (
+                  <div className="flex items-start gap-3 pt-1 border-t border-border-subtle">
+                    <User size={16} className="text-brand-primary shrink-0 mt-0.5" />
+                    <div>
+                      <div className="text-xs text-text-muted font-medium">Narahubung Acara</div>
+                      <div className="font-semibold text-text-primary mt-0.5">
+                        {eventItem.contact_person || 'Panitia Informasi'}
+                      </div>
+                      {eventItem.contact_phone && (
+                        <div className="text-xs text-text-secondary mt-0.5 font-mono">
+                          {eventItem.contact_phone}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Action Buttons */}
               <div className="space-y-3 pt-3 border-t border-border-subtle">
                 <a
-                  href={waLink}
+                  href={contactWaLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-sm bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white text-xs font-semibold transition-colors min-h-[44px] text-center"
                 >
                   <MessageCircle size={15} />
-                  <span>Tanya Panitia via WhatsApp</span>
+                  <span>Tanya Narahubung via WhatsApp</span>
                 </a>
 
                 <Link
@@ -266,7 +307,7 @@ export function EventDetail() {
                   className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-sm border border-border-subtle hover:border-border-hover bg-canvas text-text-secondary hover:text-text-primary text-xs font-semibold transition-colors min-h-[44px] text-center cursor-pointer"
                 >
                   <Share2 size={14} />
-                  <span>{copied ? 'Tautan Berhasil Disalin!' : 'Bagikan Agenda Ini'}</span>
+                  <span>{copied ? 'Tautan Berhasil Disalin!' : 'Bagikan Informasi Ini'}</span>
                 </button>
               </div>
             </div>
@@ -275,16 +316,16 @@ export function EventDetail() {
             <div className="p-5 bg-surface-muted border border-border-subtle rounded-md space-y-2">
               <div className="flex items-center gap-2 text-text-primary font-semibold text-xs">
                 <Info size={14} className="text-brand-primary" />
-                <span>Ingin Menggelar Event di Bunsay?</span>
+                <span>{calloutTitle}</span>
               </div>
               <p className="text-xs text-text-secondary leading-relaxed">
-                Area Atrium dan Koridor Plaza Kebun Sayur terbuka untuk pameran batu mulia, pentas seni, maupun bazar UMKM.
+                {calloutDesc}
               </p>
               <Link
                 to="/kontak"
                 className="inline-block text-xs font-semibold text-brand-primary hover:underline pt-1"
               >
-                Hubungi Manajemen Pengelola &rarr;
+                {calloutCta}
               </Link>
             </div>
           </aside>

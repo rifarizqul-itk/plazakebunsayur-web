@@ -16,6 +16,7 @@ class NavItemApiTest extends TestCase
             'label' => 'BELANJA',
             'path' => '/belanja',
             'location' => 'header',
+            'is_cta' => true,
             'order_index' => 2,
             'is_active' => true,
         ]);
@@ -24,6 +25,7 @@ class NavItemApiTest extends TestCase
             'label' => 'BERANDA',
             'path' => '/',
             'location' => 'header',
+            'is_cta' => false,
             'order_index' => 1,
             'is_active' => true,
         ]);
@@ -51,7 +53,9 @@ class NavItemApiTest extends TestCase
             ->assertJsonCount(2, 'data.header')
             ->assertJsonCount(1, 'data.footer')
             ->assertJsonPath('data.header.0.label', 'BERANDA')
+            ->assertJsonPath('data.header.0.is_cta', false)
             ->assertJsonPath('data.header.1.label', 'BELANJA')
+            ->assertJsonPath('data.header.1.is_cta', true)
             ->assertJsonPath('data.footer.0.label', 'Direktori Kios Belanja');
     }
 }

@@ -52,9 +52,20 @@ class PageContentResource extends Resource
                     ->disk('public')
                     ->directory('page-contents')
                     ->image()
-                    ->maxSize(5120)
-                    ->helperText('Format JPG, PNG, atau WebP maksimal 5 MB.')
+                    ->saveUploadedFileUsing(fn ($file) => app(\App\Services\ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
+                    ->helperText('Format JPG, PNG, atau WebP. Ukuran berkas bebas, otomatis dikompres ke WebP.')
                     ->visible(fn (?PageContent $record): bool => $record?->type === 'image')
+                    ->columnSpanFull(),
+                FileUpload::make('value')
+                    ->label('Unggah Galeri Foto (Multi-Foto / Slider)')
+                    ->disk('public')
+                    ->directory('page-contents')
+                    ->image()
+                    ->multiple()
+                    ->reorderable()
+                    ->saveUploadedFileUsing(fn ($file) => app(\App\Services\ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
+                    ->helperText('Unggah beberapa foto gedung/kegiatan. Ukuran berkas bebas, otomatis dikompres ke WebP.')
+                    ->visible(fn (?PageContent $record): bool => $record?->type === 'images')
                     ->columnSpanFull(),
                 Textarea::make('value')
                     ->label('Isi Konten Paragraf')
@@ -77,11 +88,15 @@ class PageContentResource extends Resource
                 Group::make('group')
                     ->label('Bagian Halaman')
                     ->getTitleFromRecordUsing(fn (PageContent $record): string => match ($record->group) {
-                        'home' => '1. Halaman Beranda',
-                        'header' => '2. Header Tiap Halaman',
-                        'footer' => '3. Footer Gedung',
-                        'brand' => '4. Identitas & Logo Brand',
-                        'seo' => '5. SEO & Metadata Meta Tags',
+                        'brand' => '1. Identitas & Logo Brand',
+                        'home' => '2. Halaman Beranda',
+                        'header' => '3. Header Tiap Halaman',
+                        'panduan' => '4. Panduan Kunjungan Gedung',
+                        'contact' => '5. Halaman Kontak & Pengaduan',
+                        'event' => '6. Informasi & Detail Event',
+                        'footer' => '7. Footer Gedung',
+                        'seo' => '8. SEO & Metadata Meta Tags',
+                        'system' => '9. Halaman Sistem & 404',
                         default => ucfirst($record->group),
                     })
             )
@@ -95,13 +110,14 @@ class PageContentResource extends Resource
                     ->label('Tipe')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'image' => 'warning',
+                        'image', 'images' => 'warning',
                         'textarea' => 'info',
                         'text' => 'success',
                         default => 'gray',
                     })
                     ->formatStateUsing(fn (string $state): string => match ($state) {
                         'image' => 'Foto / Gambar',
+                        'images' => 'Galeri Foto (Multi)',
                         'textarea' => 'Paragraf Panjang',
                         'text' => 'Teks Singkat',
                         default => $state,
@@ -123,11 +139,15 @@ class PageContentResource extends Resource
                 SelectFilter::make('group')
                     ->label('Pilih Bagian Halaman')
                     ->options([
+                        'brand' => 'Identitas Brand & Logo',
                         'home' => 'Halaman Beranda',
                         'header' => 'Header Tiap Halaman',
-                        'footer' => 'Footer',
-                        'brand' => 'Identitas Brand & Logo',
+                        'panduan' => 'Panduan Kunjungan Gedung',
+                        'contact' => 'Halaman Kontak & Pengaduan',
+                        'event' => 'Informasi & Detail Event',
+                        'footer' => 'Footer Gedung',
                         'seo' => 'SEO & Metadata',
+                        'system' => 'Sistem & 404',
                     ]),
             ])
             ->recordActions([

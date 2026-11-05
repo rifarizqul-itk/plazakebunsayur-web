@@ -13,81 +13,6 @@ import {
 import { Container } from '../layout/Container';
 import { useContent, useContentImage, useSiteSettings } from '../../hooks/useContent';
 
-const slides = [
-  {
-    id: 1,
-    image: '/assets/Photograph_of_plaza_building.webp',
-    tag: 'Fasad Utama Gedung',
-    title: 'Gedung Plaza Kebun Sayur Balikpapan',
-    desc: 'Pusat perdagangan batu mulia dan kerajinan tradisional Kalimantan Timur.',
-    ctaText: 'Pelajari Panduan Kunjungan',
-    ctaHref: '/panduan-kunjungan',
-  },
-  {
-    id: 2,
-    image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=1800&q=80',
-    tag: 'Sentra Batu Mulia Borneo',
-    title: 'Koleksi Akik, Permata & Cangkang Perak',
-    desc: 'Pengrajin ikat cincin dan ragam batu mulia khas Kalimantan terpercaya.',
-    ctaText: 'Jelajahi Kios Batu Mulia',
-    ctaHref: '/belanja',
-  },
-  {
-    id: 3,
-    image: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=1800&q=80',
-    tag: 'Cinderamata & Etnik Dayak',
-    title: 'Kerajinan Manik, Tenun & Suvenir Tradisional',
-    desc: 'Karya seni ukir Dayak, manik-manik, mandau, dan cenderamata khas Borneo.',
-    ctaText: 'Lihat Cinderamata & Tenun',
-    ctaHref: '/belanja',
-  },
-  {
-    id: 4,
-    image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=1800&q=80',
-    tag: 'Sentra Kuliner Kaltim',
-    title: 'Soto Banjar, Mantau & Amplang Renyah',
-    desc: 'Sajian kuliner otentik serta panganan khas siap kemas untuk bagasi pesawat.',
-    ctaText: 'Cari Stan Kuliner & Oleh-Oleh',
-    ctaHref: '/kuliner',
-  },
-  {
-    id: 5,
-    image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1800&q=80',
-    tag: 'Suasana Kios Plaza Kebun Sayur',
-    title: 'Ratusan Kios Resmi Pengrajin Lokal',
-    desc: 'Keramahan interaksi perniagaan dan belanja cinderamata yang nyaman dan terpercaya.',
-    ctaText: 'Buka Direktori Lengkap',
-    ctaHref: '/belanja',
-  },
-];
-
-const actionCards = [
-  {
-    id: 'belanja',
-    category: 'KIOS BELANJA',
-    title: 'Batu Mulia, Perhiasan & Cinderamata',
-    href: '/belanja',
-    btnText: 'LIHAT KIOS BELANJA',
-    image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    id: 'kuliner',
-    category: 'SENTRA KULINER',
-    title: 'Kuliner Tradisional & Oleh-Oleh',
-    href: '/kuliner',
-    btnText: 'LIHAT STAN KULINER',
-    image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    id: 'panduan',
-    category: 'INFORMASI GEDUNG',
-    title: 'Panduan Kunjungan & Fasilitas',
-    href: '/panduan-kunjungan',
-    btnText: 'BUKA PANDUAN',
-    image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80',
-  },
-];
-
 function SlideItem({ slide, idx, isActive }) {
   return (
     <div
@@ -231,6 +156,7 @@ export function HeroSection() {
   const [witaTime, setWitaTime] = useState('');
   const siteSettings = useSiteSettings();
 
+  const heroImagesRaw = useContent('home.hero.images', null);
   const heroImage = useContentImage('home.hero.image', '/assets/Photograph_of_plaza_building.webp');
   const heroTitle = useContent('home.hero.title', 'Gedung Plaza Kebun Sayur Balikpapan');
   const heroSubtitle = useContent(
@@ -238,22 +164,176 @@ export function HeroSection() {
     'Pusat perdagangan batu mulia dan kerajinan tradisional Kalimantan Timur.'
   );
   const ctaPrimaryText = useContent('home.hero.cta_primary', 'LIHAT KIOS BELANJA');
-  const ctaSecondaryText = useContent('home.hero.cta_secondary', 'JELAJAHI SENTRA KULINER');
+  const ctaSecondaryText = useContent('home.hero.cta_secondary', 'LIHAT SENTRA FASHION');
+  const buildingTag = useContent('home.hero.building_tag', 'Fasad Utama Gedung');
+  const buildingCta = useContent('home.hero.building_cta', 'Pelajari Panduan Kunjungan');
 
-  const activeSlides = [
+  // Category Slides CMS Bindings
+  const batuMuliaTag = useContent('home.hero.slide.batu_mulia.tag', 'Sentra Batu Mulia Borneo');
+  const batuMuliaTitle = useContent('home.hero.slide.batu_mulia.title', 'Koleksi Akik, Permata & Cangkang Perak');
+  const batuMuliaDesc = useContent('home.hero.slide.batu_mulia.desc', 'Pengrajin ikat cincin dan ragam batu mulia khas Kalimantan terpercaya.');
+  const batuMuliaCta = useContent('home.hero.slide.batu_mulia.cta', 'Jelajahi Kios Batu Mulia');
+  const batuMuliaImg = useContentImage('home.hero.slide.batu_mulia.image', 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=1800&q=80');
+
+  const cindTag = useContent('home.hero.slide.cinderamata.tag', 'Cinderamata & Etnik Dayak');
+  const cindTitle = useContent('home.hero.slide.cinderamata.title', 'Kerajinan Manik, Tenun & Suvenir Tradisional');
+  const cindDesc = useContent('home.hero.slide.cinderamata.desc', 'Karya seni ukir Dayak, manik-manik, mandau, dan cenderamata khas Borneo.');
+  const cindCta = useContent('home.hero.slide.cinderamata.cta', 'Lihat Cinderamata & Tenun');
+  const cindImg = useContentImage('home.hero.slide.cinderamata.image', 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=1800&q=80');
+
+  const fashTag = useContent('home.hero.slide.fashion.tag', 'Sentra Fashion & Busana Kaltim');
+  const fashTitle = useContent('home.hero.slide.fashion.title', 'Batik Balikpapan, Tenun Samarinda & Busana Adat');
+  const fashDesc = useContent('home.hero.slide.fashion.desc', 'Koleksi pakaian etnik Kalimantan, kain tenun asli, dan busana modern pilihan.');
+  const fashCta = useContent('home.hero.slide.fashion.cta', 'Jelajahi Sentra Fashion');
+  const fashImg = useContentImage('home.hero.slide.fashion.image', 'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=1800&q=80');
+
+  const suasanaTag = useContent('home.hero.slide.suasana.tag', 'Suasana Kios Plaza Kebun Sayur');
+  const suasanaTitle = useContent('home.hero.slide.suasana.title', 'Ratusan Kios Resmi Pengrajin Lokal');
+  const suasanaDesc = useContent('home.hero.slide.suasana.desc', 'Keramahan interaksi perniagaan dan belanja cinderamata yang nyaman dan terpercaya.');
+  const suasanaCta = useContent('home.hero.slide.suasana.cta', 'Buka Direktori Lengkap');
+  const suasanaImg = useContentImage('home.hero.slide.suasana.image', 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1800&q=80');
+
+  // Quick Access & Action Cards CMS Bindings
+  const quickAccessTitle = useContent('home.quick_access.title', 'Apa Yang Ada Di Plaza Kebun Sayur?');
+  const quickAccessDesc = useContent('home.quick_access.description', '');
+
+  const actionBelanjaCategory = useContent('home.action.belanja.category', 'KIOS BELANJA');
+  const actionBelanjaTitle = useContent('home.action.belanja.title', 'Batu Mulia, Perhiasan & Cinderamata');
+  const actionBelanjaBtnText = useContent('home.action.belanja.btn_text', ctaPrimaryText || 'LIHAT KIOS BELANJA');
+  const actionBelanjaImg = useContentImage('home.action.belanja.image', 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80');
+
+  const actionFashionCategory = useContent('home.action.fashion.category', 'SENTRA FASHION');
+  const actionFashionTitle = useContent('home.action.fashion.title', 'Batik, Busana Adat & Pakaian');
+  const actionFashionBtnText = useContent('home.action.fashion.btn_text', ctaSecondaryText || 'LIHAT SENTRA FASHION');
+  const actionFashionImg = useContentImage('home.action.fashion.image', 'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=800&q=80');
+
+  const actionPanduanCategory = useContent('home.action.panduan.category', 'INFORMASI GEDUNG');
+  const actionPanduanTitle = useContent('home.action.panduan.title', 'Panduan Kunjungan & Fasilitas');
+  const actionPanduanBtnText = useContent('home.action.panduan.btn_text', 'BUKA PANDUAN');
+  const actionPanduanImg = useContentImage('home.action.panduan.image', 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80');
+
+  // Support multiple building photos from CMS / settings without artificial limit
+  let buildingPhotos = [];
+  if (Array.isArray(heroImagesRaw)) {
+    buildingPhotos = heroImagesRaw.filter(Boolean);
+  } else if (typeof heroImagesRaw === 'string' && heroImagesRaw.trim()) {
+    const trimmed = heroImagesRaw.trim();
+    if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) {
+          buildingPhotos = parsed.filter(Boolean);
+        }
+      } catch {
+        // not json
+      }
+    }
+    if (buildingPhotos.length === 0 && (trimmed.startsWith('http') || trimmed.startsWith('/'))) {
+      buildingPhotos = [trimmed];
+    }
+  }
+
+  // Fallback to siteSettings.building_images
+  if (buildingPhotos.length === 0 && siteSettings?.building_images) {
+    if (Array.isArray(siteSettings.building_images)) {
+      buildingPhotos = siteSettings.building_images.filter(Boolean);
+    } else if (typeof siteSettings.building_images === 'string') {
+      const trimmed = siteSettings.building_images.trim();
+      if (trimmed.startsWith('[')) {
+        try {
+          const parsed = JSON.parse(trimmed);
+          if (Array.isArray(parsed)) buildingPhotos = parsed.filter(Boolean);
+        } catch {
+          // not json
+        }
+      } else if (trimmed.startsWith('http') || trimmed.startsWith('/')) {
+        buildingPhotos = [trimmed];
+      }
+    }
+  }
+
+  // Fallback to default single hero image
+  if (buildingPhotos.length === 0 && heroImage) {
+    buildingPhotos = [heroImage];
+  }
+
+  // Dynamically build building slides at the beginning of the slider
+  const buildingSlides = buildingPhotos.map((imgUrl, bIdx) => ({
+    id: `building-${bIdx + 1}`,
+    image: imgUrl,
+    tag: bIdx === 0 ? buildingTag : `Foto Gedung Plaza #${bIdx + 1}`,
+    title: heroTitle,
+    desc: heroSubtitle,
+    ctaText: buildingCta,
+    ctaHref: '/panduan-kunjungan',
+  }));
+
+  const categorySlides = [
     {
-      ...slides[0],
-      image: heroImage,
-      title: heroTitle,
-      desc: heroSubtitle,
+      id: 'batu-mulia',
+      image: batuMuliaImg,
+      tag: batuMuliaTag,
+      title: batuMuliaTitle,
+      desc: batuMuliaDesc,
+      ctaText: batuMuliaCta,
+      ctaHref: '/belanja',
     },
-    ...slides.slice(1),
+    {
+      id: 'cinderamata-dayak',
+      image: cindImg,
+      tag: cindTag,
+      title: cindTitle,
+      desc: cindDesc,
+      ctaText: cindCta,
+      ctaHref: '/belanja',
+    },
+    {
+      id: 'sentra-fashion',
+      image: fashImg,
+      tag: fashTag,
+      title: fashTitle,
+      desc: fashDesc,
+      ctaText: fashCta,
+      ctaHref: '/fashion',
+    },
+    {
+      id: 'suasana-plaza',
+      image: suasanaImg,
+      tag: suasanaTag,
+      title: suasanaTitle,
+      desc: suasanaDesc,
+      ctaText: suasanaCta,
+      ctaHref: '/belanja',
+    },
   ];
 
+  const activeSlides = [...buildingSlides, ...categorySlides];
+
   const activeActionCards = [
-    { ...actionCards[0], btnText: ctaPrimaryText },
-    { ...actionCards[1], btnText: ctaSecondaryText },
-    actionCards[2],
+    {
+      id: 'belanja',
+      category: actionBelanjaCategory,
+      title: actionBelanjaTitle,
+      href: '/belanja',
+      btnText: actionBelanjaBtnText,
+      image: actionBelanjaImg,
+    },
+    {
+      id: 'fashion',
+      category: actionFashionCategory,
+      title: actionFashionTitle,
+      href: '/fashion',
+      btnText: actionFashionBtnText,
+      image: actionFashionImg,
+    },
+    {
+      id: 'panduan',
+      category: actionPanduanCategory,
+      title: actionPanduanTitle,
+      href: '/panduan-kunjungan',
+      btnText: actionPanduanBtnText,
+      image: actionPanduanImg,
+    },
   ];
 
   const nextSlide = useCallback(() => {
@@ -368,8 +448,13 @@ export function HeroSection() {
           {/* Centered Display Header */}
           <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-text-primary">
-              Apa Yang Ada Di Plaza Kebun Sayur?
+              {quickAccessTitle}
             </h2>
+            {quickAccessDesc && (
+              <p className="mt-2 text-sm sm:text-base text-text-secondary leading-relaxed">
+                {quickAccessDesc}
+              </p>
+            )}
           </div>
 
           {/* Trio Action Cards */}
@@ -448,7 +533,7 @@ export function HeroSection() {
                 to="/panduan-kunjungan"
                 className="inline-flex items-center gap-1 min-h-[44px] py-2 text-xs font-semibold text-brand-primary hover:underline mt-1 self-start"
               >
-                <span>Lihat rute dari bandara & pelabuhan</span>
+                <span>Lihat informasi lokasi & fasilitas gedung</span>
                 <ArrowRight size={13} />
               </Link>
             </div>

@@ -94,7 +94,7 @@ class VisitGuideSeeder extends Seeder
             ],
             [
                 'title' => 'Keamanan Barang Bawaan',
-                'description' => 'Selalu awasi barang bawaan dan tas pribadi Anda saat berada di keramaian sentra belanja. Laporkan segera ke Pos Keamanan jika menemui hal mencurigakan.',
+                'description' => 'Selalu jaga dan awasi barang bawaan pribadi Anda agar tidak tertinggal atau hilang selama beraktivitas di area Plaza Kebun Sayur. Laporkan segera ke Pos Keamanan jika memerlukan bantuan.',
                 'order_index' => 3,
                 'is_active' => true,
             ],

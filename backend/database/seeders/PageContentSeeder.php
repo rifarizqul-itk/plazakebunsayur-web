@@ -30,14 +30,32 @@ class PageContentSeeder extends Seeder
                     'order_index' => $order,
                 ]);
             } else {
-                // Ensure metadata matches without overwriting admin's custom value
-                $existing->update([
+                $updates = [
                     'type' => $meta['type'],
                     'group' => $meta['group'],
                     'label' => $meta['label'],
                     'help' => $meta['help'] ?? null,
                     'order_index' => $order,
-                ]);
+                ];
+
+                // If value was untouched default containing old terminology, refresh to new default
+                $existingStr = is_string($existing->value)
+                    ? $existing->value
+                    : (is_array($existing->value) ? json_encode($existing->value) : (string) $existing->value);
+
+                if (
+                    str_contains($existingStr, 'Sentra Kuliner') ||
+                    str_contains($existingStr, 'kuliner tradisional') ||
+                    str_contains($existingStr, 'Agenda Kegiatan') ||
+                    str_contains($existingStr, 'Agenda & Pengumuman') ||
+                    str_contains($existingStr, 'Agenda & Kegiatan') ||
+                    str_contains($existingStr, 'stan kuliner khas') ||
+                    $existingStr === 'Akses Cepat Direktori'
+                ) {
+                    $updates['value'] = $meta['default'];
+                }
+
+                $existing->update($updates);
             }
         }
     }

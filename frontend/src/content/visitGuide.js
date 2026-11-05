@@ -52,18 +52,27 @@ export const SHOPPING_TIPS = [
 
 export const BUILDING_RULES = [
   {
+    id: 1,
+    title: 'Keamanan & Ketertiban',
+    description:
+      'Patuhi arahan petugas keamanan dan tata tertib gedung demi keselamatan serta kenyamanan seluruh pengunjung Plaza Kebun Sayur.',
+  },
+  {
+    id: 2,
     title: 'Kenyamanan & Kebersihan',
     description:
       'Jagalah kebersihan bersama dengan membuang sampah pada tempat pemilahan yang tersedia di setiap koridor dan lantai gedung.',
   },
   {
+    id: 3,
     title: 'Kawasan Tertib Merokok',
     description:
       'Merokok hanya diperkenankan di area terbuka yang telah ditentukan di luar koridor utama berpendingin ruangan.',
   },
   {
+    id: 4,
     title: 'Keamanan Barang Bawaan',
     description:
-      'Selalu awasi barang bawaan dan tas pribadi Anda saat berada di keramaian sentra belanja. Laporkan segera ke Pos Keamanan jika menemui hal mencurigakan.',
+      'Selalu jaga dan awasi barang bawaan pribadi Anda agar tidak tertinggal atau hilang selama beraktivitas di area Plaza Kebun Sayur. Laporkan segera ke Pos Keamanan jika memerlukan bantuan.',
   },
 ];
