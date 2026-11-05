@@ -50,16 +50,14 @@ function useEventDetail(slug) {
       setError(null);
       try {
         const data = await fetchWhatsOnBySlug(slug);
-        if (!isCancelled) {
-          setEventItem(data);
-          const fallback = FALLBACK_BANNERS[data?.type] || FALLBACK_BANNERS.event;
-          setBannerSrc(data?.banner_url || fallback);
-        }
+        if (isCancelled) return;
+        setEventItem(data);
+        const fallback = FALLBACK_BANNERS[data?.type] || FALLBACK_BANNERS.event;
+        setBannerSrc(data?.banner_url || fallback);
       } catch (err) {
-        if (!isCancelled) {
-          const msg = err.message === 'NOT_FOUND' ? 'Informasi tidak ditemukan' : 'Gagal memuat informasi';
-          setError(msg);
-        }
+        if (isCancelled) return;
+        const msg = err.message === 'NOT_FOUND' ? 'Informasi tidak ditemukan' : 'Gagal memuat informasi';
+        setError(msg);
       } finally {
         if (!isCancelled) setLoading(false);
       }
@@ -149,6 +147,60 @@ function EventBreadcrumb({ title }) {
   );
 }
 
+function EventMainContent({
+  eventItem,
+  bannerSrc,
+  fallbackBanner,
+  dateRange,
+  highlightsList,
+  onImageError,
+}) {
+  return (
+    <div className="lg:col-span-2 space-y-8">
+      <EventBanner
+        bannerSrc={bannerSrc || fallbackBanner}
+        title={eventItem.title}
+        type={eventItem.type}
+        onImageError={onImageError}
+      />
+
+      <div className="space-y-4">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-text-primary leading-tight">
+          {eventItem.title}
+        </h1>
+
+        {dateRange && (
+          <div className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-brand-primary tabular-nums">
+            <Calendar size={16} />
+            <span>{dateRange}</span>
+          </div>
+        )}
+
+        {eventItem.summary && (
+          <p className="text-base sm:text-lg text-text-secondary leading-relaxed border-l-2 border-brand-primary pl-4 py-1 italic">
+            {eventItem.summary}
+          </p>
+        )}
+      </div>
+
+      <div className="prose prose-sm sm:prose max-w-none text-text-primary border-t border-border-subtle pt-6 leading-relaxed whitespace-pre-line">
+        {eventItem.content}
+      </div>
+
+      <EventHighlightsCard highlightsList={highlightsList} />
+
+      {eventItem.terms && (
+        <div className="p-5 bg-surface-muted/60 border border-border-subtle rounded-md text-xs sm:text-sm space-y-1.5">
+          <h4 className="font-bold text-text-primary">Syarat & Ketentuan:</h4>
+          <p className="text-text-secondary leading-relaxed whitespace-pre-line">
+            {eventItem.terms}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function EventDetail() {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -212,48 +264,14 @@ export function EventDetail() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-12 items-start">
-          <div className="lg:col-span-2 space-y-8">
-            <EventBanner
-              bannerSrc={bannerSrc || fallbackBanner}
-              title={eventItem.title}
-              type={eventItem.type}
-              onImageError={() => setBannerSrc(fallbackBanner)}
-            />
-
-            <div className="space-y-4">
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-text-primary leading-tight">
-                {eventItem.title}
-              </h1>
-
-              {dateRange && (
-                <div className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-brand-primary tabular-nums">
-                  <Calendar size={16} />
-                  <span>{dateRange}</span>
-                </div>
-              )}
-
-              {eventItem.summary && (
-                <p className="text-base sm:text-lg text-text-secondary leading-relaxed border-l-2 border-brand-primary pl-4 py-1 italic">
-                  {eventItem.summary}
-                </p>
-              )}
-            </div>
-
-            <div className="prose prose-sm sm:prose max-w-none text-text-primary border-t border-border-subtle pt-6 leading-relaxed whitespace-pre-line">
-              {eventItem.content}
-            </div>
-
-            <EventHighlightsCard highlightsList={highlightsList} />
-
-            {eventItem.terms && (
-              <div className="p-5 bg-surface-muted/60 border border-border-subtle rounded-md text-xs sm:text-sm space-y-1.5">
-                <h4 className="font-bold text-text-primary">Syarat & Ketentuan:</h4>
-                <p className="text-text-secondary leading-relaxed whitespace-pre-line">
-                  {eventItem.terms}
-                </p>
-              </div>
-            )}
-          </div>
+          <EventMainContent
+            eventItem={eventItem}
+            bannerSrc={bannerSrc}
+            fallbackBanner={fallbackBanner}
+            dateRange={dateRange}
+            highlightsList={highlightsList}
+            onImageError={() => setBannerSrc(fallbackBanner)}
+          />
 
           <EventSidebar
             eventItem={eventItem}
