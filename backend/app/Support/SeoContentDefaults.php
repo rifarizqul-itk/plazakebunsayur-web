@@ -1,0 +1,181 @@
+<?php
+
+namespace App\Support;
+
+class SeoContentDefaults
+{
+    public static function all(): array
+    {
+        return array_merge(
+            static::seoGeneralAndShopping(),
+            static::seoContentAndInfo(),
+            static::seoContactAndLegal(),
+        );
+    }
+
+    public static function seoGeneralAndShopping(): array
+    {
+        return [
+        // --- Group: SEO & Metadata Meta Tags ---
+        'seo.default_og_image' => [
+            'type' => 'image',
+            'group' => 'seo',
+            'label' => 'SEO: Gambar Pratinjau Standar (OG Image)',
+            'help' => 'Gambar yang muncul saat tautan dibagikan ke WhatsApp / media sosial (rasio 1200x630 px).',
+            'default' => '/assets/Photograph_of_plaza_building.webp',
+        ],
+        'seo.home.title' => [
+            'type' => 'text',
+            'group' => 'seo',
+            'label' => 'SEO: Judul Tab Beranda',
+            'help' => 'Judul meta halaman beranda di browser.',
+            'default' => 'Plaza Kebun Sayur Balikpapan | Sentra Kerajinan & Batu Mulia Borneo',
+        ],
+        'seo.home.description' => [
+            'type' => 'textarea',
+            'group' => 'seo',
+            'label' => 'SEO: Deskripsi Google Beranda',
+            'help' => 'Deskripsi pencarian halaman beranda di Google (maksimal 160 karakter disarankan).',
+            'default' => 'Situs resmi direktori kios Plaza Kebun Sayur Balikpapan. Sentra batu akik, kerajinan etnik Dayak, kain batik & busana khas Kalimantan Timur.',
+        ],
+        'seo.belanja.title' => [
+            'type' => 'text',
+            'group' => 'seo',
+            'label' => 'SEO: Judul Halaman Belanja',
+            'help' => 'Judul meta tab belanja.',
+            'default' => 'Direktori Kios Belanja | Plaza Kebun Sayur Balikpapan',
+        ],
+        'seo.belanja.description' => [
+            'type' => 'textarea',
+            'group' => 'seo',
+            'label' => 'SEO: Deskripsi Halaman Belanja',
+            'help' => 'Deskripsi meta halaman belanja.',
+            'default' => 'Katalog lengkap kios batu mulia, perhiasan, suvenir Dayak, batik, dan kerajinan tradisional di Plaza Kebun Sayur Balikpapan.',
+        ],
+        'seo.fashion.title' => [
+            'type' => 'text',
+            'group' => 'seo',
+            'label' => 'SEO: Judul Halaman Fashion',
+            'help' => 'Judul meta tab fashion & busana.',
+            'default' => 'Katalog Fashion & Busana Tradisional | Plaza Kebun Sayur Balikpapan',
+        ],
+        'seo.fashion.description' => [
+            'type' => 'textarea',
+            'group' => 'seo',
+            'label' => 'SEO: Deskripsi Halaman Fashion',
+            'help' => 'Deskripsi meta halaman fashion & busana.',
+            'default' => 'Koleksi lengkap busana etnik Dayak, batik khas Kalimantan Timur, dan kain tenun tradisional di Plaza Kebun Sayur Balikpapan.',
+        ],
+        'seo.kuliner.title' => [
+            'type' => 'text',
+            'group' => 'seo',
+            'label' => 'SEO: Judul Halaman Fashion (Legacy)',
+            'help' => 'Judul meta tab fashion.',
+            'default' => 'Katalog Fashion & Busana Tradisional | Plaza Kebun Sayur Balikpapan',
+        ],
+        'seo.kuliner.description' => [
+            'type' => 'textarea',
+            'group' => 'seo',
+            'label' => 'SEO: Deskripsi Halaman Fashion (Legacy)',
+            'help' => 'Deskripsi meta halaman fashion.',
+            'default' => 'Koleksi lengkap busana etnik Dayak, batik khas Kalimantan Timur, dan kain tenun tradisional di Plaza Kebun Sayur Balikpapan.',
+        ]
+        ];
+    }
+
+    public static function seoContentAndInfo(): array
+    {
+        return [
+        'seo.informasi.title' => [
+            'type' => 'text',
+            'group' => 'seo',
+            'label' => 'SEO: Judul Halaman Informasi & Promo',
+            'help' => 'Judul meta tab informasi & promo.',
+            'default' => 'Informasi & Promo | Plaza Kebun Sayur Balikpapan',
+        ],
+        'seo.informasi.description' => [
+            'type' => 'textarea',
+            'group' => 'seo',
+            'label' => 'SEO: Deskripsi Halaman Informasi & Promo',
+            'help' => 'Deskripsi meta halaman informasi & promo.',
+            'default' => 'Jadwal pameran batu akik, pentas seni budaya Dayak, dan promo menarik dari kios pedagang di Plaza Kebun Sayur.',
+        ],
+        'seo.agenda.title' => [
+            'type' => 'text',
+            'group' => 'seo',
+            'label' => 'SEO: Judul Halaman Agenda (Legacy)',
+            'help' => 'Judul meta tab agenda.',
+            'default' => 'Informasi & Promo | Plaza Kebun Sayur Balikpapan',
+        ],
+        'seo.agenda.description' => [
+            'type' => 'textarea',
+            'group' => 'seo',
+            'label' => 'SEO: Deskripsi Halaman Agenda (Legacy)',
+            'help' => 'Deskripsi meta halaman agenda.',
+            'default' => 'Jadwal pameran batu akik, pentas seni budaya Dayak, dan promo menarik dari kios pedagang di Plaza Kebun Sayur.',
+        ],
+        'seo.panduan.title' => [
+            'type' => 'text',
+            'group' => 'seo',
+            'label' => 'SEO: Judul Halaman Panduan',
+            'help' => 'Judul meta tab panduan kunjungan.',
+            'default' => 'Panduan Kunjungan Gedung | Plaza Kebun Sayur Balikpapan',
+        ],
+        'seo.panduan.description' => [
+            'type' => 'textarea',
+            'group' => 'seo',
+            'label' => 'SEO: Deskripsi Halaman Panduan',
+            'help' => 'Deskripsi meta halaman panduan.',
+            'default' => 'Rute transportasi bandara dan pelabuhan, jam operasional, fasilitas toilet dan mushola, serta tips belanja di Plaza Kebun Sayur.',
+        ]
+        ];
+    }
+
+    public static function seoContactAndLegal(): array
+    {
+        return [
+        'seo.kontak.title' => [
+            'type' => 'text',
+            'group' => 'seo',
+            'label' => 'SEO: Judul Halaman Kontak',
+            'help' => 'Judul meta tab kontak.',
+            'default' => 'Kontak & Pengaduan | Plaza Kebun Sayur Balikpapan',
+        ],
+        'seo.kontak.description' => [
+            'type' => 'textarea',
+            'group' => 'seo',
+            'label' => 'SEO: Deskripsi Halaman Kontak',
+            'help' => 'Deskripsi meta halaman kontak.',
+            'default' => 'Hubungi kantor manajemen Plaza Kebun Sayur Balikpapan untuk informasi sewa tempat, perizinan acara, dan layanan pengaduan.',
+        ],
+        'seo.privacy.title' => [
+            'type' => 'text',
+            'group' => 'seo',
+            'label' => 'SEO: Judul Halaman Privasi',
+            'help' => 'Judul meta tab kebijakan privasi.',
+            'default' => 'Kebijakan Privasi | Plaza Kebun Sayur Balikpapan',
+        ],
+        'seo.privacy.description' => [
+            'type' => 'textarea',
+            'group' => 'seo',
+            'label' => 'SEO: Deskripsi Halaman Privasi',
+            'help' => 'Deskripsi meta halaman kebijakan privasi.',
+            'default' => 'Kebijakan privasi dan perlindungan data pribadi pengunjung website resmi Plaza Kebun Sayur Balikpapan sesuai UU PDP No. 27/2022.',
+        ],
+        'seo.terms.title' => [
+            'type' => 'text',
+            'group' => 'seo',
+            'label' => 'SEO: Judul Halaman Syarat & Ketentuan',
+            'help' => 'Judul meta tab syarat & ketentuan.',
+            'default' => 'Syarat & Ketentuan | Plaza Kebun Sayur Balikpapan',
+        ],
+        'seo.terms.description' => [
+            'type' => 'textarea',
+            'group' => 'seo',
+            'label' => 'SEO: Deskripsi Halaman Syarat & Ketentuan',
+            'help' => 'Deskripsi meta halaman syarat & ketentuan.',
+            'default' => 'Syarat dan ketentuan penggunaan situs direktori dan layanan informasi Plaza Kebun Sayur Balikpapan.',
+        ]
+        ];
+    }
+}

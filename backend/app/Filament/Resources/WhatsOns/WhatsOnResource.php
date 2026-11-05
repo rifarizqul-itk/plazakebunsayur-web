@@ -43,77 +43,98 @@ class WhatsOnResource extends Resource
     {
         return $schema
             ->components([
-                TextInput::make('title')
-                    ->label('Judul Acara / Promo')
-                    ->required()
-                    ->live(onBlur: true)
-                    ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
-                TextInput::make('slug')
-                    ->label('Slug URL')
-                    ->required()
-                    ->unique(ignoreRecord: true),
-                Select::make('type')
-                    ->label('Kategori Informasi')
-                    ->options([
-                        'event' => 'Acara / Kegiatan Budaya',
-                        'promo' => 'Promo & Penawaran Kios',
-                        'announcement' => 'Pengumuman Manajemen',
-                    ])
-                    ->default('event')
-                    ->required(),
-                DatePicker::make('start_date')
-                    ->label('Tanggal Mulai')
-                    ->required(),
-                DatePicker::make('end_date')
-                    ->label('Tanggal Selesai'),
-                TextInput::make('time')
-                    ->label('Waktu / Jam Operasional Acara')
-                    ->placeholder('Contoh: 10.00 – 17.30 WITA')
-                    ->default('10.00 – 18.00 WITA'),
-                TextInput::make('location')
-                    ->label('Lokasi Spesifik di Gedung')
-                    ->placeholder('Contoh: Atrium Utama (Lantai Dasar & Koridor Timur)')
-                    ->default('Atrium Utama (Lantai Dasar)'),
-                TextInput::make('admission')
-                    ->label('Ketentuan Tiket / Biaya Masuk (HTM)')
-                    ->placeholder('Contoh: Gratis (Terbuka untuk Umum)')
-                    ->default('Gratis (Terbuka untuk Umum)'),
-                TextInput::make('contact_person')
-                    ->label('Nama Narahubung')
-                    ->placeholder('Contoh: Bpk. Syahril / Sekretariat Plaza'),
-                TextInput::make('contact_phone')
-                    ->label('Nomor WhatsApp Narahubung')
-                    ->placeholder('Contoh: 08125556789'),
-                FileUpload::make('banner_image_path')
-                    ->label('Banner Kegiatan / Promo (Rasio 16:9)')
-                    ->disk('public')
-                    ->directory('whats-on')
-                    ->image()
-                    ->saveUploadedFileUsing(fn ($file) => app(\App\Services\ImageOptimizerService::class)->optimizeWhatsOnBanner($file))
-                    ->helperText('Rekomendasi rasio 16:9 (1600x900 px). Ukuran berkas bebas, otomatis dikompres ke WebP.'),
-                Textarea::make('summary')
-                    ->label('Ringkasan Singkat')
-                    ->placeholder('Ringkasan 1-2 kalimat untuk kartu depan...')
-                    ->columnSpanFull(),
-                Textarea::make('content')
-                    ->label('Detail Lengkap & Jadwal')
-                    ->placeholder('Deskripsi acara, pengisi acara, jadwal...')
-                    ->rows(6)
-                    ->columnSpanFull(),
-                Textarea::make('terms')
-                    ->label('Ketentuan Acara / Promo')
-                    ->placeholder('Syarat & ketentuan berlaku, tata tertib partisipasi...')
-                    ->rows(3)
-                    ->columnSpanFull(),
-                TagsInput::make('highlights')
-                    ->label('Sorotan & Rangkaian Aktivitas Acara')
-                    ->placeholder('Ketik sorotan lalu tekan Enter')
-                    ->helperText('Daftar poin keunggulan/daya tarik acara untuk kemudahan pembaca di halaman detail.')
-                    ->columnSpanFull(),
-                Toggle::make('is_active')
-                    ->label('Status Publikasi Aktif')
-                    ->default(true),
+                ...static::getEventMetaFields(),
+                ...static::getEventContactAndMediaFields(),
+                ...static::getEventContentFields(),
             ]);
+    }
+
+    protected static function getEventMetaFields(): array
+    {
+        return [
+            TextInput::make('title')
+                ->label('Judul Acara / Promo')
+                ->required()
+                ->live(onBlur: true)
+                ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
+            TextInput::make('slug')
+                ->label('Slug URL')
+                ->required()
+                ->unique(ignoreRecord: true),
+            Select::make('type')
+                ->label('Kategori Informasi')
+                ->options([
+                    'event' => 'Acara / Kegiatan Budaya',
+                    'promo' => 'Promo & Penawaran Kios',
+                    'announcement' => 'Pengumuman Manajemen',
+                ])
+                ->default('event')
+                ->required(),
+            DatePicker::make('start_date')
+                ->label('Tanggal Mulai')
+                ->required(),
+            DatePicker::make('end_date')
+                ->label('Tanggal Selesai'),
+            TextInput::make('time')
+                ->label('Waktu / Jam Operasional Acara')
+                ->placeholder('Contoh: 10.00 – 17.30 WITA')
+                ->default('10.00 – 18.00 WITA'),
+            TextInput::make('location')
+                ->label('Lokasi Spesifik di Gedung')
+                ->placeholder('Contoh: Atrium Utama (Lantai Dasar & Koridor Timur)')
+                ->default('Atrium Utama (Lantai Dasar)'),
+            TextInput::make('admission')
+                ->label('Ketentuan Tiket / Biaya Masuk (HTM)')
+                ->placeholder('Contoh: Gratis (Terbuka untuk Umum)')
+                ->default('Gratis (Terbuka untuk Umum)'),
+        ];
+    }
+
+    protected static function getEventContactAndMediaFields(): array
+    {
+        return [
+            TextInput::make('contact_person')
+                ->label('Nama Narahubung')
+                ->placeholder('Contoh: Bpk. Syahril / Sekretariat Plaza'),
+            TextInput::make('contact_phone')
+                ->label('Nomor WhatsApp Narahubung')
+                ->placeholder('Contoh: 08125556789'),
+            FileUpload::make('banner_image_path')
+                ->label('Banner Kegiatan / Promo (Rasio 16:9)')
+                ->disk('public')
+                ->directory('whats-on')
+                ->image()
+                ->saveUploadedFileUsing(fn ($file) => app(\App\Services\ImageOptimizerService::class)->optimizeWhatsOnBanner($file))
+                ->helperText('Rekomendasi rasio 16:9 (1600x900 px). Ukuran berkas bebas, otomatis dikompres ke WebP.'),
+        ];
+    }
+
+    protected static function getEventContentFields(): array
+    {
+        return [
+            Textarea::make('summary')
+                ->label('Ringkasan Singkat')
+                ->placeholder('Ringkasan 1-2 kalimat untuk kartu depan...')
+                ->columnSpanFull(),
+            Textarea::make('content')
+                ->label('Detail Lengkap & Jadwal')
+                ->placeholder('Deskripsi acara, pengisi acara, jadwal...')
+                ->rows(6)
+                ->columnSpanFull(),
+            Textarea::make('terms')
+                ->label('Ketentuan Acara / Promo')
+                ->placeholder('Syarat & ketentuan berlaku, tata tertib partisipasi...')
+                ->rows(3)
+                ->columnSpanFull(),
+            TagsInput::make('highlights')
+                ->label('Sorotan & Rangkaian Aktivitas Acara')
+                ->placeholder('Ketik sorotan lalu tekan Enter')
+                ->helperText('Daftar poin keunggulan/daya tarik acara untuk kemudahan pembaca di halaman detail.')
+                ->columnSpanFull(),
+            Toggle::make('is_active')
+                ->label('Status Publikasi Aktif')
+                ->default(true),
+        ];
     }
 
     public static function table(Table $table): Table

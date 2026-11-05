@@ -37,18 +37,12 @@ class Tenant extends Model
     public function getImageUrlAttribute(): ?string
     {
         if ($this->image_path) {
-            return str_starts_with($this->image_path, 'http')
-                ? $this->image_path
-                : Storage::disk('public')->url($this->image_path);
+            return $this->resolveStorageUrl($this->image_path);
         }
 
-        if (!empty($this->images) && is_array($this->images) && count($this->images) > 0) {
-            $first = $this->images[0];
-            if ($first) {
-                return str_starts_with($first, 'http')
-                    ? $first
-                    : Storage::disk('public')->url($first);
-            }
+        $firstImage = is_array($this->images) ? ($this->images[0] ?? null) : null;
+        if ($firstImage) {
+            return $this->resolveStorageUrl($firstImage);
         }
 
         return $this->banner_url ?? null;
@@ -58,12 +52,11 @@ class Tenant extends Model
     {
         $urls = [];
 
-        if (!empty($this->images) && is_array($this->images)) {
+        if (is_array($this->images)) {
             foreach ($this->images as $path) {
-                if ($path) {
-                    $urls[] = str_starts_with($path, 'http')
-                        ? $path
-                        : Storage::disk('public')->url($path);
+                $url = $this->resolveStorageUrl($path);
+                if ($url) {
+                    $urls[] = $url;
                 }
             }
         }
@@ -73,5 +66,18 @@ class Tenant extends Model
         }
 
         return $urls;
+    }
+
+    protected function resolveStorageUrl(?string $path): ?string
+    {
+        if (empty($path)) {
+            return null;
+        }
+
+        if (str_starts_with($path, 'http')) {
+            return $path;
+        }
+
+        return Storage::disk('public')->url($path);
     }
 }

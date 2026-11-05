@@ -7,7 +7,6 @@ import {
   Tag,
   ArrowLeft,
   Share2,
-  Check,
   Navigation,
   MessageCircle,
   Info,
@@ -24,20 +23,30 @@ const FALLBACK_BANNERS = {
   promo: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80',
 };
 
-export function EventDetail() {
-  const { slug } = useParams();
-  const navigate = useNavigate();
+function parseHighlights(raw) {
+  if (Array.isArray(raw)) return raw;
+  if (typeof raw === 'string' && raw.trim().startsWith('[')) {
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return [];
+    }
+  }
+  return [];
+}
+
+function buildContactWaLink(contactPhone, contactPerson, title, defaultPhone) {
+  const raw = contactPhone || defaultPhone || '080000000000';
+  const cleanPhone = raw.replace(/[^0-9]/g, '').replace(/^0/, '62');
+  const name = contactPerson || 'Panitia Informasi';
+  const msg = `Halo ${name}, saya ingin bertanya mengenai informasi "${title}" di Plaza Kebun Sayur.`;
+  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`;
+}
+
+function useEventDetail(slug) {
   const [eventItem, setEventItem] = useState(null);
-  const siteSettings = useSiteSettings();
-  const calloutTitle = useContent('event.callout.title', 'Ingin Menggelar Event di Bunsay?');
-  const calloutDesc = useContent(
-    'event.callout.description',
-    'Area Atrium dan Koridor Plaza Kebun Sayur terbuka untuk pameran batu mulia, pentas seni, maupun bazar UMKM.'
-  );
-  const calloutCta = useContent('event.callout.cta_label', 'Hubungi Manajemen Pengelola →');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [copied, setCopied] = useState(false);
   const [bannerSrc, setBannerSrc] = useState(null);
 
   useEffect(() => {
@@ -66,8 +75,190 @@ export function EventDetail() {
     };
   }, [slug]);
 
+  return { eventItem, loading, error, bannerSrc, setBannerSrc };
+}
+
+function EventNotFound({ onBack }) {
+  return (
+    <div className="py-20 text-center">
+      <Container>
+        <div className="max-w-md mx-auto p-8 bg-surface-subtle border border-border-subtle rounded-md">
+          <h2 className="text-xl font-bold text-text-primary tracking-tight">Informasi Tidak Ditemukan</h2>
+          <p className="text-sm text-text-secondary mt-2">
+            Agenda kegiatan atau promo yang Anda tuju mungkin sudah berakhir atau tautan tidak valid.
+          </p>
+          <Button variant="primary" className="mt-6" onClick={onBack}>
+            Kembali ke Daftar Informasi
+          </Button>
+        </div>
+      </Container>
+    </div>
+  );
+}
+
+function EventHighlightsCard({ highlightsList }) {
+  if (!highlightsList || highlightsList.length === 0) return null;
+
+  return (
+    <div className="p-6 bg-surface-subtle border border-border-subtle rounded-md space-y-3">
+      <h3 className="font-bold text-base text-text-primary">
+        Sorotan & Rangkaian Aktivitas
+      </h3>
+      <ul className="space-y-2 text-xs sm:text-sm text-text-secondary">
+        {highlightsList.map((highlight, idx) => (
+          <li key={idx} className="flex items-start gap-2.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-brand-primary mt-2 shrink-0" />
+            <span className="leading-relaxed">{highlight}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function EventSidebar({
+  eventItem,
+  dateRange,
+  termsText,
+  contactWaLink,
+  copied,
+  onShare,
+  calloutTitle,
+  calloutDesc,
+  calloutCta,
+}) {
+  return (
+    <aside className="space-y-6">
+      <div className="p-6 bg-surface-subtle border border-border-subtle rounded-md space-y-5">
+        <h3 className="font-bold text-base text-text-primary border-b border-border-subtle pb-3">
+          Ringkasan Pelaksanaan
+        </h3>
+
+        <div className="space-y-4 text-xs sm:text-sm">
+          {dateRange && (
+            <div className="flex items-start gap-3">
+              <Calendar size={16} className="text-brand-primary shrink-0 mt-0.5" />
+              <div>
+                <div className="text-xs text-text-muted font-medium">Jadwal Tanggal</div>
+                <div className="font-semibold text-text-primary mt-0.5">{dateRange}</div>
+              </div>
+            </div>
+          )}
+
+          <div className="flex items-start gap-3">
+            <Clock size={16} className="text-brand-primary shrink-0 mt-0.5" />
+            <div>
+              <div className="text-xs text-text-muted font-medium">Waktu Operasional</div>
+              <div className="font-semibold text-text-primary mt-0.5">
+                {eventItem.time || '10.00 – 18.00 WITA'}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <MapPin size={16} className="text-brand-primary shrink-0 mt-0.5" />
+            <div>
+              <div className="text-xs text-text-muted font-medium">Lokasi di Mall</div>
+              <div className="font-semibold text-text-primary mt-0.5">
+                {eventItem.location || 'Plaza Kebun Sayur Balikpapan'}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <Tag size={16} className="text-brand-primary shrink-0 mt-0.5" />
+            <div>
+              <div className="text-xs text-text-muted font-medium">Ketentuan / HTM</div>
+              <div className="font-semibold text-text-primary mt-0.5">
+                {termsText}
+              </div>
+            </div>
+          </div>
+
+          {(eventItem.contact_person || eventItem.contact_phone) && (
+            <div className="flex items-start gap-3 pt-1 border-t border-border-subtle">
+              <User size={16} className="text-brand-primary shrink-0 mt-0.5" />
+              <div>
+                <div className="text-xs text-text-muted font-medium">Narahubung Acara</div>
+                <div className="font-semibold text-text-primary mt-0.5">
+                  {eventItem.contact_person || 'Panitia Informasi'}
+                </div>
+                {eventItem.contact_phone && (
+                  <div className="text-xs text-text-secondary mt-0.5 font-mono">
+                    {eventItem.contact_phone}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="space-y-3 pt-3 border-t border-border-subtle">
+          <a
+            href={contactWaLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-sm bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white text-xs font-semibold transition-colors min-h-[44px] text-center"
+          >
+            <MessageCircle size={15} />
+            <span>Tanya Narahubung via WhatsApp</span>
+          </a>
+
+          <Link
+            to="/panduan-kunjungan"
+            className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-sm border border-border-subtle hover:border-border-hover bg-canvas text-text-primary text-xs font-semibold transition-colors min-h-[44px] text-center"
+          >
+            <Navigation size={14} />
+            <span>Panduan Rute & Akses Mall</span>
+          </Link>
+
+          <button
+            type="button"
+            onClick={onShare}
+            className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-sm border border-border-subtle hover:border-border-hover bg-canvas text-text-secondary hover:text-text-primary text-xs font-semibold transition-colors min-h-[44px] text-center cursor-pointer"
+          >
+            <Share2 size={14} />
+            <span>{copied ? 'Tautan Berhasil Disalin!' : 'Bagikan Informasi Ini'}</span>
+          </button>
+        </div>
+      </div>
+
+      <div className="p-5 bg-surface-muted border border-border-subtle rounded-md space-y-2">
+        <div className="flex items-center gap-2 text-text-primary font-semibold text-xs">
+          <Info size={14} className="text-brand-primary" />
+          <span>{calloutTitle}</span>
+        </div>
+        <p className="text-xs text-text-secondary leading-relaxed">
+          {calloutDesc}
+        </p>
+        <Link
+          to="/kontak"
+          className="inline-block text-xs font-semibold text-brand-primary hover:underline pt-1"
+        >
+          {calloutCta}
+        </Link>
+      </div>
+    </aside>
+  );
+}
+
+export function EventDetail() {
+  const { slug } = useParams();
+  const navigate = useNavigate();
+  const siteSettings = useSiteSettings();
+
+  const calloutTitle = useContent('event.callout.title', 'Ingin Menggelar Event di Bunsay?');
+  const calloutDesc = useContent(
+    'event.callout.description',
+    'Area Atrium dan Koridor Plaza Kebun Sayur terbuka untuk pameran batu mulia, pentas seni, maupun bazar UMKM.'
+  );
+  const calloutCta = useContent('event.callout.cta_label', 'Hubungi Manajemen Pengelola →');
+
+  const [copied, setCopied] = useState(false);
+  const { eventItem, loading, error, bannerSrc, setBannerSrc } = useEventDetail(slug);
+
   const handleShare = () => {
-    if (navigator.clipboard) {
+    if (navigator?.clipboard) {
       navigator.clipboard.writeText(window.location.href);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -83,50 +274,24 @@ export function EventDetail() {
   }
 
   if (error || !eventItem) {
-    return (
-      <div className="py-20 text-center">
-        <Container>
-          <div className="max-w-md mx-auto p-8 bg-surface-subtle border border-border-subtle rounded-md">
-            <h2 className="text-xl font-bold text-text-primary tracking-tight">Informasi Tidak Ditemukan</h2>
-            <p className="text-sm text-text-secondary mt-2">
-              Agenda kegiatan atau promo yang Anda tuju mungkin sudah berakhir atau tautan tidak valid.
-            </p>
-            <Button variant="primary" className="mt-6" onClick={() => navigate('/informasi')}>
-              Kembali ke Daftar Informasi
-            </Button>
-          </div>
-        </Container>
-      </div>
-    );
+    return <EventNotFound onBack={() => navigate('/informasi')} />;
   }
 
   const fallbackBanner = FALLBACK_BANNERS[eventItem.type] || FALLBACK_BANNERS.event;
+  const contactWaLink = buildContactWaLink(
+    eventItem.contact_phone,
+    eventItem.contact_person,
+    eventItem.title,
+    siteSettings?.management_whatsapp
+  );
 
-  // Narahubung WhatsApp handling
-  const rawContactPhone = eventItem.contact_phone || siteSettings?.management_whatsapp || '080000000000';
-  const cleanPhone = rawContactPhone.replace(/[^0-9]/g, '').replace(/^0/, '62');
-  const contactName = eventItem.contact_person || 'Panitia Informasi';
-  const contactMessage = `Halo ${contactName}, saya ingin bertanya mengenai informasi "${eventItem.title}" di Plaza Kebun Sayur.`;
-  const contactWaLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(contactMessage)}`;
-
-  // Parse highlights
-  let highlightsList = [];
-  if (Array.isArray(eventItem.highlights)) {
-    highlightsList = eventItem.highlights;
-  } else if (typeof eventItem.highlights === 'string' && eventItem.highlights.trim().startsWith('[')) {
-    try {
-      highlightsList = JSON.parse(eventItem.highlights);
-    } catch {
-      highlightsList = [];
-    }
-  }
-
+  const highlightsList = parseHighlights(eventItem.highlights);
+  const dateRange = formatDateRange(eventItem.start_date, eventItem.end_date);
   const termsText = eventItem.terms || eventItem.admission || (eventItem.type === 'event' ? 'Gratis (Terbuka untuk Umum)' : 'Promo Belanja Langsung');
 
   return (
     <div className="py-8 sm:py-12 bg-canvas min-h-screen">
       <Container>
-        {/* Breadcrumb */}
         <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-text-muted mb-6">
           <Link to="/" className="hover:text-text-primary transition-colors">
             Beranda
@@ -136,199 +301,84 @@ export function EventDetail() {
             Informasi & Promo
           </Link>
           <span>/</span>
-          <span className="text-text-primary font-medium line-clamp-1">{eventItem.title}</span>
+          <span className="text-text-primary font-medium truncate max-w-[200px] sm:max-w-xs">
+            {eventItem.title}
+          </span>
         </nav>
 
-        {/* 2-Column Responsive Layout per DESIGN.md */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-          {/* Main Content (Left: 8 cols) */}
-          <article className="lg:col-span-8 flex flex-col gap-6">
-            {/* Category / Type & Date */}
-            <div className="flex flex-wrap items-center gap-3">
-              <span className="text-xs font-semibold uppercase tracking-wider text-text-muted">
-                {eventItem.type === 'event' ? 'Agenda & Kegiatan' : 'Promo Plaza & Kios'}
-              </span>
-              <span className="text-border-subtle" aria-hidden="true">•</span>
-              <div className="flex items-center gap-1.5 text-xs text-text-secondary tabular-nums">
-                <Calendar size={13} className="text-brand-primary" />
-                <span>{formatDateRange(eventItem.start_date, eventItem.end_date)}</span>
-              </div>
-            </div>
+        <div className="mb-6">
+          <Link
+            to="/informasi"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-text-secondary hover:text-brand-primary transition-colors min-h-[44px] py-2"
+          >
+            <ArrowLeft size={16} />
+            <span>Kembali ke Semua Informasi & Promo</span>
+          </Link>
+        </div>
 
-            {/* Title */}
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-text-primary leading-tight">
-              {eventItem.title}
-            </h1>
-
-            {/* Banner Photographic Frame (16:9 ratio) */}
-            <div className="w-full aspect-[16/9] rounded-md overflow-hidden border border-border-subtle bg-surface-muted shadow-card">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-12 items-start">
+          <div className="lg:col-span-2 space-y-8">
+            <div className="relative w-full aspect-[16/9] rounded-md overflow-hidden bg-surface-muted border border-border-subtle shadow-sm">
               <img
                 src={bannerSrc || fallbackBanner}
                 alt={eventItem.title}
-                onError={() => {
-                  if (bannerSrc !== fallbackBanner) {
-                    setBannerSrc(fallbackBanner);
-                  }
-                }}
                 className="w-full h-full object-cover"
+                onError={() => setBannerSrc(fallbackBanner)}
               />
-            </div>
-
-            {/* Summary & Story Content */}
-            <div className="space-y-4 pt-2">
-              <p className="font-semibold text-text-primary text-base sm:text-lg leading-relaxed">
-                {eventItem.summary}
-              </p>
-              <div className="text-sm sm:text-base text-text-secondary leading-relaxed whitespace-pre-line space-y-4 max-w-prose">
-                <p>{eventItem.content}</p>
+              <div className="absolute top-4 left-4">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-sm text-xs font-bold uppercase tracking-wider bg-brand-primary text-white shadow-md">
+                  <Tag size={13} />
+                  <span>{eventItem.type === 'event' ? 'Acara / Event' : 'Promo Kios'}</span>
+                </span>
               </div>
             </div>
 
-            {/* Event Highlights Section */}
-            {highlightsList.length > 0 && (
-              <div className="p-6 bg-surface-subtle border border-border-subtle rounded-md space-y-4 mt-2">
-                <h2 className="text-base font-bold text-text-primary">
-                  Sorotan & Rangkaian Acara
-                </h2>
-                <ul className="space-y-3">
-                  {highlightsList.map((highlight, idx) => (
-                    <li key={idx} className="flex items-start gap-3 text-sm text-text-secondary leading-relaxed">
-                      <Check size={16} className="text-brand-primary shrink-0 mt-0.5" />
-                      <span>{highlight}</span>
-                    </li>
-                  ))}
-                </ul>
+            <div className="space-y-4">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-text-primary leading-tight">
+                {eventItem.title}
+              </h1>
+
+              {dateRange && (
+                <div className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-brand-primary tabular-nums">
+                  <Calendar size={16} />
+                  <span>{dateRange}</span>
+                </div>
+              )}
+
+              {eventItem.summary && (
+                <p className="text-base sm:text-lg text-text-secondary leading-relaxed border-l-2 border-brand-primary pl-4 py-1 italic">
+                  {eventItem.summary}
+                </p>
+              )}
+            </div>
+
+            <div className="prose prose-sm sm:prose max-w-none text-text-primary border-t border-border-subtle pt-6 leading-relaxed whitespace-pre-line">
+              {eventItem.content}
+            </div>
+
+            <EventHighlightsCard highlightsList={highlightsList} />
+
+            {eventItem.terms && (
+              <div className="p-5 bg-surface-muted/60 border border-border-subtle rounded-md text-xs sm:text-sm space-y-1.5">
+                <h4 className="font-bold text-text-primary">Syarat & Ketentuan:</h4>
+                <p className="text-text-secondary leading-relaxed whitespace-pre-line">
+                  {eventItem.terms}
+                </p>
               </div>
             )}
+          </div>
 
-            {/* Back Button */}
-            <div className="pt-6 border-t border-border-subtle">
-              <Link
-                to="/informasi"
-                className="inline-flex items-center gap-2 py-2.5 min-h-[44px] text-xs font-semibold text-text-secondary hover:text-brand-primary transition-colors"
-              >
-                <ArrowLeft size={15} />
-                <span>Kembali ke Daftar Informasi</span>
-              </Link>
-            </div>
-          </article>
-
-          {/* Logistics & Action Sidebar (Right: 4 cols, sticky on desktop) */}
-          <aside className="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
-            {/* Implementation Details Card */}
-            <div className="p-6 bg-surface-subtle border border-border-subtle rounded-md space-y-6">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-text-primary border-b border-border-subtle pb-3">
-                Informasi Pelaksanaan
-              </h2>
-
-              <div className="space-y-4 text-xs sm:text-sm">
-                <div className="flex items-start gap-3">
-                  <Calendar size={16} className="text-brand-primary shrink-0 mt-0.5" />
-                  <div>
-                    <div className="text-xs text-text-muted font-medium">Tanggal Pelaksanaan</div>
-                    <div className="font-semibold text-text-primary mt-0.5 tabular-nums">
-                      {formatDateRange(eventItem.start_date, eventItem.end_date)}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <Clock size={16} className="text-brand-primary shrink-0 mt-0.5" />
-                  <div>
-                    <div className="text-xs text-text-muted font-medium">Waktu Operasional</div>
-                    <div className="font-semibold text-text-primary mt-0.5">
-                      {eventItem.time || '10.00 – 18.00 WITA'}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <MapPin size={16} className="text-brand-primary shrink-0 mt-0.5" />
-                  <div>
-                    <div className="text-xs text-text-muted font-medium">Lokasi di Mall</div>
-                    <div className="font-semibold text-text-primary mt-0.5">
-                      {eventItem.location || 'Plaza Kebun Sayur Balikpapan'}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <Tag size={16} className="text-brand-primary shrink-0 mt-0.5" />
-                  <div>
-                    <div className="text-xs text-text-muted font-medium">Ketentuan / HTM</div>
-                    <div className="font-semibold text-text-primary mt-0.5">
-                      {termsText}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Narahubung Acara */}
-                {(eventItem.contact_person || eventItem.contact_phone) && (
-                  <div className="flex items-start gap-3 pt-1 border-t border-border-subtle">
-                    <User size={16} className="text-brand-primary shrink-0 mt-0.5" />
-                    <div>
-                      <div className="text-xs text-text-muted font-medium">Narahubung Acara</div>
-                      <div className="font-semibold text-text-primary mt-0.5">
-                        {eventItem.contact_person || 'Panitia Informasi'}
-                      </div>
-                      {eventItem.contact_phone && (
-                        <div className="text-xs text-text-secondary mt-0.5 font-mono">
-                          {eventItem.contact_phone}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Action Buttons */}
-              <div className="space-y-3 pt-3 border-t border-border-subtle">
-                <a
-                  href={contactWaLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-sm bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white text-xs font-semibold transition-colors min-h-[44px] text-center"
-                >
-                  <MessageCircle size={15} />
-                  <span>Tanya Narahubung via WhatsApp</span>
-                </a>
-
-                <Link
-                  to="/panduan-kunjungan"
-                  className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-sm border border-border-subtle hover:border-border-hover bg-canvas text-text-primary text-xs font-semibold transition-colors min-h-[44px] text-center"
-                >
-                  <Navigation size={14} />
-                  <span>Panduan Rute & Akses Mall</span>
-                </Link>
-
-                <button
-                  type="button"
-                  onClick={handleShare}
-                  className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-sm border border-border-subtle hover:border-border-hover bg-canvas text-text-secondary hover:text-text-primary text-xs font-semibold transition-colors min-h-[44px] text-center cursor-pointer"
-                >
-                  <Share2 size={14} />
-                  <span>{copied ? 'Tautan Berhasil Disalin!' : 'Bagikan Informasi Ini'}</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Space Rental Callout */}
-            <div className="p-5 bg-surface-muted border border-border-subtle rounded-md space-y-2">
-              <div className="flex items-center gap-2 text-text-primary font-semibold text-xs">
-                <Info size={14} className="text-brand-primary" />
-                <span>{calloutTitle}</span>
-              </div>
-              <p className="text-xs text-text-secondary leading-relaxed">
-                {calloutDesc}
-              </p>
-              <Link
-                to="/kontak"
-                className="inline-block text-xs font-semibold text-brand-primary hover:underline pt-1"
-              >
-                {calloutCta}
-              </Link>
-            </div>
-          </aside>
+          <EventSidebar
+            eventItem={eventItem}
+            dateRange={dateRange}
+            termsText={termsText}
+            contactWaLink={contactWaLink}
+            copied={copied}
+            onShare={handleShare}
+            calloutTitle={calloutTitle}
+            calloutDesc={calloutDesc}
+            calloutCta={calloutCta}
+          />
         </div>
       </Container>
     </div>

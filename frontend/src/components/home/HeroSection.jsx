@@ -120,41 +120,301 @@ function SlideControls({ isPaused, onTogglePause, currentSlide, totalSlides, onS
 
 function ActionCardItem({ card }) {
   return (
-    <Link
-      to={card.href}
-      className="group relative rounded-md overflow-hidden bg-surface-dark border border-mono-800 flex flex-col justify-end p-6 min-h-[300px] sm:min-h-[340px] h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-primary transition-all duration-300 hover:border-mono-600 cursor-pointer"
-    >
-      {/* Background Ambient Image */}
-      <img
-        src={card.image}
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all duration-700 ease-out z-0 pointer-events-none"
-      />
-      {/* Balanced dark gradient */}
-      <div className="absolute inset-0 bg-gradient-to-t from-mono-900/90 via-mono-900/60 to-mono-900/20 z-1 pointer-events-none" />
+    <div className="group flex flex-col bg-canvas border border-border-subtle hover:border-border-strong active:border-border-strong transition-all duration-150 rounded-md overflow-hidden">
+      {/* 4:3 Aspect Photographic Frame */}
+      <Link
+        to={card.href}
+        tabIndex={-1}
+        aria-hidden="true"
+        className="relative block w-full aspect-[4/3] bg-surface-muted overflow-hidden focus:outline-none"
+      >
+        <img
+          src={card.image}
+          alt={card.title}
+          loading="lazy"
+          className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500 ease-out"
+        />
+        {/* Soft shadow inside image frame to pop category chip */}
+        <div className="absolute inset-0 bg-gradient-to-t from-mono-900/80 via-transparent to-transparent opacity-90" />
 
-      <div className="relative z-10 flex flex-col gap-2">
-        <span className="text-xs font-bold uppercase tracking-wider text-gold drop-shadow-sm">
-          {card.category}
-        </span>
-        <h3 className="text-xl sm:text-2xl font-bold text-white leading-snug mb-3 drop-shadow-sm">
-          {card.title}
-        </h3>
-        <div className="w-full py-3 px-4 min-h-[44px] bg-brand-primary group-hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white font-bold text-xs uppercase tracking-wider text-center transition-all flex items-center justify-center gap-2 rounded-sm shadow-sm">
-          <span>{card.btnText}</span>
-          <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-1" />
+        {/* Category Badge Chip inside Frame */}
+        <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-1 text-left">
+          <span className="text-xs font-bold uppercase tracking-wider text-gold drop-shadow-sm">
+            {card.category}
+          </span>
+          <h3 className="text-lg sm:text-xl font-bold text-white drop-shadow-md leading-snug line-clamp-2">
+            {card.title}
+          </h3>
         </div>
+      </Link>
+
+      {/* Structured Action Area */}
+      <div className="p-4 bg-canvas flex flex-col justify-end mt-auto">
+        <Link
+          to={card.href}
+          className="w-full min-h-[44px] flex items-center justify-center gap-2 py-2.5 px-4 text-xs font-bold uppercase tracking-wider text-white hover:text-white bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed rounded-sm shadow-subtle transition-colors group/btn cursor-pointer"
+        >
+          <span>{card.btnText}</span>
+          <ArrowRight size={15} className="group-hover/btn:translate-x-1 transition-transform" />
+        </Link>
       </div>
-    </Link>
+    </div>
+  );
+}
+
+function parseImagesArray(raw) {
+  if (Array.isArray(raw)) {
+    return raw.filter(Boolean);
+  }
+  if (typeof raw !== 'string' || !raw.trim()) {
+    return [];
+  }
+  const trimmed = raw.trim();
+  if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (Array.isArray(parsed)) {
+        return parsed.filter(Boolean);
+      }
+    } catch {
+      // not json
+    }
+  }
+  if (trimmed.startsWith('http') || trimmed.startsWith('/')) {
+    return [trimmed];
+  }
+  return [];
+}
+
+function resolveBuildingPhotos(heroImagesRaw, siteBuildingImages, fallbackImage) {
+  const fromRaw = parseImagesArray(heroImagesRaw);
+  if (fromRaw.length > 0) return fromRaw;
+
+  const fromSettings = parseImagesArray(siteBuildingImages);
+  if (fromSettings.length > 0) return fromSettings;
+
+  return fallbackImage ? [fallbackImage] : [];
+}
+
+function useHeroSlider(totalSlides) {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  const nextSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev + 1) % totalSlides);
+  }, [totalSlides]);
+
+  const prevSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
+  }, [totalSlides]);
+
+  useEffect(() => {
+    const mediaQuery = typeof window !== 'undefined'
+      ? window.matchMedia('(prefers-reduced-motion: reduce)')
+      : null;
+
+    if (isPaused || (mediaQuery && mediaQuery.matches)) return;
+
+    const interval = setInterval(nextSlide, 5000);
+    return () => clearInterval(interval);
+  }, [isPaused, nextSlide]);
+
+  return {
+    currentSlide,
+    setCurrentSlide,
+    isPaused,
+    setIsPaused,
+    nextSlide,
+    prevSlide,
+  };
+}
+
+function useWitaClock() {
+  const [witaTime, setWitaTime] = useState('');
+
+  useEffect(() => {
+    const checkOperatingStatus = () => {
+      const now = new Date();
+      const utcHours = now.getUTCHours();
+      const utcMinutes = now.getUTCMinutes();
+      const witaHours = (utcHours + 8) % 24;
+
+      const formattedTime = `${String(witaHours).padStart(2, '0')}:${String(utcMinutes).padStart(2, '0')} WITA`;
+      setWitaTime(formattedTime);
+    };
+
+    checkOperatingStatus();
+    const interval = setInterval(checkOperatingStatus, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return witaTime;
+}
+
+function useCopyAddress(mallAddress) {
+  const [copiedAddress, setCopiedAddress] = useState(false);
+
+  const handleCopyAddress = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(mallAddress);
+      setCopiedAddress(true);
+      setTimeout(() => setCopiedAddress(false), 2200);
+    } catch {
+      setCopiedAddress(true);
+      setTimeout(() => setCopiedAddress(false), 2200);
+    }
+  }, [mallAddress]);
+
+  return { copiedAddress, handleCopyAddress };
+}
+
+function HeroSliderModule({
+  activeSlides,
+  currentSlide,
+  isPaused,
+  setIsPaused,
+  nextSlide,
+  prevSlide,
+  setCurrentSlide,
+}) {
+  return (
+    <section
+      className="relative w-full aspect-[16/9] sm:aspect-[21/9] lg:aspect-[24/9] min-h-[420px] sm:min-h-[480px] lg:min-h-[520px] max-h-[580px] bg-surface-dark overflow-hidden group select-none"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onFocus={() => setIsPaused(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) {
+          setIsPaused(false);
+        }
+      }}
+      aria-label="Galeri Sorotan Plaza Kebun Sayur"
+    >
+      {activeSlides.map((slide, idx) => (
+        <SlideItem
+          key={slide.id}
+          slide={slide}
+          idx={idx}
+          isActive={idx === currentSlide}
+        />
+      ))}
+
+      <button
+        type="button"
+        onClick={prevSlide}
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 flex items-center justify-center bg-surface-dark/70 hover:bg-brand-primary active:bg-brand-primary-pressed text-white border border-white/20 transition-all rounded-sm cursor-pointer opacity-80 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100"
+        aria-label="Slide sebelumnya"
+      >
+        <ChevronLeft size={22} />
+      </button>
+
+      <button
+        type="button"
+        onClick={nextSlide}
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 flex items-center justify-center bg-surface-dark/70 hover:bg-brand-primary active:bg-brand-primary-pressed text-white border border-white/20 transition-all rounded-sm cursor-pointer opacity-80 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100"
+        aria-label="Slide berikutnya"
+      >
+        <ChevronRight size={22} />
+      </button>
+
+      <SlideControls
+        isPaused={isPaused}
+        onTogglePause={() => setIsPaused((prev) => !prev)}
+        currentSlide={currentSlide}
+        totalSlides={activeSlides.length}
+        onSelectSlide={setCurrentSlide}
+      />
+    </section>
+  );
+}
+
+function QuickInfoModule({
+  mallHours,
+  witaTime,
+  mallAddress,
+  mapsUrl,
+  copiedAddress,
+  handleCopyAddress,
+}) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+      {/* Box 1: Opening Hours */}
+      <div className="p-6 bg-surface-subtle border border-border-subtle rounded-md flex flex-col gap-1.5 hover:border-border-strong transition-colors">
+        <h4 className="text-base font-bold text-text-primary">
+          Waktu operasional mall
+        </h4>
+        <p className="text-sm font-semibold text-text-primary">
+          {mallHours}
+        </p>
+        {witaTime && (
+          <span className="text-xs text-text-muted">
+            Waktu lokal WITA saat ini: <span className="font-mono font-medium text-text-secondary">{witaTime}</span>
+          </span>
+        )}
+        <Link
+          to="/panduan-kunjungan"
+          className="inline-flex items-center gap-1 min-h-[44px] py-2 text-xs font-semibold text-brand-primary hover:underline mt-1 self-start"
+        >
+          <span>Lihat jadwal operasional lengkap</span>
+          <ArrowRight size={13} />
+        </Link>
+      </div>
+
+      {/* Box 2: Getting Here with Interactive Quick-Copy */}
+      <div className="p-6 bg-surface-subtle border border-border-subtle rounded-md flex flex-col gap-1.5 hover:border-border-strong transition-colors">
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <h4 className="text-base font-bold text-text-primary">
+            Petunjuk lokasi dan akses
+          </h4>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleCopyAddress}
+              className="inline-flex items-center gap-1.5 min-h-[44px] px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-text-primary hover:text-brand-primary active:bg-surface-muted bg-canvas border border-border-subtle rounded-sm transition-all cursor-pointer"
+              title="Salin alamat lengkap untuk navigasi GPS / ojek online"
+            >
+              {copiedAddress ? (
+                <>
+                  <Check size={14} className="text-emerald-600" />
+                  <span className="text-emerald-700">Tersalin!</span>
+                </>
+              ) : (
+                <>
+                  <Copy size={14} className="text-text-muted" />
+                  <span>Salin Alamat</span>
+                </>
+              )}
+            </button>
+            <a
+              href={mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 min-h-[44px] px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-text-primary hover:text-brand-primary active:bg-surface-muted bg-canvas border border-border-subtle rounded-sm transition-all"
+              title="Buka rute navigasi langsung di Google Maps"
+            >
+              <span>Buka Maps</span>
+              <ExternalLink size={14} />
+            </a>
+          </div>
+        </div>
+        <p className="text-sm font-semibold text-text-primary">
+          {mallAddress}
+        </p>
+        <Link
+          to="/panduan-kunjungan"
+          className="inline-flex items-center gap-1 min-h-[44px] py-2 text-xs font-semibold text-brand-primary hover:underline mt-1 self-start"
+        >
+          <span>Lihat informasi lokasi & fasilitas gedung</span>
+          <ArrowRight size={13} />
+        </Link>
+      </div>
+    </div>
   );
 }
 
 export function HeroSection() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [copiedAddress, setCopiedAddress] = useState(false);
-  const [witaTime, setWitaTime] = useState('');
   const siteSettings = useSiteSettings();
+  const witaTime = useWitaClock();
 
   const heroImagesRaw = useContent('home.hero.images', null);
   const heroImage = useContentImage('home.hero.image', '/assets/Photograph_of_plaza_building.webp');
@@ -212,56 +472,12 @@ export function HeroSection() {
   const actionPanduanBtnText = useContent('home.action.panduan.btn_text', 'BUKA PANDUAN');
   const actionPanduanImg = useContentImage('home.action.panduan.image', 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80');
 
-  // Support multiple building photos from CMS / settings without artificial limit
-  let buildingPhotos = [];
-  if (Array.isArray(heroImagesRaw)) {
-    buildingPhotos = heroImagesRaw.filter(Boolean);
-  } else if (typeof heroImagesRaw === 'string' && heroImagesRaw.trim()) {
-    const trimmed = heroImagesRaw.trim();
-    if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
-      try {
-        const parsed = JSON.parse(trimmed);
-        if (Array.isArray(parsed)) {
-          buildingPhotos = parsed.filter(Boolean);
-        }
-      } catch {
-        // not json
-      }
-    }
-    if (buildingPhotos.length === 0 && (trimmed.startsWith('http') || trimmed.startsWith('/'))) {
-      buildingPhotos = [trimmed];
-    }
-  }
+  const buildingPhotos = resolveBuildingPhotos(heroImagesRaw, siteSettings?.building_images, heroImage);
 
-  // Fallback to siteSettings.building_images
-  if (buildingPhotos.length === 0 && siteSettings?.building_images) {
-    if (Array.isArray(siteSettings.building_images)) {
-      buildingPhotos = siteSettings.building_images.filter(Boolean);
-    } else if (typeof siteSettings.building_images === 'string') {
-      const trimmed = siteSettings.building_images.trim();
-      if (trimmed.startsWith('[')) {
-        try {
-          const parsed = JSON.parse(trimmed);
-          if (Array.isArray(parsed)) buildingPhotos = parsed.filter(Boolean);
-        } catch {
-          // not json
-        }
-      } else if (trimmed.startsWith('http') || trimmed.startsWith('/')) {
-        buildingPhotos = [trimmed];
-      }
-    }
-  }
-
-  // Fallback to default single hero image
-  if (buildingPhotos.length === 0 && heroImage) {
-    buildingPhotos = [heroImage];
-  }
-
-  // Dynamically build building slides at the beginning of the slider
-  const buildingSlides = buildingPhotos.map((imgUrl, bIdx) => ({
-    id: `building-${bIdx + 1}`,
-    image: imgUrl,
-    tag: bIdx === 0 ? buildingTag : `Foto Gedung Plaza #${bIdx + 1}`,
+  const buildingSlides = buildingPhotos.map((photo, i) => ({
+    id: `gedung-plaza-${i + 1}`,
+    image: photo,
+    tag: buildingPhotos.length > 1 ? `${buildingTag} (${i + 1}/${buildingPhotos.length})` : buildingTag,
     title: heroTitle,
     desc: heroSubtitle,
     ctaText: buildingCta,
@@ -336,116 +552,30 @@ export function HeroSection() {
     },
   ];
 
-  const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % activeSlides.length);
-  }, [activeSlides.length]);
-
-  const prevSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev - 1 + activeSlides.length) % activeSlides.length);
-  }, [activeSlides.length]);
-
-  // Auto-slide 5s with pause on hover, focus, and prefers-reduced-motion
-  useEffect(() => {
-    const mediaQuery = typeof window !== 'undefined'
-      ? window.matchMedia('(prefers-reduced-motion: reduce)')
-      : null;
-
-    if (isPaused || (mediaQuery && mediaQuery.matches)) return;
-
-    const interval = setInterval(nextSlide, 5000);
-    return () => clearInterval(interval);
-  }, [isPaused, nextSlide]);
-
-  // Real-time WITA Clock Tracker (UTC+8)
-  useEffect(() => {
-    const checkOperatingStatus = () => {
-      const now = new Date();
-      const utcHours = now.getUTCHours();
-      const utcMinutes = now.getUTCMinutes();
-      const witaHours = (utcHours + 8) % 24;
-
-      const formattedTime = `${String(witaHours).padStart(2, '0')}:${String(utcMinutes).padStart(2, '0')} WITA`;
-      setWitaTime(formattedTime);
-    };
-
-    checkOperatingStatus();
-    const interval = setInterval(checkOperatingStatus, 60000);
-    return () => clearInterval(interval);
-  }, []);
+  const slider = useHeroSlider(activeSlides.length);
 
   const mallAddress = siteSettings?.office_address || 'Plaza Kebun Sayur, Jl. Letjen Suprapto, Baru Ilir, Kec. Balikpapan Barat, Kota Balikpapan, Kalimantan Timur 76131';
   const mallHours = siteSettings?.mall_opening_hours || '08.00 – 18.00 WITA (Buka Setiap Hari)';
   const mapsUrl = siteSettings?.maps_url || 'https://maps.google.com/?q=Plaza+Kebun+Sayur+Balikpapan';
 
-  const handleCopyAddress = async () => {
-    try {
-      await navigator.clipboard.writeText(mallAddress);
-      setCopiedAddress(true);
-      setTimeout(() => setCopiedAddress(false), 2200);
-    } catch {
-      setCopiedAddress(true);
-      setTimeout(() => setCopiedAddress(false), 2200);
-    }
-  };
+  const { copiedAddress, handleCopyAddress } = useCopyAddress(mallAddress);
 
   return (
     <div className="flex flex-col bg-canvas">
       {/* 1. Auto-Sliding Photo Highlights Gallery */}
-      <section
-        className="relative w-full aspect-[16/9] sm:aspect-[21/9] lg:aspect-[24/9] min-h-[420px] sm:min-h-[480px] lg:min-h-[520px] max-h-[580px] bg-surface-dark overflow-hidden group select-none"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
-        onFocus={() => setIsPaused(true)}
-        onBlur={(e) => {
-          if (!e.currentTarget.contains(e.relatedTarget)) {
-            setIsPaused(false);
-          }
-        }}
-        aria-label="Galeri Sorotan Plaza Kebun Sayur"
-      >
-        {/* Slides */}
-        {activeSlides.map((slide, idx) => (
-          <SlideItem
-            key={slide.id}
-            slide={slide}
-            idx={idx}
-            isActive={idx === currentSlide}
-          />
-        ))}
-
-        {/* Prev / Next Arrows */}
-        <button
-          type="button"
-          onClick={prevSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 flex items-center justify-center bg-surface-dark/70 hover:bg-brand-primary active:bg-brand-primary-pressed text-white border border-white/20 transition-all rounded-sm cursor-pointer opacity-80 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100"
-          aria-label="Slide sebelumnya"
-        >
-          <ChevronLeft size={22} />
-        </button>
-
-        <button
-          type="button"
-          onClick={nextSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 flex items-center justify-center bg-surface-dark/70 hover:bg-brand-primary active:bg-brand-primary-pressed text-white border border-white/20 transition-all rounded-sm cursor-pointer opacity-80 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100"
-          aria-label="Slide berikutnya"
-        >
-          <ChevronRight size={22} />
-        </button>
-
-        {/* Slide Controls: Play/Pause, Counter & Progress Indicator */}
-        <SlideControls
-          isPaused={isPaused}
-          onTogglePause={() => setIsPaused((prev) => !prev)}
-          currentSlide={currentSlide}
-          totalSlides={activeSlides.length}
-          onSelectSlide={setCurrentSlide}
-        />
-      </section>
+      <HeroSliderModule
+        activeSlides={activeSlides}
+        currentSlide={slider.currentSlide}
+        isPaused={slider.isPaused}
+        setIsPaused={slider.setIsPaused}
+        nextSlide={slider.nextSlide}
+        prevSlide={slider.prevSlide}
+        setCurrentSlide={slider.setCurrentSlide}
+      />
 
       {/* 2. Layanan dan Komoditas Belanja */}
       <section className="py-14 sm:py-18 bg-canvas border-b border-border-subtle">
         <Container>
-          {/* Centered Display Header */}
           <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-text-primary">
               {quickAccessTitle}
@@ -457,87 +587,20 @@ export function HeroSection() {
             )}
           </div>
 
-          {/* Trio Action Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
             {activeActionCards.map((card) => (
               <ActionCardItem key={card.id} card={card} />
             ))}
           </div>
 
-          {/* 3. Quick Info Module: Opening Hours & Getting Here */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
-            {/* Box 1: Opening Hours */}
-            <div className="p-6 bg-surface-subtle border border-border-subtle rounded-md flex flex-col gap-1.5 hover:border-border-strong transition-colors">
-              <h4 className="text-base font-bold text-text-primary">
-                Waktu operasional mall
-              </h4>
-              <p className="text-sm font-semibold text-text-primary">
-                {mallHours}
-              </p>
-              {witaTime && (
-                <span className="text-xs text-text-muted">
-                  Waktu lokal WITA saat ini: <span className="font-mono font-medium text-text-secondary">{witaTime}</span>
-                </span>
-              )}
-              <Link
-                to="/panduan-kunjungan"
-                className="inline-flex items-center gap-1 min-h-[44px] py-2 text-xs font-semibold text-brand-primary hover:underline mt-1 self-start"
-              >
-                <span>Lihat jadwal operasional lengkap</span>
-                <ArrowRight size={13} />
-              </Link>
-            </div>
-
-            {/* Box 2: Getting Here with Interactive Quick-Copy */}
-            <div className="p-6 bg-surface-subtle border border-border-subtle rounded-md flex flex-col gap-1.5 hover:border-border-strong transition-colors">
-              <div className="flex items-center justify-between flex-wrap gap-2">
-                <h4 className="text-base font-bold text-text-primary">
-                  Petunjuk lokasi dan akses
-                </h4>
-                {/* Interactive Quick Actions (Salin Alamat & Google Maps Navigasi) */}
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={handleCopyAddress}
-                    className="inline-flex items-center gap-1.5 min-h-[44px] px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-text-primary hover:text-brand-primary active:bg-surface-muted bg-canvas border border-border-subtle rounded-sm transition-all cursor-pointer"
-                    title="Salin alamat lengkap untuk navigasi GPS / ojek online"
-                  >
-                    {copiedAddress ? (
-                      <>
-                        <Check size={14} className="text-emerald-600" />
-                        <span className="text-emerald-700">Tersalin!</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy size={14} className="text-text-muted" />
-                        <span>Salin Alamat</span>
-                      </>
-                    )}
-                  </button>
-                  <a
-                    href={mapsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 min-h-[44px] px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-text-primary hover:text-brand-primary active:bg-surface-muted bg-canvas border border-border-subtle rounded-sm transition-all"
-                    title="Buka rute navigasi langsung di Google Maps"
-                  >
-                    <span>Buka Maps</span>
-                    <ExternalLink size={14} />
-                  </a>
-                </div>
-              </div>
-              <p className="text-sm font-semibold text-text-primary">
-                {mallAddress}
-              </p>
-              <Link
-                to="/panduan-kunjungan"
-                className="inline-flex items-center gap-1 min-h-[44px] py-2 text-xs font-semibold text-brand-primary hover:underline mt-1 self-start"
-              >
-                <span>Lihat informasi lokasi & fasilitas gedung</span>
-                <ArrowRight size={13} />
-              </Link>
-            </div>
-          </div>
+          <QuickInfoModule
+            mallHours={mallHours}
+            witaTime={witaTime}
+            mallAddress={mallAddress}
+            mapsUrl={mapsUrl}
+            copiedAddress={copiedAddress}
+            handleCopyAddress={handleCopyAddress}
+          />
         </Container>
       </section>
     </div>

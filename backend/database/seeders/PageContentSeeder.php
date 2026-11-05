@@ -17,46 +17,65 @@ class PageContentSeeder extends Seeder
 
         foreach ($defaults as $key => $meta) {
             $order++;
-            $existing = PageContent::where('key', $key)->first();
+            $this->syncPageContent($key, $meta, $order);
+        }
+    }
 
-            if (!$existing) {
-                PageContent::create([
-                    'key' => $key,
-                    'value' => $meta['default'],
-                    'type' => $meta['type'],
-                    'group' => $meta['group'],
-                    'label' => $meta['label'],
-                    'help' => $meta['help'] ?? null,
-                    'order_index' => $order,
-                ]);
-            } else {
-                $updates = [
-                    'type' => $meta['type'],
-                    'group' => $meta['group'],
-                    'label' => $meta['label'],
-                    'help' => $meta['help'] ?? null,
-                    'order_index' => $order,
-                ];
+    protected function syncPageContent(string $key, array $meta, int $order): void
+    {
+        $existing = PageContent::where('key', $key)->first();
 
-                // If value was untouched default containing old terminology, refresh to new default
-                $existingStr = is_string($existing->value)
-                    ? $existing->value
-                    : (is_array($existing->value) ? json_encode($existing->value) : (string) $existing->value);
+        if (!$existing) {
+            PageContent::create([
+                'key' => $key,
+                'value' => $meta['default'],
+                'type' => $meta['type'],
+                'group' => $meta['group'],
+                'label' => $meta['label'],
+                'help' => $meta['help'] ?? null,
+                'order_index' => $order,
+            ]);
+            return;
+        }
 
-                if (
-                    str_contains($existingStr, 'Sentra Kuliner') ||
-                    str_contains($existingStr, 'kuliner tradisional') ||
-                    str_contains($existingStr, 'Agenda Kegiatan') ||
-                    str_contains($existingStr, 'Agenda & Pengumuman') ||
-                    str_contains($existingStr, 'Agenda & Kegiatan') ||
-                    str_contains($existingStr, 'stan kuliner khas') ||
-                    $existingStr === 'Akses Cepat Direktori'
-                ) {
-                    $updates['value'] = $meta['default'];
-                }
+        $updates = [
+            'type' => $meta['type'],
+            'group' => $meta['group'],
+            'label' => $meta['label'],
+            'help' => $meta['help'] ?? null,
+            'order_index' => $order,
+        ];
 
-                $existing->update($updates);
+        if ($this->isLegacyDefaultValue($existing->value)) {
+            $updates['value'] = $meta['default'];
+        }
+
+        $existing->update($updates);
+    }
+
+    protected function isLegacyDefaultValue(mixed $value): bool
+    {
+        $str = is_array($value) ? json_encode($value) : (string) $value;
+
+        if ($str === 'Akses Cepat Direktori') {
+            return true;
+        }
+
+        $legacyKeywords = [
+            'Sentra Kuliner',
+            'kuliner tradisional',
+            'Agenda Kegiatan',
+            'Agenda & Pengumuman',
+            'Agenda & Kegiatan',
+            'stan kuliner khas',
+        ];
+
+        foreach ($legacyKeywords as $keyword) {
+            if (str_contains($str, $keyword)) {
+                return true;
             }
         }
+
+        return false;
     }
 }

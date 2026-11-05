@@ -14,7 +14,6 @@ function PromoCard({ promo }) {
 
   return (
     <article className="group flex flex-col bg-canvas border border-border-subtle hover:border-border-strong active:border-border-strong transition-all duration-150 rounded-md overflow-hidden">
-      {/* Banner Photographic Frame */}
       <Link
         to={detailLink}
         tabIndex={-1}
@@ -36,10 +35,8 @@ function PromoCard({ promo }) {
         </div>
       </Link>
 
-      {/* Card Info Body */}
       <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between gap-3 text-left">
         <div className="flex flex-col gap-2">
-          {/* Date range */}
           {dateRange && (
             <div className="flex items-center gap-1.5 text-xs font-semibold text-text-muted tabular-nums">
               <Calendar size={13} className="text-brand-primary shrink-0" />
@@ -47,7 +44,6 @@ function PromoCard({ promo }) {
             </div>
           )}
 
-          {/* Promo Title */}
           <Link
             to={detailLink}
             className="focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-sm"
@@ -57,7 +53,6 @@ function PromoCard({ promo }) {
             </h3>
           </Link>
 
-          {/* Promo Summary */}
           {promo.summary && (
             <p className="text-xs sm:text-sm text-text-secondary line-clamp-2 leading-relaxed">
               {promo.summary}
@@ -65,7 +60,6 @@ function PromoCard({ promo }) {
           )}
         </div>
 
-        {/* Action Button (Min 44px Touch Target) */}
         <div className="pt-3 border-t border-border-subtle mt-1">
           <Link
             to={detailLink}
@@ -80,6 +74,76 @@ function PromoCard({ promo }) {
   );
 }
 
+function PromoGrid({ promos, loading }) {
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <SkeletonCard key={i} />
+        ))}
+      </div>
+    );
+  }
+
+  if (promos.length === 0) {
+    return (
+      <div className="py-8 text-center text-xs text-text-muted">
+        Belum ada promo aktif yang ditampilkan saat ini.
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {promos.map((promo) => (
+        <PromoCard key={promo.id} promo={promo} />
+      ))}
+    </div>
+  );
+}
+
+function OlehOlehGrid({ tenants, loading }) {
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <SkeletonCard key={i} />
+        ))}
+      </div>
+    );
+  }
+
+  if (tenants.length === 0) {
+    return (
+      <div className="py-8 text-center text-xs text-text-muted">
+        Belum ada kios oleh-oleh pilihan yang ditampilkan.
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {tenants.map((tenant) => (
+        <TenantCard
+          key={tenant.id}
+          tenant={tenant}
+          basePath={tenant.category?.type === 'fashion' ? '/fashion' : '/belanja'}
+        />
+      ))}
+    </div>
+  );
+}
+
+function resolveActiveOlehOleh(olehOlehTenants, retailTenants, culinaryTenants) {
+  if (olehOlehTenants.length > 0) {
+    return olehOlehTenants.slice(0, 4);
+  }
+  if (retailTenants.length > 0) {
+    return retailTenants.slice(0, 4);
+  }
+  return culinaryTenants.slice(0, 4);
+}
+
 export function FeaturedSection({
   promos = [],
   olehOlehTenants = [],
@@ -87,14 +151,8 @@ export function FeaturedSection({
   culinaryTenants = [],
   loading = false,
 }) {
-  const activePromos = promos.length > 0 ? promos.slice(0, 4) : [];
-  const activeOlehOleh = (
-    olehOlehTenants.length > 0
-      ? olehOlehTenants
-      : retailTenants.length > 0
-        ? retailTenants
-        : culinaryTenants
-  ).slice(0, 4);
+  const activePromos = promos.slice(0, 4);
+  const activeOlehOleh = resolveActiveOlehOleh(olehOlehTenants, retailTenants, culinaryTenants);
 
   const promoEyebrow = useContent('home.promos.eyebrow', 'Penawaran Spesial Kios & Gedung');
   const promoTitle = useContent('home.promos.title', 'Promo Minggu Ini / Bulan Ini');
@@ -120,21 +178,7 @@ export function FeaturedSection({
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {loading ? (
-              Array.from({ length: 4 }).map((_, i) => (
-                <SkeletonCard key={i} />
-              ))
-            ) : activePromos.length > 0 ? (
-              activePromos.map((promo) => (
-                <PromoCard key={promo.id} promo={promo} />
-              ))
-            ) : (
-              <div className="col-span-full py-8 text-center text-xs text-text-muted">
-                Belum ada promo aktif yang ditampilkan saat ini.
-              </div>
-            )}
-          </div>
+          <PromoGrid promos={activePromos} loading={loading} />
 
           <div className="pt-2">
             <Link
@@ -160,25 +204,7 @@ export function FeaturedSection({
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {loading ? (
-              Array.from({ length: 4 }).map((_, i) => (
-                <SkeletonCard key={i} />
-              ))
-            ) : activeOlehOleh.length > 0 ? (
-              activeOlehOleh.map((tenant) => (
-                <TenantCard
-                  key={tenant.id}
-                  tenant={tenant}
-                  basePath={tenant.category?.type === 'fashion' ? '/fashion' : '/belanja'}
-                />
-              ))
-            ) : (
-              <div className="col-span-full py-8 text-center text-xs text-text-muted">
-                Belum ada kios oleh-oleh pilihan yang ditampilkan.
-              </div>
-            )}
-          </div>
+          <OlehOlehGrid tenants={activeOlehOleh} loading={loading} />
 
           <div className="pt-2">
             <Link

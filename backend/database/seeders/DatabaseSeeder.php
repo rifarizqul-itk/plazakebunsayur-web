@@ -16,7 +16,18 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Admin User
+        $this->seedAdminUser();
+        $floors = $this->seedFloors();
+        $categories = $this->seedCategories();
+        $this->seedMerchants($floors, $categories);
+        $this->seedFacilities();
+        $this->seedWhatsOns();
+        $this->seedSiteSettings();
+        $this->seedSubSeeders();
+    }
+
+    protected function seedAdminUser(): void
+    {
         User::updateOrCreate(
             ['email' => 'admin@plazakebunsayur.com'],
             [
@@ -24,106 +35,139 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('password123'),
             ]
         );
+    }
 
-        // 2. Floors
-        $gf = Floor::create([
-            'name' => 'Lantai Dasar (Ground Floor)',
-            'code' => 'GF',
-            'order_index' => 1,
-        ]);
+    protected function seedFloors(): array
+    {
+        return [
+            'gf' => Floor::create([
+                'name' => 'Lantai Dasar (Ground Floor)',
+                'code' => 'GF',
+                'order_index' => 1,
+            ]),
+            'l1' => Floor::create([
+                'name' => 'Lantai 1',
+                'code' => 'L1',
+                'order_index' => 2,
+            ]),
+            'l2' => Floor::create([
+                'name' => 'Lantai 2',
+                'code' => 'L2',
+                'order_index' => 3,
+            ]),
+        ];
+    }
 
-        $l1 = Floor::create([
-            'name' => 'Lantai 1',
-            'code' => 'L1',
-            'order_index' => 2,
-        ]);
+    protected function seedCategories(): array
+    {
+        return array_merge(
+            $this->seedRetailCategories(),
+            $this->seedFashionCategories()
+        );
+    }
 
-        $l2 = Floor::create([
-            'name' => 'Lantai 2',
-            'code' => 'L2',
-            'order_index' => 3,
-        ]);
+    protected function seedRetailCategories(): array
+    {
+        return [
+            'batu' => Category::create([
+                'name' => 'Batu Mulia & Akik',
+                'slug' => 'batu-mulia-dan-akik',
+                'type' => 'retail',
+                'icon_name' => 'Gem',
+                'description' => 'Pusat koleksi batu akik Kalimantan, kecubung wulung, red borneo, dan aneka permata bersertifikat.',
+                'order_index' => 1,
+            ]),
+            'emas' => Category::create([
+                'name' => 'Perhiasan Emas & Perak',
+                'slug' => 'perhiasan-emas-dan-perak',
+                'type' => 'retail',
+                'icon_name' => 'Sparkles',
+                'description' => 'Deretan toko emas terpercaya, perak bakar, dan custom cincin pernikahan khas Kaltim.',
+                'order_index' => 2,
+            ]),
+            'dayak' => Category::create([
+                'name' => 'Kerajinan Dayak & Souvenir',
+                'slug' => 'kerajinan-dayak-dan-souvenir',
+                'type' => 'retail',
+                'icon_name' => 'ShoppingBag',
+                'description' => 'Mandau bertuah, rompi manik motif Dayak Kenyah, gelang ulin, dan pernak-pernik khas Borneo.',
+                'order_index' => 3,
+            ]),
+            'oleh' => Category::create([
+                'name' => 'Oleh-Oleh Khas Kaltim',
+                'slug' => 'oleh-oleh-khas-kaltim',
+                'type' => 'retail',
+                'icon_name' => 'PackageOpen',
+                'description' => 'Amplang kuku macan renyah, mantau sapi lada hitam, lempok durian asli, dan abon kepiting khas kios depan.',
+                'order_index' => 4,
+            ]),
+            'cinderamata' => Category::create([
+                'name' => 'Cinderamata & Aksesoris',
+                'slug' => 'cinderamata-dan-aksesoris',
+                'type' => 'retail',
+                'icon_name' => 'Package',
+                'description' => 'Miniatur khas Kaltim, gantungan kunci manik, kaos Balikpapan, dan gelang akar bahar.',
+                'order_index' => 5,
+            ]),
+        ];
+    }
 
-        // 3. Categories (Retail & Fashion)
-        $catBatu = Category::create([
-            'name' => 'Batu Mulia & Akik',
-            'slug' => 'batu-mulia-dan-akik',
-            'type' => 'retail',
-            'icon_name' => 'Gem',
-            'description' => 'Pusat koleksi batu akik Kalimantan, kecubung wulung, red borneo, dan aneka permata bersertifikat.',
-            'order_index' => 1,
-        ]);
+    protected function seedFashionCategories(): array
+    {
+        return [
+            'batik' => Category::create([
+                'name' => 'Batik & Tenun Kaltim',
+                'slug' => 'batik-dan-tenun-kaltim',
+                'type' => 'fashion',
+                'icon_name' => 'Shirt',
+                'description' => 'Kain batik motif mangrove Balikpapan, sarung tenun Samarinda asli sutra, dan songket khas Kalimantan.',
+                'order_index' => 6,
+            ]),
+            'busana_adat' => Category::create([
+                'name' => 'Busana Adat & Etnik Dayak',
+                'slug' => 'busana-adat-dan-etnik-dayak',
+                'type' => 'fashion',
+                'icon_name' => 'Sparkles',
+                'description' => 'Pakaian adat Dayak bordir manik, rompi etnik, mahkota bulu burung enggang, dan kelengkapan tari tradisional.',
+                'order_index' => 7,
+            ]),
+            'fashion_modern' => Category::create([
+                'name' => 'Pakaian & Aksesoris Modern',
+                'slug' => 'pakaian-dan-aksesoris-modern',
+                'type' => 'fashion',
+                'icon_name' => 'ShoppingBag',
+                'description' => 'Koleksi busana etnik modern, kemeja batik pria kantor, gamis pesta Kalimantan, dan aksesoris fashion terkini.',
+                'order_index' => 8,
+            ]),
+        ];
+    }
 
-        $catEmas = Category::create([
-            'name' => 'Perhiasan Emas & Perak',
-            'slug' => 'perhiasan-emas-dan-perak',
-            'type' => 'retail',
-            'icon_name' => 'Sparkles',
-            'description' => 'Deretan toko emas terpercaya, perak bakar, dan custom cincin pernikahan khas Kaltim.',
-            'order_index' => 2,
-        ]);
+    protected function seedMerchants(array $floors, array $categories): void
+    {
+        $allTenants = array_merge(
+            $this->getBatuTenants($floors, $categories),
+            $this->getEmasTenants($floors, $categories),
+            $this->getDayakTenants($floors, $categories),
+            $this->getOlehOlehTenants($floors, $categories),
+            $this->getCinderamataTenants($floors, $categories),
+            $this->getBatikTenantsPart1($floors, $categories),
+            $this->getBatikTenantsPart2($floors, $categories),
+            $this->getBusanaAdatTenants($floors, $categories),
+            $this->getModernFashionTenantsPart1($floors, $categories),
+            $this->getModernFashionTenantsPart2($floors, $categories),
+        );
 
-        $catDayak = Category::create([
-            'name' => 'Kerajinan Dayak & Souvenir',
-            'slug' => 'kerajinan-dayak-dan-souvenir',
-            'type' => 'retail',
-            'icon_name' => 'ShoppingBag',
-            'description' => 'Mandau bertuah, rompi manik motif Dayak Kenyah, gelang ulin, dan pernak-pernik khas Borneo.',
-            'order_index' => 3,
-        ]);
+        foreach ($allTenants as $t) {
+            Tenant::create($t);
+        }
+    }
 
-        $catOlehOleh = Category::create([
-            'name' => 'Oleh-Oleh Khas Kaltim',
-            'slug' => 'oleh-oleh-khas-kaltim',
-            'type' => 'retail',
-            'icon_name' => 'PackageOpen',
-            'description' => 'Amplang kuku macan renyah, mantau sapi lada hitam, lempok durian asli, dan abon kepiting khas kios depan.',
-            'order_index' => 4,
-        ]);
-
-        $catCinderamata = Category::create([
-            'name' => 'Cinderamata & Aksesoris',
-            'slug' => 'cinderamata-dan-aksesoris',
-            'type' => 'retail',
-            'icon_name' => 'Package',
-            'description' => 'Miniatur khas Kaltim, gantungan kunci manik, kaos Balikpapan, dan gelang akar bahar.',
-            'order_index' => 5,
-        ]);
-
-        // Categories: Fashion (Busana, Batik & Pakaian Adat)
-        $catBatik = Category::create([
-            'name' => 'Batik & Tenun Kaltim',
-            'slug' => 'batik-dan-tenun-kaltim',
-            'type' => 'fashion',
-            'icon_name' => 'Shirt',
-            'description' => 'Kain batik motif mangrove Balikpapan, sarung tenun Samarinda asli sutra, dan songket khas Kalimantan.',
-            'order_index' => 6,
-        ]);
-
-        $catBusanaAdat = Category::create([
-            'name' => 'Busana Adat & Etnik Dayak',
-            'slug' => 'busana-adat-dan-etnik-dayak',
-            'type' => 'fashion',
-            'icon_name' => 'Sparkles',
-            'description' => 'Pakaian adat Dayak bordir manik, rompi etnik, mahkota bulu burung enggang, dan kelengkapan tari tradisional.',
-            'order_index' => 7,
-        ]);
-
-        $catFashionModern = Category::create([
-            'name' => 'Pakaian & Aksesoris Modern',
-            'slug' => 'pakaian-dan-aksesoris-modern',
-            'type' => 'fashion',
-            'icon_name' => 'ShoppingBag',
-            'description' => 'Koleksi busana etnik modern, kemeja batik pria kantor, gamis pesta Kalimantan, dan aksesoris fashion terkini.',
-            'order_index' => 8,
-        ]);
-
-        // 4. Authentic Kebun Sayur Merchants (22 Kios)
-        $tenants = [
-            // Retail: Batu Mulia
+    protected function getBatuTenants(array $f, array $c): array
+    {
+        return [
             [
-                'category_id' => $catBatu->id,
-                'floor_id' => $gf->id,
+                'category_id' => $c['batu']->id,
+                'floor_id' => $f['gf']->id,
                 'name' => 'Permata Borneo Gems',
                 'slug' => 'permata-borneo-gems',
                 'unit_number' => 'Blok A No. 04',
@@ -143,8 +187,8 @@ class DatabaseSeeder extends Seeder
                 'is_featured' => true,
             ],
             [
-                'category_id' => $catBatu->id,
-                'floor_id' => $gf->id,
+                'category_id' => $c['batu']->id,
+                'floor_id' => $f['gf']->id,
                 'name' => 'Galeri Mustika Safir',
                 'slug' => 'galeri-mustika-safir',
                 'unit_number' => 'Blok A No. 11',
@@ -164,8 +208,8 @@ class DatabaseSeeder extends Seeder
                 'is_featured' => true,
             ],
             [
-                'category_id' => $catBatu->id,
-                'floor_id' => $gf->id,
+                'category_id' => $c['batu']->id,
+                'floor_id' => $f['gf']->id,
                 'name' => 'Kios Akik Tuah Borneo',
                 'slug' => 'kios-akik-tuah-borneo',
                 'unit_number' => 'Blok A No. 18',
@@ -182,12 +226,16 @@ class DatabaseSeeder extends Seeder
                 'closing_time' => '18:00:00',
                 'days_open' => 'Setiap Hari (Senin - Minggu)',
                 'is_featured' => false,
-            ],
+            ]
+        ];
+    }
 
-            // Retail: Perhiasan Emas & Perak
+    protected function getEmasTenants(array $f, array $c): array
+    {
+        return [
             [
-                'category_id' => $catEmas->id,
-                'floor_id' => $gf->id,
+                'category_id' => $c['emas']->id,
+                'floor_id' => $f['gf']->id,
                 'name' => 'Toko Emas Sejahtera Sayur',
                 'slug' => 'toko-emas-sejahtera-sayur',
                 'unit_number' => 'Blok B No. 01 - 02',
@@ -207,8 +255,8 @@ class DatabaseSeeder extends Seeder
                 'is_featured' => true,
             ],
             [
-                'category_id' => $catEmas->id,
-                'floor_id' => $gf->id,
+                'category_id' => $c['emas']->id,
+                'floor_id' => $f['gf']->id,
                 'name' => 'Toko Perak Borneo Silver',
                 'slug' => 'toko-perak-borneo-silver',
                 'unit_number' => 'Blok B No. 08',
@@ -225,12 +273,16 @@ class DatabaseSeeder extends Seeder
                 'closing_time' => '17:30:00',
                 'days_open' => 'Setiap Hari (Senin - Minggu)',
                 'is_featured' => false,
-            ],
+            ]
+        ];
+    }
 
-            // Retail: Kerajinan Dayak
+    protected function getDayakTenants(array $f, array $c): array
+    {
+        return [
             [
-                'category_id' => $catDayak->id,
-                'floor_id' => $l1->id,
+                'category_id' => $c['dayak']->id,
+                'floor_id' => $f['l1']->id,
                 'name' => 'Art Shop Dayak Kenyah',
                 'slug' => 'art-shop-dayak-kenyah',
                 'unit_number' => 'Blok C No. 08',
@@ -250,8 +302,8 @@ class DatabaseSeeder extends Seeder
                 'is_featured' => true,
             ],
             [
-                'category_id' => $catDayak->id,
-                'floor_id' => $l1->id,
+                'category_id' => $c['dayak']->id,
+                'floor_id' => $f['l1']->id,
                 'name' => 'Galeri Etnik Pedalaman Apo Kayan',
                 'slug' => 'galeri-etnik-apo-kayan',
                 'unit_number' => 'Blok C No. 12',
@@ -270,8 +322,8 @@ class DatabaseSeeder extends Seeder
                 'is_featured' => true,
             ],
             [
-                'category_id' => $catDayak->id,
-                'floor_id' => $l1->id,
+                'category_id' => $c['dayak']->id,
+                'floor_id' => $f['l1']->id,
                 'name' => 'Mandau Pusaka Borneo',
                 'slug' => 'mandau-pusaka-borneo',
                 'unit_number' => 'Blok C No. 20',
@@ -288,12 +340,16 @@ class DatabaseSeeder extends Seeder
                 'closing_time' => '17:30:00',
                 'days_open' => 'Setiap Hari (Senin - Minggu)',
                 'is_featured' => false,
-            ],
+            ]
+        ];
+    }
 
-            // Retail: Oleh-Oleh Khas Kaltim (Kios Depan / GF)
+    protected function getOlehOlehTenants(array $f, array $c): array
+    {
+        return [
             [
-                'category_id' => $catOlehOleh->id,
-                'floor_id' => $gf->id,
+                'category_id' => $c['oleh']->id,
+                'floor_id' => $f['gf']->id,
                 'name' => 'Oleh-Oleh Amplang Kuku Macan Ibu Ani',
                 'slug' => 'oleh-oleh-amplang-ibu-ani',
                 'unit_number' => 'Blok E No. 01',
@@ -313,8 +369,8 @@ class DatabaseSeeder extends Seeder
                 'is_featured' => true,
             ],
             [
-                'category_id' => $catOlehOleh->id,
-                'floor_id' => $gf->id,
+                'category_id' => $c['oleh']->id,
+                'floor_id' => $f['gf']->id,
                 'name' => 'Mantau Sapi Rasa Borneo',
                 'slug' => 'mantau-sapi-rasa-borneo',
                 'unit_number' => 'Blok E No. 04',
@@ -333,8 +389,8 @@ class DatabaseSeeder extends Seeder
                 'is_featured' => true,
             ],
             [
-                'category_id' => $catOlehOleh->id,
-                'floor_id' => $gf->id,
+                'category_id' => $c['oleh']->id,
+                'floor_id' => $f['gf']->id,
                 'name' => 'Sentra Lempok Durian Paser',
                 'slug' => 'sentra-lempok-durian-paser',
                 'unit_number' => 'Blok E No. 07',
@@ -351,12 +407,16 @@ class DatabaseSeeder extends Seeder
                 'closing_time' => '19:00:00',
                 'days_open' => 'Setiap Hari (Senin - Minggu)',
                 'is_featured' => false,
-            ],
+            ]
+        ];
+    }
 
-            // Retail: Cinderamata & Aksesoris
+    protected function getCinderamataTenants(array $f, array $c): array
+    {
+        return [
             [
-                'category_id' => $catCinderamata->id,
-                'floor_id' => $l1->id,
+                'category_id' => $c['cinderamata']->id,
+                'floor_id' => $f['l1']->id,
                 'name' => 'Kios Cinderamata Mahakam',
                 'slug' => 'kios-cinderamata-mahakam',
                 'unit_number' => 'Blok C No. 15',
@@ -375,8 +435,8 @@ class DatabaseSeeder extends Seeder
                 'is_featured' => false,
             ],
             [
-                'category_id' => $catCinderamata->id,
-                'floor_id' => $l1->id,
+                'category_id' => $c['cinderamata']->id,
+                'floor_id' => $f['l1']->id,
                 'name' => 'Borneo Souvenir Center',
                 'slug' => 'borneo-souvenir-center',
                 'unit_number' => 'Blok C No. 25',
@@ -393,12 +453,16 @@ class DatabaseSeeder extends Seeder
                 'closing_time' => '18:00:00',
                 'days_open' => 'Setiap Hari (Senin - Minggu)',
                 'is_featured' => false,
-            ],
+            ]
+        ];
+    }
 
-            // Fashion: Batik & Tenun Kaltim
+    protected function getBatikTenantsPart1(array $f, array $c): array
+    {
+        return [
             [
-                'category_id' => $catBatik->id,
-                'floor_id' => $l1->id,
+                'category_id' => $c['batik']->id,
+                'floor_id' => $f['l1']->id,
                 'name' => 'Batik Ampiek Khas Balikpapan',
                 'slug' => 'batik-ampiek-khas-balikpapan',
                 'unit_number' => 'Blok D No. 03',
@@ -419,8 +483,8 @@ class DatabaseSeeder extends Seeder
                 'is_featured' => true,
             ],
             [
-                'category_id' => $catBatik->id,
-                'floor_id' => $l1->id,
+                'category_id' => $c['batik']->id,
+                'floor_id' => $f['l1']->id,
                 'name' => 'Tenun Mahakam Indah',
                 'slug' => 'tenun-mahakam-indah',
                 'unit_number' => 'Blok D No. 09',
@@ -439,9 +503,15 @@ class DatabaseSeeder extends Seeder
                 'days_open' => 'Setiap Hari (Senin - Minggu)',
                 'is_featured' => false,
             ],
+        ];
+    }
+
+    protected function getBatikTenantsPart2(array $f, array $c): array
+    {
+        return [
             [
-                'category_id' => $catBatik->id,
-                'floor_id' => $l1->id,
+                'category_id' => $c['batik']->id,
+                'floor_id' => $f['l1']->id,
                 'name' => 'Batik Mahakam Jaya',
                 'slug' => 'batik-mahakam-jaya',
                 'unit_number' => 'Blok D No. 14',
@@ -459,12 +529,16 @@ class DatabaseSeeder extends Seeder
                 'closing_time' => '18:00:00',
                 'days_open' => 'Setiap Hari (Senin - Minggu)',
                 'is_featured' => true,
-            ],
+            ]
+        ];
+    }
 
-            // Fashion: Busana Adat & Etnik Dayak
+    protected function getBusanaAdatTenants(array $f, array $c): array
+    {
+        return [
             [
-                'category_id' => $catBusanaAdat->id,
-                'floor_id' => $l1->id,
+                'category_id' => $c['busana_adat']->id,
+                'floor_id' => $f['l1']->id,
                 'name' => 'Galeri Busana Dayak Kenyah',
                 'slug' => 'galeri-busana-dayak-kenyah',
                 'unit_number' => 'Blok D No. 18',
@@ -485,8 +559,8 @@ class DatabaseSeeder extends Seeder
                 'is_featured' => true,
             ],
             [
-                'category_id' => $catBusanaAdat->id,
-                'floor_id' => $l1->id,
+                'category_id' => $c['busana_adat']->id,
+                'floor_id' => $f['l1']->id,
                 'name' => 'Pakaian Tradisional Adat Kutai',
                 'slug' => 'pakaian-tradisional-adat-kutai',
                 'unit_number' => 'Blok D No. 22',
@@ -504,12 +578,16 @@ class DatabaseSeeder extends Seeder
                 'closing_time' => '17:30:00',
                 'days_open' => 'Setiap Hari (Senin - Minggu)',
                 'is_featured' => false,
-            ],
+            ]
+        ];
+    }
 
-            // Fashion: Pakaian & Aksesoris Modern
+    protected function getModernFashionTenantsPart1(array $f, array $c): array
+    {
+        return [
             [
-                'category_id' => $catFashionModern->id,
-                'floor_id' => $l1->id,
+                'category_id' => $c['fashion_modern']->id,
+                'floor_id' => $f['l1']->id,
                 'name' => 'Butik Etnik Borneo Modern',
                 'slug' => 'butik-etnik-borneo-modern',
                 'unit_number' => 'Blok D No. 26',
@@ -529,8 +607,8 @@ class DatabaseSeeder extends Seeder
                 'is_featured' => true,
             ],
             [
-                'category_id' => $catFashionModern->id,
-                'floor_id' => $l1->id,
+                'category_id' => $c['fashion_modern']->id,
+                'floor_id' => $f['l1']->id,
                 'name' => 'Gamis & Busana Modest Etnik',
                 'slug' => 'gamis-busana-modest-etnik',
                 'unit_number' => 'Blok D No. 30',
@@ -547,10 +625,16 @@ class DatabaseSeeder extends Seeder
                 'closing_time' => '18:00:00',
                 'days_open' => 'Setiap Hari (Senin - Minggu)',
                 'is_featured' => false,
-            ],
+            ]
+        ];
+    }
+
+    protected function getModernFashionTenantsPart2(array $f, array $c): array
+    {
+        return [
             [
-                'category_id' => $catFashionModern->id,
-                'floor_id' => $l1->id,
+                'category_id' => $c['fashion_modern']->id,
+                'floor_id' => $f['l1']->id,
                 'name' => 'Kemeja & Busana Pria Borneo',
                 'slug' => 'kemeja-busana-pria-borneo',
                 'unit_number' => 'Blok D No. 34',
@@ -569,8 +653,8 @@ class DatabaseSeeder extends Seeder
                 'is_featured' => false,
             ],
             [
-                'category_id' => $catFashionModern->id,
-                'floor_id' => $l1->id,
+                'category_id' => $c['fashion_modern']->id,
+                'floor_id' => $f['l1']->id,
                 'name' => 'Kios Aksesoris & Manik Busana',
                 'slug' => 'kios-aksesoris-manik-busana',
                 'unit_number' => 'Blok D No. 38',
@@ -587,14 +671,12 @@ class DatabaseSeeder extends Seeder
                 'closing_time' => '17:30:00',
                 'days_open' => 'Setiap Hari (Senin - Minggu)',
                 'is_featured' => false,
-            ],
+            ]
         ];
+    }
 
-        foreach ($tenants as $t) {
-            Tenant::create($t);
-        }
-
-        // 5. Facilities (Short labels, Food Court removed)
+    protected function seedFacilities(): void
+    {
         $facilities = [
             [
                 'name' => 'Musala',
@@ -630,14 +712,22 @@ class DatabaseSeeder extends Seeder
                 'location_note' => 'Lobby Utama Gedung',
                 'description' => 'Petugas keamanan (Satpam) siaga siap membantu arah denah kios dan kenyamanan pengunjung.',
                 'order_index' => 5,
-            ],
+            ]
         ];
 
         foreach ($facilities as $f) {
             Facility::create($f);
         }
+    }
 
-        // 6. Whats On (Events & Promos)
+    protected function seedWhatsOns(): void
+    {
+        $this->createWhatsOnEvents();
+        $this->createWhatsOnPromos();
+    }
+
+    protected function createWhatsOnEvents(): void
+    {
         WhatsOn::create([
             'title' => 'Festival Pesona Budaya & Batu Mulia Balikpapan 2026',
             'slug' => 'festival-pesona-budaya-batu-mulia-2026',
@@ -659,9 +749,12 @@ class DatabaseSeeder extends Seeder
             'terms' => 'Terbuka untuk umum tanpa biaya pendaftaran. Pengunjung wajib menjaga ketertiban, kebersihan, dan keselamatan barang bawaan masing-masing.',
             'contact_person' => 'Bpk. Syahril (Koordinator Acara)',
             'contact_phone' => '081234567890',
-            'is_active' => true,
+            'is_active' => true
         ]);
+    }
 
+    protected function createWhatsOnPromos(): void
+    {
         WhatsOn::create([
             'title' => 'Promo Wisata Cinderamata IKN & Nusantara',
             'slug' => 'promo-wisata-cinderamata-ikn',
@@ -682,7 +775,7 @@ class DatabaseSeeder extends Seeder
             'terms' => 'Berlaku selama persediaan suvenir bonus masih ada di kios mitra berpartisipasi. Cukup tunjukkan nota belanja transaksi hari yang sama.',
             'contact_person' => 'Kantor Pengelola Plaza Kebun Sayur',
             'contact_phone' => '080000000000',
-            'is_active' => true,
+            'is_active' => true
         ]);
 
         WhatsOn::create([
@@ -705,10 +798,12 @@ class DatabaseSeeder extends Seeder
             'terms' => 'Berlaku di seluruh kios batik & busana lantai 1 bertanda khusus promo. Tidak dapat digabungkan dengan promo lain.',
             'contact_person' => 'Ibu Rahmawati (Koordinator Kios Fashion)',
             'contact_phone' => '08125557788',
-            'is_active' => true,
+            'is_active' => true
         ]);
+    }
 
-        // 7. Site Settings (Informasi Operasional Gedung)
+    protected function seedSiteSettings(): void
+    {
         $settings = [
             'mall_opening_hours' => 'Setiap Hari 08.00 - 18.00 WITA',
             'management_whatsapp' => '080000000000',
@@ -716,7 +811,7 @@ class DatabaseSeeder extends Seeder
             'office_address' => 'Lantai Dasar (Pintu Timur), Jl. Letjen Suprapto, Kebun Sayur, Balikpapan Barat 76131',
             'management_email' => 'pengelola@plazakebunsayur.com',
             'maps_url' => 'https://maps.google.com/?q=Plaza+Kebun+Sayur+Balikpapan',
-            'maps_embed_url' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.8924495252077!2d116.82160367496476!3d-1.234368035571572!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x55155145b04a009%3A0xd023fb431afb2027!2sPlaza%20Kebun%20Sayur!5e0!3m2!1sen!2sid!4v1791731211789!5m2!1sen!2sid',
+            'maps_embed_url' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.8924495252077!2d116.82160367496476!3d-1.234368035571572!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x55155145b04a009%3A0xd023fb431afb2027!2sPlaza%20Kebun%20Sayur!5e0!3m2!1sen!2sid!4v1791731211789!5m2!1sen!2sid'
         ];
 
         foreach ($settings as $key => $value) {
@@ -725,8 +820,10 @@ class DatabaseSeeder extends Seeder
                 ['value' => $value]
             );
         }
+    }
 
-        // 8. Page Contents & Dynamic CMS Lists
+    protected function seedSubSeeders(): void
+    {
         $this->call([
             PageContentSeeder::class,
             VisitGuideSeeder::class,

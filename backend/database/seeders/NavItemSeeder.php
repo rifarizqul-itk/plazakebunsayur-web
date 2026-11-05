@@ -15,8 +15,25 @@ class NavItemSeeder extends Seeder
         // Clean up legacy paths
         NavItem::whereIn('path', ['/kuliner', '/agenda'])->delete();
 
-        $items = [
-            // Header items
+        $items = array_merge(
+            $this->getHeaderNavItems(),
+            $this->getFooterNavItems(),
+        );
+
+        foreach ($items as $item) {
+            NavItem::updateOrCreate(
+                [
+                    'location' => $item['location'],
+                    'path' => $item['path'],
+                ],
+                $item
+            );
+        }
+    }
+
+    protected function getHeaderNavItems(): array
+    {
+        return [
             [
                 'label' => 'BERANDA',
                 'path' => '/',
@@ -71,8 +88,12 @@ class NavItemSeeder extends Seeder
                 'order_index' => 6,
                 'is_active' => true,
             ],
+        ];
+    }
 
-            // Footer items
+    protected function getFooterNavItems(): array
+    {
+        return [
             [
                 'label' => 'Direktori Kios Belanja',
                 'path' => '/belanja',
@@ -119,15 +140,5 @@ class NavItemSeeder extends Seeder
                 'is_active' => true,
             ],
         ];
-
-        foreach ($items as $item) {
-            NavItem::updateOrCreate(
-                [
-                    'location' => $item['location'],
-                    'path' => $item['path'],
-                ],
-                $item
-            );
-        }
     }
 }

@@ -81,6 +81,66 @@ function HomeEventsSection({ events, title }) {
   );
 }
 
+const OLEH_OLEH_SLUGS = ['batik', 'dayak', 'souvenir', 'cinderamata'];
+
+function isOlehOlehCategory(tenant) {
+  const slug = tenant?.category?.slug || '';
+  return OLEH_OLEH_SLUGS.some((keyword) => slug.includes(keyword));
+}
+
+function resolveOlehOlehTenants(fashionData = [], retailData = []) {
+  if (fashionData.length > 0) {
+    return fashionData.slice(0, 4);
+  }
+
+  const filteredRetail = retailData.filter(isOlehOlehCategory);
+  if (filteredRetail.length > 0) {
+    return filteredRetail.slice(0, 4);
+  }
+
+  return retailData.slice(0, 4);
+}
+
+function useHomeData() {
+  const [promos, setPromos] = useState([]);
+  const [olehOlehTenants, setOlehOlehTenants] = useState([]);
+  const [latestEvents, setLatestEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    async function loadData() {
+      try {
+        setLoading(true);
+        const [fashionRes, retailRes, whatsOnRes] = await Promise.all([
+          fetchTenants({ type: 'fashion', featured: true, per_page: 4 }).catch(() => ({ data: [] })),
+          fetchTenants({ type: 'retail', featured: true, per_page: 8 }).catch(() => ({ data: [] })),
+          fetchWhatsOn().catch(() => []),
+        ]);
+
+        if (isCancelled) return;
+
+        const allWhatsOn = Array.isArray(whatsOnRes) ? whatsOnRes : [];
+        setPromos(allWhatsOn.filter((item) => item.type === 'promo'));
+        setLatestEvents(allWhatsOn.filter((item) => item.type !== 'promo').slice(0, 3));
+        setOlehOlehTenants(resolveOlehOlehTenants(fashionRes?.data, retailRes?.data));
+      } catch (err) {
+        console.error('Failed to load home data:', err);
+      } finally {
+        if (!isCancelled) setLoading(false);
+      }
+    }
+
+    loadData();
+    return () => {
+      isCancelled = true;
+    };
+  }, []);
+
+  return { promos, olehOlehTenants, latestEvents, loading };
+}
+
 export function Home() {
   const metaTitle = useContent('seo.home.title', 'Plaza Kebun Sayur Balikpapan | Sentra Kerajinan & Batu Mulia Borneo');
   const metaDesc = useContent(
@@ -90,57 +150,7 @@ export function Home() {
   useDocumentMeta(metaTitle, metaDesc);
 
   const eventsTitle = useContent('home.events.title', 'Informasi & Kegiatan Mendatang');
-  const [promos, setPromos] = useState([]);
-  const [olehOlehTenants, setOlehOlehTenants] = useState([]);
-  const [latestEvents, setLatestEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let isCancelled = false;
-    async function loadHomeData() {
-      try {
-        setLoading(true);
-        const [fashionRes, retailRes, whatsOnRes] = await Promise.all([
-          fetchTenants({ type: 'fashion', featured: true, per_page: 4 }).catch(() => ({ data: [] })),
-          fetchTenants({ type: 'retail', featured: true, per_page: 8 }).catch(() => ({ data: [] })),
-          fetchWhatsOn().catch(() => []),
-        ]);
-
-        if (!isCancelled) {
-          const allWhatsOn = Array.isArray(whatsOnRes) ? whatsOnRes : [];
-          // Active promos for top section
-          const promoList = allWhatsOn.filter((item) => item.type === 'promo');
-          setPromos(promoList);
-
-          // Events / Information items for bottom section
-          const eventList = allWhatsOn.filter((item) => item.type === 'event' || item.type !== 'promo');
-          setLatestEvents(eventList.slice(0, 3));
-
-          // Oleh-oleh & cenderamata: prioritize fashion, fallback to retail souvenir/batik
-          let olehOlehList = fashionRes.data || [];
-          if (olehOlehList.length === 0 && retailRes.data?.length > 0) {
-            olehOlehList = retailRes.data.filter(
-              (t) =>
-                t.category?.slug?.includes('batik') ||
-                t.category?.slug?.includes('dayak') ||
-                t.category?.slug?.includes('souvenir') ||
-                t.category?.slug?.includes('cinderamata')
-            );
-            if (olehOlehList.length === 0) olehOlehList = retailRes.data;
-          }
-          setOlehOlehTenants(olehOlehList.slice(0, 4));
-        }
-      } catch (err) {
-        console.error('Failed to load home data:', err);
-      } finally {
-        if (!isCancelled) setLoading(false);
-      }
-    }
-    loadHomeData();
-    return () => {
-      isCancelled = true;
-    };
-  }, []);
+  const { promos, olehOlehTenants, latestEvents, loading } = useHomeData();
 
   return (
     <div className="flex flex-col min-h-screen">

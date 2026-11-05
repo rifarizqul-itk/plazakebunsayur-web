@@ -72,33 +72,31 @@ function OperatingHoursBadge({ daysOpen, hours }) {
   );
 }
 
-function extractImageList(tenant) {
-  if (!tenant) return [FALLBACK_FASHION_IMAGE];
-  const rawList = tenant.image_urls || tenant.images;
-  let list = [];
-
-  if (Array.isArray(rawList) && rawList.length > 0) {
-    list = rawList.filter((img) => typeof img === 'string' && img.trim().length > 0);
-  } else if (typeof rawList === 'string' && rawList.trim().startsWith('[')) {
+function parseStringList(raw) {
+  if (Array.isArray(raw)) {
+    return raw.filter((img) => typeof img === 'string' && img.trim().length > 0);
+  }
+  if (typeof raw === 'string' && raw.trim().startsWith('[')) {
     try {
-      const parsed = JSON.parse(rawList);
+      const parsed = JSON.parse(raw);
       if (Array.isArray(parsed)) {
-        list = parsed.filter((img) => typeof img === 'string' && img.trim().length > 0);
+        return parsed.filter((img) => typeof img === 'string' && img.trim().length > 0);
       }
     } catch {
       // ignore JSON parse error
     }
   }
+  return [];
+}
 
-  if (list.length === 0 && tenant.image_url) {
-    list = [tenant.image_url];
-  }
+function extractImageList(tenant) {
+  if (!tenant) return [FALLBACK_FASHION_IMAGE];
 
-  if (list.length === 0) {
-    list = [FALLBACK_FASHION_IMAGE];
-  }
+  const list = parseStringList(tenant.image_urls || tenant.images);
+  if (list.length > 0) return list;
 
-  return list;
+  if (tenant.image_url) return [tenant.image_url];
+  return [FALLBACK_FASHION_IMAGE];
 }
 
 export function FashionDetail() {

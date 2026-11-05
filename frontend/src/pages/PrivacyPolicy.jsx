@@ -8,6 +8,136 @@ import { useContent, useSiteSettings } from '../hooks/useContent';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import { formatDate } from '../utils/date';
 
+function PrivacyFallbackSections() {
+  return (
+    <>
+      <section className="space-y-3">
+        <h2 className="text-lg sm:text-xl font-bold text-text-primary tracking-tight">
+          1. Pendahuluan & Prinsip Perlindungan Data
+        </h2>
+        <div className="text-sm sm:text-base text-text-secondary leading-relaxed space-y-3">
+          <p>
+            Pengelola Plaza Kebun Sayur Balikpapan berkomitmen penuh untuk menghormati, menjaga kerahasiaan, dan melindungi hak privasi setiap pengunjung situs direktori resmi ini.
+          </p>
+          <p>
+            Dokumen Kebijakan Privasi ini menjelaskan bagaimana data dan informasi pribadi Anda dikumpulkan, digunakan, disimpan, dan dilindungi saat mengakses portal web serta layanan informasi digital kami. Kami mematuhi ketentuan peraturan perundang-undangan Republik Indonesia, khususnya Undang-Undang No. 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP).
+          </p>
+        </div>
+      </section>
+
+      <section className="space-y-3 pt-6 border-t border-border-subtle">
+        <h2 className="text-lg sm:text-xl font-bold text-text-primary tracking-tight">
+          2. Data yang Kami Kumpulkan
+        </h2>
+        <div className="text-sm sm:text-base text-text-secondary leading-relaxed space-y-3">
+          <p>Situs ini mengumpulkan data secara terbatas dan proporsional untuk keperluan penyediaan informasi:</p>
+          <ul className="list-disc pl-5 space-y-2">
+            <li><strong className="text-text-primary font-semibold">Data yang Anda Berikan Secara Sukarela:</strong> Nama, alamat email, nomor telepon/WhatsApp, dan isi pesan yang Anda kirimkan melalui formulir Kontak & Pengaduan.</li>
+            <li><strong className="text-text-primary font-semibold">Data Teknis Navigasi:</strong> Alamat IP, jenis peramban (*browser*), resolusi layar, dan waktu akses yang dicatat secara otomatis dalam log peladen (*server logs*) guna pemeliharaan keamanan infrastruktur sistem.</li>
+            <li><strong className="text-text-primary font-semibold">Pencarian Kios & Filter:</strong> Kata kunci pencarian direktori yang diproses secara langsung di peramban Anda tanpa menghubungkan ke identitas pribadi.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="space-y-3 pt-6 border-t border-border-subtle">
+        <h2 className="text-lg sm:text-xl font-bold text-text-primary tracking-tight">
+          3. Tujuan Pemrosesan Data
+        </h2>
+        <div className="text-sm sm:text-base text-text-secondary leading-relaxed space-y-3">
+          <p>Data yang dikumpulkan hanya digunakan untuk tujuan:</p>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>Merespons pertanyaan, masukan, laporan barang tertinggal, atau koordinasi kunjungan rombongan ke pengelola.</li>
+            <li>Menjaga stabilitas, mencegah serangan siber, dan memastikan kelancaran operasional website direktori.</li>
+            <li>Menganalisis statistik agregat tanpa identitas pribadi (*anonymized traffic*) guna meningkatkan kemudahan navigasi publik.</li>
+          </ul>
+          <p className="font-semibold text-text-primary">
+            Kami tidak pernah menjual, menyewakan, atau memperdagangkan data pribadi Anda kepada pihak ketiga untuk kepentingan komersial maupun periklanan.
+          </p>
+        </div>
+      </section>
+
+      <section className="space-y-3 pt-6 border-t border-border-subtle">
+        <h2 className="text-lg sm:text-xl font-bold text-text-primary tracking-tight">
+          4. Kerahasiaan & Keamanan Data
+        </h2>
+        <div className="text-sm sm:text-base text-text-secondary leading-relaxed space-y-3">
+          <p>
+            Pengelola menerapkan standar perlindungan teknis dan organisasi yang wajar, termasuk enkripsi transmisi (HTTPS/SSL), pembatasan akses data hanya kepada staf manajemen yang berwenang, dan mekanisme anti-spam (*honeypot*) pada formulir interaktif.
+          </p>
+        </div>
+      </section>
+
+      <section className="space-y-3 pt-6 border-t border-border-subtle">
+        <h2 className="text-lg sm:text-xl font-bold text-text-primary tracking-tight">
+          5. Hak Subjek Data Pribadi
+        </h2>
+        <div className="text-sm sm:text-base text-text-secondary leading-relaxed space-y-3">
+          <p>Sesuai dengan ketentuan Bab IV UU PDP No. 27/2022, Anda memiliki hak-hak hukum berikut:</p>
+          <ul className="list-disc pl-5 space-y-2">
+            <li><strong className="text-text-primary font-semibold">Hak Akses:</strong> Mendapatkan konfirmasi dan informasi mengenai data pribadi Anda yang tersimpan di sistem kami.</li>
+            <li><strong className="text-text-primary font-semibold">Hak Koreksi:</strong> Meminta perbaikan data pribadi Anda jika terjadi kekeliruan atau ketidaklengkapan.</li>
+            <li><strong className="text-text-primary font-semibold">Hak Penghapusan (Right to Erasure):</strong> Meminta penghapusan riwayat data pesan atau kontak yang pernah Anda kirimkan.</li>
+            <li><strong className="text-text-primary font-semibold">Hak Penarikan Persetujuan:</strong> Menarik kembali persetujuan pemrosesan data pribadi yang sebelumnya telah diberikan.</li>
+          </ul>
+          <p>
+            Untuk menggunakan hak-hak tersebut, Anda dapat menghubungi kantor manajemen pengelola melalui saluran kontak resmi yang tercantum di bagian akhir dokumen ini.
+          </p>
+        </div>
+      </section>
+
+      <section className="space-y-3 pt-6 border-t border-border-subtle">
+        <h2 className="text-lg sm:text-xl font-bold text-text-primary tracking-tight">
+          6. Penggunaan Cookie & Penyimpanan Lokal
+        </h2>
+        <div className="text-sm sm:text-base text-text-secondary leading-relaxed space-y-3">
+          <p>
+            Situs ini hanya menggunakan cookie teknis esensial atau penyimpanan lokal peramban (Local Storage) untuk mengingat preferensi filter direktori kios dan kinerja navigasi. Situs ini tidak menggunakan cookie pelacak iklan pihak ketiga (third-party advertising trackers) yang memantau riwayat lintas situs Anda.
+          </p>
+        </div>
+      </section>
+
+      <section className="space-y-3 pt-6 border-t border-border-subtle">
+        <h2 className="text-lg sm:text-xl font-bold text-text-primary tracking-tight">
+          7. Perubahan atas Kebijakan Privasi
+        </h2>
+        <div className="text-sm sm:text-base text-text-secondary leading-relaxed space-y-3">
+          <p>
+            Pengelola Plaza Kebun Sayur dapat memperbarui dokumen kebijakan ini sewaktu-waktu guna menyesuaikan dengan perkembangan regulasi perundang-undangan atau penambahan fitur layanan situs. Setiap perubahan akan dicantumkan pada halaman ini dengan mencantumkan tanggal revisi terbaru di bagian atas.
+          </p>
+        </div>
+      </section>
+    </>
+  );
+}
+
+function PrivacyContactBox({ siteSettings }) {
+  return (
+    <div className="p-6 bg-surface-subtle border border-border-subtle rounded-md space-y-3 mt-4">
+      <h3 className="text-sm font-bold text-text-primary uppercase tracking-wider">
+        Pertanyaan & Layanan Pelindungan Data
+      </h3>
+      <p className="text-xs sm:text-sm text-text-secondary leading-relaxed">
+        Apabila Anda memiliki pertanyaan, keberatan, atau ingin mengajukan permohonan terkait data pribadi Anda, silakan hubungi Kantor Pengelola Plaza Kebun Sayur:
+      </p>
+      <div className="text-xs sm:text-sm text-text-primary space-y-1 font-medium">
+        <div>Kantor Pengelola Plaza Kebun Sayur</div>
+        <div>{siteSettings?.office_address || 'Jl. Letjen Suprapto, Baru Ilir, Balikpapan Barat, Kota Balikpapan 76131'}</div>
+        {siteSettings?.management_email && (
+          <div>
+            Email:{' '}
+            <a href={`mailto:${siteSettings.management_email}`} className="text-brand-primary hover:underline">
+              {siteSettings.management_email}
+            </a>
+          </div>
+        )}
+        {siteSettings?.security_phone && (
+          <div>Telepon: {siteSettings.security_phone}</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export function PrivacyPolicy() {
   const metaTitle = useContent('seo.privacy.title', 'Kebijakan Privasi | Plaza Kebun Sayur Balikpapan');
   const metaDesc = useContent('seo.privacy.description', 'Kebijakan privasi dan perlindungan data pribadi pengunjung website resmi Plaza Kebun Sayur Balikpapan sesuai UU PDP No. 27/2022.');
@@ -50,7 +180,6 @@ export function PrivacyPolicy() {
 
       <section className="py-10 sm:py-14 flex-1">
         <Container>
-          {/* Breadcrumb */}
           <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-text-muted mb-8 max-w-3xl mx-auto">
             <Link to="/" className="hover:text-text-primary transition-colors">
               Beranda
@@ -60,7 +189,6 @@ export function PrivacyPolicy() {
           </nav>
 
           <article className="max-w-3xl mx-auto flex flex-col gap-10">
-            {/* Meta Update Header */}
             <div className="flex items-center gap-2 text-xs text-text-muted border-b border-border-subtle pb-4">
               <Calendar size={14} className="text-brand-primary" />
               <span>Terakhir diperbarui: {updatedDate}</span>
@@ -83,148 +211,11 @@ export function PrivacyPolicy() {
                 dangerouslySetInnerHTML={{ __html: legalPage.body }}
               />
             ) : (
-              <>
-                {/* Fallback Section 1 */}
-                <section className="space-y-3">
-                  <h2 className="text-lg sm:text-xl font-bold text-text-primary tracking-tight">
-                    1. Pendahuluan & Prinsip Perlindungan Data
-                  </h2>
-                  <div className="text-sm sm:text-base text-text-secondary leading-relaxed space-y-3">
-                    <p>
-                      Pengelola Plaza Kebun Sayur Balikpapan berkomitmen penuh untuk menghormati, menjaga kerahasiaan, dan melindungi hak privasi setiap pengunjung situs direktori resmi ini.
-                    </p>
-                    <p>
-                      Dokumen Kebijakan Privasi ini menjelaskan bagaimana data dan informasi pribadi Anda dikumpulkan, digunakan, disimpan, dan dilindungi saat mengakses portal web serta layanan informasi digital kami, sejalan dengan prinsip transparansi hukum Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP).
-                    </p>
-                  </div>
-                </section>
-
-                {/* Fallback Section 2 */}
-                <section className="space-y-3 pt-6 border-t border-border-subtle">
-                  <h2 className="text-lg sm:text-xl font-bold text-text-primary tracking-tight">
-                    2. Data Pribadi yang Kami Kumpulkan
-                  </h2>
-                  <div className="text-sm sm:text-base text-text-secondary leading-relaxed space-y-3">
-                    <p>
-                      Kami hanya mengumpulkan data yang relevan dan terbatas sesuai tujuan operasional direktori:
-                    </p>
-                    <ul className="list-disc pl-5 space-y-2">
-                      <li>
-                        <strong className="text-text-primary font-semibold">Data yang Diberikan Secara Sukarela:</strong> Saat Anda mengirimkan pesan melalui formulir pada halaman Kontak, data yang dikirimkan meliputi nama lengkap, nomor telepon (WhatsApp), alamat surat elektronik (email), dan isi pesan/pertanyaan Anda.
-                      </li>
-                      <li>
-                        <strong className="text-text-primary font-semibold">Data Teknis & Akses:</strong> Informasi standar log peladen peramban web seperti alamat protokol internet (IP address), jenis perangkat keras, jenis peramban web, serta stempel waktu kunjungan untuk keperluan pemeliharaan stabilitas server dan keamanan infrastruktur situs.
-                      </li>
-                      <li>
-                        <strong className="text-text-primary font-semibold">Interaksi Tautan Eksternal WhatsApp:</strong> Saat Anda menekan tombol &ldquo;Chat Penjual&rdquo; atau &ldquo;WhatsApp Pengelola&rdquo;, Anda akan dialihkan ke layanan pihak ketiga (WhatsApp by Meta). Kami tidak menyimpan isi percakapan pribadi atau rincian transaksi jual beli yang Anda lakukan secara langsung dengan pedagang.
-                      </li>
-                    </ul>
-                  </div>
-                </section>
-
-                {/* Fallback Section 3 */}
-                <section className="space-y-3 pt-6 border-t border-border-subtle">
-                  <h2 className="text-lg sm:text-xl font-bold text-text-primary tracking-tight">
-                    3. Tujuan Pemrosesan Data
-                  </h2>
-                  <div className="text-sm sm:text-base text-text-secondary leading-relaxed space-y-3">
-                    <p>Data yang dikumpulkan hanya diproses untuk tujuan-tujuan yang sah, yaitu:</p>
-                    <ul className="list-disc pl-5 space-y-2">
-                      <li>Menanggapi pertanyaan, permintaan bantuan sewa ruang pameran, atau pengaduan fasilitas gedung yang Anda sampaikan.</li>
-                      <li>Memastikan keamanan teknis sistem situs dari percobaan serangan siber, akses tidak sah, dan aktivitas otomatis yang berbahaya (bot/spam).</li>
-                      <li>Menganalisis pola keterbacaan direktori kios dan kuliner secara agregat tanpa mengidentifikasi profil individu secara spesifik, guna meningkatkan kenyamanan navigasi pengunjung.</li>
-                    </ul>
-                  </div>
-                </section>
-
-                {/* Fallback Section 4 */}
-                <section className="space-y-3 pt-6 border-t border-border-subtle">
-                  <h2 className="text-lg sm:text-xl font-bold text-text-primary tracking-tight">
-                    4. Keamanan & Kerahasiaan Data
-                  </h2>
-                  <div className="text-sm sm:text-base text-text-secondary leading-relaxed space-y-3">
-                    <p>
-                      Kami menerapkan langkah-langkah teknis dan organisasional yang memadai guna mencegah kehilangan, penyalahgunaan, atau pengubahan data pribadi:
-                    </p>
-                    <ul className="list-disc pl-5 space-y-2">
-                      <li>Seluruh transmisi data dienkripsi menggunakan protokol aman Transport Layer Security (HTTPS/TLS).</li>
-                      <li>Akses terhadap pesan masuk pada sistem hanya diberikan kepada staf pengelola gedung yang berwenang.</li>
-                      <li>Kami tidak pernah memperjualbelikan, menyewakan, atau membagikan data kontak Anda kepada pihak ketiga mana pun untuk tujuan promosi komersial atau telemarketing.</li>
-                    </ul>
-                  </div>
-                </section>
-
-                {/* Fallback Section 5 */}
-                <section className="space-y-3 pt-6 border-t border-border-subtle">
-                  <h2 className="text-lg sm:text-xl font-bold text-text-primary tracking-tight">
-                    5. Hak Anda sebagai Subjek Data Pribadi
-                  </h2>
-                  <div className="text-sm sm:text-base text-text-secondary leading-relaxed space-y-3">
-                    <p>Sesuai Bab IV UU PDP Nomor 27 Tahun 2022, Anda memiliki hak-hak hukum berikut:</p>
-                    <ul className="list-disc pl-5 space-y-2">
-                      <li><strong className="text-text-primary font-semibold">Hak Akses:</strong> Mendapatkan konfirmasi dan informasi mengenai data pribadi Anda yang tersimpan di sistem kami.</li>
-                      <li><strong className="text-text-primary font-semibold">Hak Koreksi:</strong> Meminta perbaikan data pribadi Anda jika terjadi kekeliruan atau ketidaklengkapan.</li>
-                      <li><strong className="text-text-primary font-semibold">Hak Penghapusan (Right to Erasure):</strong> Meminta penghapusan riwayat data pesan atau kontak yang pernah Anda kirimkan.</li>
-                      <li><strong className="text-text-primary font-semibold">Hak Penarikan Persetujuan:</strong> Menarik kembali persetujuan pemrosesan data pribadi yang sebelumnya telah diberikan.</li>
-                    </ul>
-                    <p>
-                      Untuk menggunakan hak-hak tersebut, Anda dapat menghubungi kantor manajemen pengelola melalui saluran kontak resmi yang tercantum di bagian akhir dokumen ini.
-                    </p>
-                  </div>
-                </section>
-
-                {/* Fallback Section 6 */}
-                <section className="space-y-3 pt-6 border-t border-border-subtle">
-                  <h2 className="text-lg sm:text-xl font-bold text-text-primary tracking-tight">
-                    6. Penggunaan Cookie & Penyimpanan Lokal
-                  </h2>
-                  <div className="text-sm sm:text-base text-text-secondary leading-relaxed space-y-3">
-                    <p>
-                      Situs ini hanya menggunakan cookie teknis esensial atau penyimpanan lokal peramban (Local Storage) untuk mengingat preferensi filter direktori kios dan kinerja navigasi. Situs ini tidak menggunakan cookie pelacak iklan pihak ketiga (third-party advertising trackers) yang memantau riwayat lintas situs Anda.
-                    </p>
-                  </div>
-                </section>
-
-                {/* Fallback Section 7 */}
-                <section className="space-y-3 pt-6 border-t border-border-subtle">
-                  <h2 className="text-lg sm:text-xl font-bold text-text-primary tracking-tight">
-                    7. Perubahan atas Kebijakan Privasi
-                  </h2>
-                  <div className="text-sm sm:text-base text-text-secondary leading-relaxed space-y-3">
-                    <p>
-                      Pengelola Plaza Kebun Sayur dapat memperbarui dokumen kebijakan ini sewaktu-waktu guna menyesuaikan dengan perkembangan regulasi perundang-undangan atau penambahan fitur layanan situs. Setiap perubahan akan dicantumkan pada halaman ini dengan mencantumkan tanggal revisi terbaru di bagian atas.
-                    </p>
-                  </div>
-                </section>
-              </>
+              <PrivacyFallbackSections />
             )}
 
-            {/* Contact Box */}
-            <div className="p-6 bg-surface-subtle border border-border-subtle rounded-md space-y-3 mt-4">
-              <h3 className="text-sm font-bold text-text-primary uppercase tracking-wider">
-                Pertanyaan & Layanan Pelindungan Data
-              </h3>
-              <p className="text-xs sm:text-sm text-text-secondary leading-relaxed">
-                Apabila Anda memiliki pertanyaan, keberatan, atau ingin mengajukan permohonan terkait data pribadi Anda, silakan hubungi Kantor Pengelola Plaza Kebun Sayur:
-              </p>
-              <div className="text-xs sm:text-sm text-text-primary space-y-1 font-medium">
-                <div>Kantor Pengelola Plaza Kebun Sayur</div>
-                <div>{siteSettings?.office_address || 'Jl. Letjen Suprapto, Baru Ilir, Balikpapan Barat, Kota Balikpapan 76131'}</div>
-                {siteSettings?.management_email && (
-                  <div>
-                    Email:{' '}
-                    <a href={`mailto:${siteSettings.management_email}`} className="text-brand-primary hover:underline">
-                      {siteSettings.management_email}
-                    </a>
-                  </div>
-                )}
-                {siteSettings?.security_phone && (
-                  <div>Telepon: {siteSettings.security_phone}</div>
-                )}
-              </div>
-            </div>
+            <PrivacyContactBox siteSettings={siteSettings} />
 
-            {/* Back Link */}
             <div className="pt-6 border-t border-border-subtle">
               <Link
                 to="/"

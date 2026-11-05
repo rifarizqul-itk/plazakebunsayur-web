@@ -84,57 +84,8 @@ class PageContentResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultGroup(
-                Group::make('group')
-                    ->label('Bagian Halaman')
-                    ->getTitleFromRecordUsing(fn (PageContent $record): string => match ($record->group) {
-                        'brand' => '1. Identitas & Logo Brand',
-                        'home' => '2. Halaman Beranda',
-                        'header' => '3. Header Tiap Halaman',
-                        'panduan' => '4. Panduan Kunjungan Gedung',
-                        'contact' => '5. Halaman Kontak & Pengaduan',
-                        'event' => '6. Informasi & Detail Event',
-                        'footer' => '7. Footer Gedung',
-                        'seo' => '8. SEO & Metadata Meta Tags',
-                        'system' => '9. Halaman Sistem & 404',
-                        default => ucfirst($record->group),
-                    })
-            )
-            ->columns([
-                TextColumn::make('label')
-                    ->label('Pengaturan Konten')
-                    ->searchable()
-                    ->sortable()
-                    ->weight('bold'),
-                TextColumn::make('type')
-                    ->label('Tipe')
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'image', 'images' => 'warning',
-                        'textarea' => 'info',
-                        'text' => 'success',
-                        default => 'gray',
-                    })
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'image' => 'Foto / Gambar',
-                        'images' => 'Galeri Foto (Multi)',
-                        'textarea' => 'Paragraf Panjang',
-                        'text' => 'Teks Singkat',
-                        default => $state,
-                    }),
-                ImageColumn::make('value')
-                    ->label('Pratinjau Foto')
-                    ->disk('public')
-                    ->visible(fn (): bool => true),
-                TextColumn::make('value')
-                    ->label('Nilai Saat Ini')
-                    ->limit(60)
-                    ->searchable(),
-                TextColumn::make('updated_at')
-                    ->label('Terakhir Diperbarui')
-                    ->dateTime('d M Y, H:i')
-                    ->sortable(),
-            ])
+            ->defaultGroup(static::getTableGroup())
+            ->columns(static::getTableColumns())
             ->filters([
                 SelectFilter::make('group')
                     ->label('Pilih Bagian Halaman')
@@ -154,6 +105,63 @@ class PageContentResource extends Resource
                 EditAction::make(),
             ])
             ->toolbarActions([]);
+    }
+
+    protected static function getTableGroup(): Group
+    {
+        return Group::make('group')
+            ->label('Bagian Halaman')
+            ->getTitleFromRecordUsing(fn (PageContent $record): string => match ($record->group) {
+                'brand' => '1. Identitas & Logo Brand',
+                'home' => '2. Halaman Beranda',
+                'header' => '3. Header Tiap Halaman',
+                'panduan' => '4. Panduan Kunjungan Gedung',
+                'contact' => '5. Halaman Kontak & Pengaduan',
+                'event' => '6. Informasi & Detail Event',
+                'footer' => '7. Footer Gedung',
+                'seo' => '8. SEO & Metadata Meta Tags',
+                'system' => '9. Halaman Sistem & 404',
+                default => ucfirst($record->group),
+            });
+    }
+
+    protected static function getTableColumns(): array
+    {
+        return [
+            TextColumn::make('label')
+                ->label('Pengaturan Konten')
+                ->searchable()
+                ->sortable()
+                ->weight('bold'),
+            TextColumn::make('type')
+                ->label('Tipe')
+                ->badge()
+                ->color(fn (string $state): string => match ($state) {
+                    'image', 'images' => 'warning',
+                    'textarea' => 'info',
+                    'text' => 'success',
+                    default => 'gray',
+                })
+                ->formatStateUsing(fn (string $state): string => match ($state) {
+                    'image' => 'Foto / Gambar',
+                    'images' => 'Galeri Foto (Multi)',
+                    'textarea' => 'Paragraf Panjang',
+                    'text' => 'Teks Singkat',
+                    default => $state,
+                }),
+            ImageColumn::make('value')
+                ->label('Pratinjau Foto')
+                ->disk('public')
+                ->visible(fn (): bool => true),
+            TextColumn::make('value')
+                ->label('Nilai Saat Ini')
+                ->limit(60)
+                ->searchable(),
+            TextColumn::make('updated_at')
+                ->label('Terakhir Diperbarui')
+                ->dateTime('d M Y, H:i')
+                ->sortable(),
+        ];
     }
 
     public static function getRelations(): array
