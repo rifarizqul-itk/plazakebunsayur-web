@@ -179,34 +179,41 @@ function VisitHoursAndLocationSection({
   );
 }
 
-function VisitRoutesSection({ routesTitle, routesDesc, accessRoutes }) {
+function VisitInfoListSection({
+  title,
+  description,
+  items,
+  icon: Icon,
+  iconColor = 'text-brand-primary',
+}) {
   return (
     <section>
       <div className="border-b border-border-subtle pb-4 mb-6">
         <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary">
-          {routesTitle}
+          {title}
         </h2>
         <p className="text-xs sm:text-sm text-text-secondary mt-1 max-w-[68ch]">
-          {routesDesc}
+          {description}
         </p>
       </div>
 
       <div className="divide-y divide-border-subtle">
-        {accessRoutes.map((route) => (
-          <div key={route.id || route.title} className="py-6 first:pt-2 last:pb-2 grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-6">
+        {items.map((item) => (
+          <div key={item.id || item.title} className="py-6 first:pt-2 last:pb-2 grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-6">
             <div className="md:col-span-5">
-              <h3 className="text-sm font-semibold text-text-primary">
-                {route.title}
+              <h3 className="text-sm font-semibold text-text-primary flex items-center gap-2">
+                {Icon && <Icon size={16} className={`${iconColor} shrink-0`} />}
+                <span>{item.title}</span>
               </h3>
-              {route.distance && (
+              {item.distance && (
                 <span className="text-xs text-text-muted mt-0.5 block">
-                  {route.distance}
+                  {item.distance}
                 </span>
               )}
             </div>
             <div className="md:col-span-7">
               <p className="text-xs sm:text-sm text-text-secondary leading-relaxed max-w-[68ch]">
-                {route.description}
+                {item.description}
               </p>
             </div>
           </div>
@@ -250,72 +257,6 @@ function VisitFacilitiesSection({ facilitiesTitle, facilitiesDesc, facilities })
             </div>
           );
         })}
-      </div>
-    </section>
-  );
-}
-
-function VisitTipsSection({ tipsTitle, tipsDesc, shoppingTips }) {
-  return (
-    <section>
-      <div className="border-b border-border-subtle pb-4 mb-6">
-        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary">
-          {tipsTitle}
-        </h2>
-        <p className="text-xs sm:text-sm text-text-secondary mt-1 max-w-[68ch]">
-          {tipsDesc}
-        </p>
-      </div>
-
-      <div className="divide-y divide-border-subtle">
-        {shoppingTips.map((tip) => (
-          <div key={tip.id || tip.title} className="py-5 first:pt-2 last:pb-2 grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-6">
-            <div className="md:col-span-5">
-              <h3 className="text-sm font-semibold text-text-primary flex items-center gap-2">
-                <Sparkles size={16} className="text-gold-text shrink-0" />
-                <span>{tip.title}</span>
-              </h3>
-            </div>
-            <div className="md:col-span-7">
-              <p className="text-xs sm:text-sm text-text-secondary leading-relaxed max-w-[68ch]">
-                {tip.description}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function VisitRulesSection({ rulesTitle, rulesDesc, buildingRules }) {
-  return (
-    <section>
-      <div className="border-b border-border-subtle pb-4 mb-6">
-        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary">
-          {rulesTitle}
-        </h2>
-        <p className="text-xs sm:text-sm text-text-secondary mt-1 max-w-[68ch]">
-          {rulesDesc}
-        </p>
-      </div>
-
-      <div className="divide-y divide-border-subtle">
-        {buildingRules.map((rule) => (
-          <div key={rule.id || rule.title} className="py-5 first:pt-2 last:pb-2 grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-6">
-            <div className="md:col-span-5">
-              <h3 className="text-sm font-semibold text-text-primary flex items-center gap-2">
-                <ShieldAlert size={16} className="text-brand-primary shrink-0" />
-                <span>{rule.title}</span>
-              </h3>
-            </div>
-            <div className="md:col-span-7">
-              <p className="text-xs sm:text-sm text-text-secondary leading-relaxed max-w-[68ch]">
-                {rule.description}
-              </p>
-            </div>
-          </div>
-        ))}
       </div>
     </section>
   );
@@ -428,10 +369,10 @@ export function PlanYourVisit() {
               mapsEmbedUrl={mapsEmbedUrl}
             />
 
-            <VisitRoutesSection
-              routesTitle={routesTitle}
-              routesDesc={routesDesc}
-              accessRoutes={accessRoutes}
+            <VisitInfoListSection
+              title={routesTitle}
+              description={routesDesc}
+              items={accessRoutes}
             />
 
             <VisitFacilitiesSection
@@ -440,16 +381,19 @@ export function PlanYourVisit() {
               facilities={filteredFacilities}
             />
 
-            <VisitTipsSection
-              tipsTitle={tipsTitle}
-              tipsDesc={tipsDesc}
-              shoppingTips={shoppingTips}
+            <VisitInfoListSection
+              title={tipsTitle}
+              description={tipsDesc}
+              items={shoppingTips}
+              icon={Sparkles}
+              iconColor="text-gold-text"
             />
 
-            <VisitRulesSection
-              rulesTitle={rulesTitle}
-              rulesDesc={rulesDesc}
-              buildingRules={buildingRules}
+            <VisitInfoListSection
+              title={rulesTitle}
+              description={rulesDesc}
+              items={buildingRules}
+              icon={ShieldAlert}
             />
           </div>
         </Container>

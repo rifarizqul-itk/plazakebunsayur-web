@@ -92,7 +92,15 @@ class PageContent extends Model
 
     protected static function resolveImageUrl(mixed $value): mixed
     {
-        if (empty($value) || !is_string($value) || static::isDirectUrl($value)) {
+        if (!is_string($value)) {
+            return $value;
+        }
+
+        if ($value === '') {
+            return $value;
+        }
+
+        if (static::isDirectUrl($value)) {
             return $value;
         }
 
@@ -101,7 +109,11 @@ class PageContent extends Model
 
     protected static function isDirectUrl(string $path): bool
     {
-        return str_starts_with($path, 'http') || str_starts_with($path, '/assets');
+        if (str_starts_with($path, 'http')) {
+            return true;
+        }
+
+        return str_starts_with($path, '/assets');
     }
 
     protected static function resolveImagesUrl(mixed $value): mixed

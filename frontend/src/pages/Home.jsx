@@ -101,6 +101,22 @@ function resolveOlehOlehTenants(fashionData = [], retailData = []) {
   return retailData.slice(0, 4);
 }
 
+function partitionWhatsOn(rawList) {
+  const list = Array.isArray(rawList) ? rawList : [];
+  return {
+    promos: list.filter((item) => item.type === 'promo'),
+    events: list.filter((item) => item.type !== 'promo').slice(0, 3),
+  };
+}
+
+async function safeFetchTenants(params) {
+  try {
+    return await fetchTenants(params);
+  } catch {
+    return { data: [] };
+  }
+}
+
 function useHomeData() {
   const [promos, setPromos] = useState([]);
   const [olehOlehTenants, setOlehOlehTenants] = useState([]);
@@ -111,19 +127,19 @@ function useHomeData() {
     let isCancelled = false;
 
     async function loadData() {
+      setLoading(true);
       try {
-        setLoading(true);
         const [fashionRes, retailRes, whatsOnRes] = await Promise.all([
-          fetchTenants({ type: 'fashion', featured: true, per_page: 4 }).catch(() => ({ data: [] })),
-          fetchTenants({ type: 'retail', featured: true, per_page: 8 }).catch(() => ({ data: [] })),
+          safeFetchTenants({ type: 'fashion', featured: true, per_page: 4 }),
+          safeFetchTenants({ type: 'retail', featured: true, per_page: 8 }),
           fetchWhatsOn().catch(() => []),
         ]);
 
         if (isCancelled) return;
 
-        const allWhatsOn = Array.isArray(whatsOnRes) ? whatsOnRes : [];
-        setPromos(allWhatsOn.filter((item) => item.type === 'promo'));
-        setLatestEvents(allWhatsOn.filter((item) => item.type !== 'promo').slice(0, 3));
+        const { promos: promoList, events } = partitionWhatsOn(whatsOnRes);
+        setPromos(promoList);
+        setLatestEvents(events);
         setOlehOlehTenants(resolveOlehOlehTenants(fashionRes?.data, retailRes?.data));
       } catch (err) {
         console.error('Failed to load home data:', err);

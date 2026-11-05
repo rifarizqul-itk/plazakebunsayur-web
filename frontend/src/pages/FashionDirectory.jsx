@@ -10,6 +10,19 @@ import { fetchCategories, fetchFloors, fetchTenants } from '../services/api';
 import { useContent } from '../hooks/useContent';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 
+function buildTenantQueryParams({ selectedCatId, selectedFloorId, searchQuery, sortOrder, currentPage }) {
+  const params = {
+    type: 'fashion',
+    sort: sortOrder,
+    page: currentPage,
+    per_page: 12,
+  };
+  if (selectedCatId) params.category_id = selectedCatId;
+  if (selectedFloorId) params.floor_id = selectedFloorId;
+  if (searchQuery) params.q = searchQuery;
+  return params;
+}
+
 function useFashionData({ selectedCatId, selectedFloorId, searchQuery, sortOrder, currentPage }) {
   const [categories, setCategories] = useState([]);
   const [floors, setFloors] = useState([]);
@@ -41,18 +54,17 @@ function useFashionData({ selectedCatId, selectedFloorId, searchQuery, sortOrder
       setLoading(true);
       setError(null);
       try {
-        const res = await fetchTenants({
-          type: 'fashion',
-          category_id: selectedCatId || undefined,
-          floor_id: selectedFloorId || undefined,
-          q: searchQuery || undefined,
-          sort: sortOrder,
-          page: currentPage,
-          per_page: 12,
+        const queryParams = buildTenantQueryParams({
+          selectedCatId,
+          selectedFloorId,
+          searchQuery,
+          sortOrder,
+          currentPage,
         });
+        const res = await fetchTenants(queryParams);
         if (!isCancelled) {
-          setTenants(res.data || []);
-          setMeta(res.meta || { current_page: 1, last_page: 1, total: 0 });
+          setTenants(res?.data ?? []);
+          setMeta(res?.meta ?? { current_page: 1, last_page: 1, total: 0 });
         }
       } catch (err) {
         if (!isCancelled) {
@@ -86,6 +98,81 @@ function useFashionData({ selectedCatId, selectedFloorId, searchQuery, sortOrder
   };
 }
 
+function FilterBadge({ label, onRemove, ariaLabel }) {
+  return (
+    <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-surface-muted border border-border-subtle rounded-sm text-text-primary">
+      <span>{label}</span>
+      <button
+        type="button"
+        onClick={onRemove}
+        className="hover:text-brand-primary cursor-pointer"
+        aria-label={ariaLabel}
+      >
+        <X size={12} />
+      </button>
+    </span>
+  );
+}
+
+function ActiveFilterBadges({
+  searchQuery,
+  handleSearchChange,
+  selectedCategoryObj,
+  setSelectedCatId,
+  selectedFloorObj,
+  setSelectedFloorId,
+  setCurrentPage,
+  handleResetFilters,
+}) {
+  const hasActiveFilters = Boolean(searchQuery || selectedCategoryObj || selectedFloorObj);
+  if (!hasActiveFilters) return null;
+
+  return (
+    <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-border-subtle text-xs">
+      <span className="text-text-muted">Filter Aktif:</span>
+
+      {searchQuery && (
+        <FilterBadge
+          label={`Pencarian: "${searchQuery}"`}
+          onRemove={() => handleSearchChange('')}
+          ariaLabel="Hapus kata kunci pencarian"
+        />
+      )}
+
+      {selectedCategoryObj && (
+        <FilterBadge
+          label={`Kategori: ${selectedCategoryObj.name}`}
+          onRemove={() => {
+            setSelectedCatId(null);
+            setCurrentPage(1);
+          }}
+          ariaLabel="Hapus filter kategori"
+        />
+      )}
+
+      {selectedFloorObj && (
+        <FilterBadge
+          label={`Lantai: ${selectedFloorObj.name}`}
+          onRemove={() => {
+            setSelectedFloorId(null);
+            setCurrentPage(1);
+          }}
+          ariaLabel="Hapus filter lantai"
+        />
+      )}
+
+      <button
+        type="button"
+        onClick={handleResetFilters}
+        className="inline-flex items-center gap-1 text-xs font-semibold text-brand-primary hover:underline ml-auto cursor-pointer"
+      >
+        <RotateCcw size={12} />
+        <span>Reset Filter</span>
+      </button>
+    </div>
+  );
+}
+
 function FashionFilterHeader({
   headerTitle,
   headerDesc,
@@ -100,7 +187,6 @@ function FashionFilterHeader({
   setCurrentPage,
   handleResetFilters,
 }) {
-  const hasActiveFilters = Boolean(searchQuery || selectedCatId || selectedFloorId);
   const selectedCategoryObj = categories.find((c) => c.id === selectedCatId);
   const selectedFloorObj = floors.find((f) => f.id === selectedFloorId);
 
@@ -146,68 +232,16 @@ function FashionFilterHeader({
         </div>
       </div>
 
-      {hasActiveFilters && (
-        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-border-subtle text-xs">
-          <span className="text-text-muted">Filter Aktif:</span>
-
-          {searchQuery && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-surface-muted border border-border-subtle rounded-sm text-text-primary">
-              <span>Pencarian: &ldquo;{searchQuery}&rdquo;</span>
-              <button
-                type="button"
-                onClick={() => handleSearchChange('')}
-                className="hover:text-brand-primary"
-                aria-label="Hapus kata kunci pencarian"
-              >
-                <X size={12} />
-              </button>
-            </span>
-          )}
-
-          {selectedCategoryObj && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-surface-muted border border-border-subtle rounded-sm text-text-primary">
-              <span>Kategori: {selectedCategoryObj.name}</span>
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedCatId(null);
-                  setCurrentPage(1);
-                }}
-                className="hover:text-brand-primary"
-                aria-label="Hapus filter kategori"
-              >
-                <X size={12} />
-              </button>
-            </span>
-          )}
-
-          {selectedFloorObj && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-surface-muted border border-border-subtle rounded-sm text-text-primary">
-              <span>Lantai: {selectedFloorObj.name}</span>
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedFloorId(null);
-                  setCurrentPage(1);
-                }}
-                className="hover:text-brand-primary"
-                aria-label="Hapus filter lantai"
-              >
-                <X size={12} />
-              </button>
-            </span>
-          )}
-
-          <button
-            type="button"
-            onClick={handleResetFilters}
-            className="inline-flex items-center gap-1 text-xs font-semibold text-brand-primary hover:underline ml-auto cursor-pointer"
-          >
-            <RotateCcw size={12} />
-            <span>Reset Filter</span>
-          </button>
-        </div>
-      )}
+      <ActiveFilterBadges
+        searchQuery={searchQuery}
+        handleSearchChange={handleSearchChange}
+        selectedCategoryObj={selectedCategoryObj}
+        setSelectedCatId={setSelectedCatId}
+        selectedFloorObj={selectedFloorObj}
+        setSelectedFloorId={setSelectedFloorId}
+        setCurrentPage={setCurrentPage}
+        handleResetFilters={handleResetFilters}
+      />
     </div>
   );
 }

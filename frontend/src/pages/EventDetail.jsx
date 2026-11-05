@@ -43,6 +43,13 @@ function buildContactWaLink(contactPhone, contactPerson, title, defaultPhone) {
   return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`;
 }
 
+function resolveTermsText(eventItem) {
+  if (eventItem.terms) return eventItem.terms;
+  if (eventItem.admission) return eventItem.admission;
+  if (eventItem.type === 'event') return 'Gratis (Terbuka untuk Umum)';
+  return 'Promo Belanja Langsung';
+}
+
 function useEventDetail(slug) {
   const [eventItem, setEventItem] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -63,7 +70,8 @@ function useEventDetail(slug) {
         }
       } catch (err) {
         if (!isCancelled) {
-          setError(err.message === 'NOT_FOUND' ? 'Informasi tidak ditemukan' : 'Gagal memuat informasi');
+          const msg = err.message === 'NOT_FOUND' ? 'Informasi tidak ditemukan' : 'Gagal memuat informasi';
+          setError(msg);
         }
       } finally {
         if (!isCancelled) setLoading(false);
@@ -116,6 +124,35 @@ function EventHighlightsCard({ highlightsList }) {
   );
 }
 
+function EventMetaRow({ icon: Icon, label, value }) {
+  if (!value) return null;
+  return (
+    <div className="flex items-start gap-3">
+      <Icon size={16} className="text-brand-primary shrink-0 mt-0.5" />
+      <div>
+        <div className="text-xs text-text-muted font-medium">{label}</div>
+        <div className="font-semibold text-text-primary mt-0.5">{value}</div>
+      </div>
+    </div>
+  );
+}
+
+function EventOrganizerRow({ contactPerson, contactPhone }) {
+  if (!contactPerson && !contactPhone) return null;
+  return (
+    <div className="flex items-start gap-3 pt-1 border-t border-border-subtle">
+      <User size={16} className="text-brand-primary shrink-0 mt-0.5" />
+      <div>
+        <div className="text-xs text-text-muted font-medium">Narahubung Acara</div>
+        <div className="font-semibold text-text-primary mt-0.5">{contactPerson || 'Panitia Informasi'}</div>
+        {contactPhone && (
+          <div className="text-xs text-text-secondary mt-0.5 font-mono">{contactPhone}</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function EventSidebar({
   eventItem,
   dateRange,
@@ -135,62 +172,11 @@ function EventSidebar({
         </h3>
 
         <div className="space-y-4 text-xs sm:text-sm">
-          {dateRange && (
-            <div className="flex items-start gap-3">
-              <Calendar size={16} className="text-brand-primary shrink-0 mt-0.5" />
-              <div>
-                <div className="text-xs text-text-muted font-medium">Jadwal Tanggal</div>
-                <div className="font-semibold text-text-primary mt-0.5">{dateRange}</div>
-              </div>
-            </div>
-          )}
-
-          <div className="flex items-start gap-3">
-            <Clock size={16} className="text-brand-primary shrink-0 mt-0.5" />
-            <div>
-              <div className="text-xs text-text-muted font-medium">Waktu Operasional</div>
-              <div className="font-semibold text-text-primary mt-0.5">
-                {eventItem.time || '10.00 – 18.00 WITA'}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3">
-            <MapPin size={16} className="text-brand-primary shrink-0 mt-0.5" />
-            <div>
-              <div className="text-xs text-text-muted font-medium">Lokasi di Mall</div>
-              <div className="font-semibold text-text-primary mt-0.5">
-                {eventItem.location || 'Plaza Kebun Sayur Balikpapan'}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3">
-            <Tag size={16} className="text-brand-primary shrink-0 mt-0.5" />
-            <div>
-              <div className="text-xs text-text-muted font-medium">Ketentuan / HTM</div>
-              <div className="font-semibold text-text-primary mt-0.5">
-                {termsText}
-              </div>
-            </div>
-          </div>
-
-          {(eventItem.contact_person || eventItem.contact_phone) && (
-            <div className="flex items-start gap-3 pt-1 border-t border-border-subtle">
-              <User size={16} className="text-brand-primary shrink-0 mt-0.5" />
-              <div>
-                <div className="text-xs text-text-muted font-medium">Narahubung Acara</div>
-                <div className="font-semibold text-text-primary mt-0.5">
-                  {eventItem.contact_person || 'Panitia Informasi'}
-                </div>
-                {eventItem.contact_phone && (
-                  <div className="text-xs text-text-secondary mt-0.5 font-mono">
-                    {eventItem.contact_phone}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
+          <EventMetaRow icon={Calendar} label="Jadwal Tanggal" value={dateRange} />
+          <EventMetaRow icon={Clock} label="Waktu Operasional" value={eventItem.time || '10.00 – 18.00 WITA'} />
+          <EventMetaRow icon={MapPin} label="Lokasi di Mall" value={eventItem.location || 'Plaza Kebun Sayur Balikpapan'} />
+          <EventMetaRow icon={Tag} label="Ketentuan / HTM" value={termsText} />
+          <EventOrganizerRow contactPerson={eventItem.contact_person} contactPhone={eventItem.contact_phone} />
         </div>
 
         <div className="space-y-3 pt-3 border-t border-border-subtle">
@@ -242,6 +228,44 @@ function EventSidebar({
   );
 }
 
+function EventBanner({ bannerSrc, title, type, onImageError }) {
+  const badgeLabel = type === 'event' ? 'Acara / Event' : 'Promo Kios';
+  return (
+    <div className="relative w-full aspect-[16/9] rounded-md overflow-hidden bg-surface-muted border border-border-subtle shadow-sm">
+      <img
+        src={bannerSrc}
+        alt={title}
+        className="w-full h-full object-cover"
+        onError={onImageError}
+      />
+      <div className="absolute top-4 left-4">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-sm text-xs font-bold uppercase tracking-wider bg-brand-primary text-white shadow-md">
+          <Tag size={13} />
+          <span>{badgeLabel}</span>
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function EventBreadcrumb({ title }) {
+  return (
+    <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-text-muted mb-6">
+      <Link to="/" className="hover:text-text-primary transition-colors">
+        Beranda
+      </Link>
+      <span>/</span>
+      <Link to="/informasi" className="hover:text-text-primary transition-colors">
+        Informasi & Promo
+      </Link>
+      <span>/</span>
+      <span className="text-text-primary font-medium truncate max-w-[200px] sm:max-w-xs">
+        {title}
+      </span>
+    </nav>
+  );
+}
+
 export function EventDetail() {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -287,24 +311,12 @@ export function EventDetail() {
 
   const highlightsList = parseHighlights(eventItem.highlights);
   const dateRange = formatDateRange(eventItem.start_date, eventItem.end_date);
-  const termsText = eventItem.terms || eventItem.admission || (eventItem.type === 'event' ? 'Gratis (Terbuka untuk Umum)' : 'Promo Belanja Langsung');
+  const termsText = resolveTermsText(eventItem);
 
   return (
     <div className="py-8 sm:py-12 bg-canvas min-h-screen">
       <Container>
-        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-text-muted mb-6">
-          <Link to="/" className="hover:text-text-primary transition-colors">
-            Beranda
-          </Link>
-          <span>/</span>
-          <Link to="/informasi" className="hover:text-text-primary transition-colors">
-            Informasi & Promo
-          </Link>
-          <span>/</span>
-          <span className="text-text-primary font-medium truncate max-w-[200px] sm:max-w-xs">
-            {eventItem.title}
-          </span>
-        </nav>
+        <EventBreadcrumb title={eventItem.title} />
 
         <div className="mb-6">
           <Link
@@ -318,20 +330,12 @@ export function EventDetail() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-12 items-start">
           <div className="lg:col-span-2 space-y-8">
-            <div className="relative w-full aspect-[16/9] rounded-md overflow-hidden bg-surface-muted border border-border-subtle shadow-sm">
-              <img
-                src={bannerSrc || fallbackBanner}
-                alt={eventItem.title}
-                className="w-full h-full object-cover"
-                onError={() => setBannerSrc(fallbackBanner)}
-              />
-              <div className="absolute top-4 left-4">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-sm text-xs font-bold uppercase tracking-wider bg-brand-primary text-white shadow-md">
-                  <Tag size={13} />
-                  <span>{eventItem.type === 'event' ? 'Acara / Event' : 'Promo Kios'}</span>
-                </span>
-              </div>
-            </div>
+            <EventBanner
+              bannerSrc={bannerSrc || fallbackBanner}
+              title={eventItem.title}
+              type={eventItem.type}
+              onImageError={() => setBannerSrc(fallbackBanner)}
+            />
 
             <div className="space-y-4">
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-text-primary leading-tight">

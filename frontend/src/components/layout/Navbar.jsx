@@ -14,48 +14,27 @@ const DEFAULT_HEADER_NAV = [
   { id: 6, label: 'KONTAK', path: '/kontak', is_external: false, is_cta: false },
 ];
 
+function resolveItemPathAndLabel(item) {
+  if (item.path === '/kuliner') {
+    const label = item.label === 'KULINER' ? 'FASHION' : item.label;
+    return { ...item, path: '/fashion', label };
+  }
+  if (item.path === '/agenda') {
+    const label = item.label === 'AGENDA' ? 'INFORMASI' : item.label;
+    return { ...item, path: '/informasi', label };
+  }
+  return item;
+}
+
 function normalizeNavItems(rawItems) {
-  return rawItems.map((item) => {
-    let path = item.path;
-    let label = item.label;
-    if (path === '/kuliner') {
-      path = '/fashion';
-      if (label === 'KULINER') label = 'FASHION';
-    } else if (path === '/agenda') {
-      path = '/informasi';
-      if (label === 'AGENDA') label = 'INFORMASI';
-    }
-    return { ...item, path, label };
-  });
+  return rawItems.map(resolveItemPathAndLabel);
 }
 
 function DesktopNavItem({ item }) {
-  if (item.is_cta) {
-    const ctaClasses =
-      'inline-flex items-center justify-center px-4 py-2 bg-brand-primary text-white hover:bg-brand-primary-hover active:bg-brand-primary-pressed rounded-sm font-semibold text-xs xl:text-sm tracking-wide transition-colors shadow-subtle ml-2 whitespace-nowrap';
-
-    if (item.is_external) {
-      return (
-        <a
-          href={item.path}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={ctaClasses}
-        >
-          {item.label}
-        </a>
-      );
-    }
-
-    return (
-      <NavLink
-        to={item.path}
-        className={ctaClasses}
-      >
-        {item.label}
-      </NavLink>
-    );
-  }
+  const isCta = Boolean(item.is_cta);
+  const classes = isCta
+    ? 'inline-flex items-center justify-center px-4 py-2 bg-brand-primary text-white hover:bg-brand-primary-hover active:bg-brand-primary-pressed rounded-sm font-semibold text-xs xl:text-sm tracking-wide transition-colors shadow-subtle ml-2 whitespace-nowrap'
+    : 'px-2.5 xl:px-3.5 py-2 text-xs xl:text-sm font-semibold tracking-wide transition-colors whitespace-nowrap';
 
   if (item.is_external) {
     return (
@@ -63,7 +42,7 @@ function DesktopNavItem({ item }) {
         href={item.path}
         target="_blank"
         rel="noopener noreferrer"
-        className="px-2.5 xl:px-3.5 py-2 text-xs xl:text-sm font-semibold tracking-wide transition-colors whitespace-nowrap text-text-primary hover:text-brand-primary"
+        className={classes}
       >
         {item.label}
       </a>
@@ -74,9 +53,9 @@ function DesktopNavItem({ item }) {
     <NavLink
       to={item.path}
       className={({ isActive }) =>
-        `px-2.5 xl:px-3.5 py-2 text-xs xl:text-sm font-semibold tracking-wide transition-colors whitespace-nowrap ${
-          isActive ? 'text-brand-primary' : 'text-text-primary hover:text-brand-primary'
-        }`
+        isCta
+          ? classes
+          : `${classes} ${isActive ? 'text-brand-primary' : 'text-text-primary hover:text-brand-primary'}`
       }
     >
       {item.label}
@@ -85,34 +64,10 @@ function DesktopNavItem({ item }) {
 }
 
 function MobileNavItem({ item, onClose }) {
-  if (item.is_cta) {
-    const mobileCtaClasses =
-      'inline-flex items-center justify-center w-full my-1.5 px-4 py-3 bg-brand-primary text-white font-bold text-sm tracking-wide rounded-sm hover:bg-brand-primary-hover active:bg-brand-primary-pressed transition-colors min-h-[44px]';
-
-    if (item.is_external) {
-      return (
-        <a
-          href={item.path}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={onClose}
-          className={mobileCtaClasses}
-        >
-          {item.label}
-        </a>
-      );
-    }
-
-    return (
-      <NavLink
-        to={item.path}
-        onClick={onClose}
-        className={mobileCtaClasses}
-      >
-        <span>{item.label}</span>
-      </NavLink>
-    );
-  }
+  const isCta = Boolean(item.is_cta);
+  const classes = isCta
+    ? 'inline-flex items-center justify-center w-full my-1.5 px-4 py-3 bg-brand-primary text-white font-bold text-sm tracking-wide rounded-sm hover:bg-brand-primary-hover active:bg-brand-primary-pressed transition-colors min-h-[44px]'
+    : 'px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide rounded-sm flex items-center transition-colors text-white hover:bg-mono-800';
 
   if (item.is_external) {
     return (
@@ -121,9 +76,9 @@ function MobileNavItem({ item, onClose }) {
         target="_blank"
         rel="noopener noreferrer"
         onClick={onClose}
-        className="px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide text-white hover:bg-mono-800 rounded-sm flex items-center"
+        className={classes}
       >
-        {item.label}
+        <span>{item.label}</span>
       </a>
     );
   }
@@ -133,11 +88,9 @@ function MobileNavItem({ item, onClose }) {
       to={item.path}
       onClick={onClose}
       className={({ isActive }) =>
-        `px-3 py-3 min-h-[44px] text-sm font-semibold tracking-wide rounded-sm flex items-center transition-colors ${
-          isActive
-            ? 'bg-mono-800 text-gold font-bold border-l-2 border-gold pl-2.5'
-            : 'text-white hover:bg-mono-800'
-        }`
+        isCta
+          ? classes
+          : `${classes} ${isActive ? 'bg-mono-800 text-gold font-bold border-l-2 border-gold pl-2.5' : ''}`
       }
     >
       <span>{item.label}</span>
@@ -152,20 +105,19 @@ function useNavSearch(isFashionPage, setMobileMenuOpen, mobileMenuOpen) {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        if (mobileMenuOpen) {
-          setMobileMenuOpen(false);
-          return;
-        }
-        if (document.activeElement === searchInputRef.current) {
-          searchInputRef.current?.blur();
-          return;
-        }
+      if (e.key === 'Escape' && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+        return;
+      }
+      if (e.key === 'Escape' && document.activeElement === searchInputRef.current) {
+        searchInputRef.current?.blur();
+        return;
       }
 
       const isInput =
         ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName) || e.target.isContentEditable;
-      if (!isInput && (e.key === '/' || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k'))) {
+      const isSearchShortcut = e.key === '/' || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k');
+      if (!isInput && isSearchShortcut) {
         e.preventDefault();
         searchInputRef.current?.focus();
       }

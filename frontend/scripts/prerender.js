@@ -147,58 +147,79 @@ async function fetchPageContents() {
   }
 }
 
+const STATIC_PAGE_CONFIGS = [
+  {
+    route: 'belanja',
+    key: 'seo.belanja.title',
+    fallbackTitle: 'Direktori Belanja & Batu Mulia - Plaza Kebun Sayur Balikpapan',
+    descKey: 'seo.belanja.description',
+    fallbackDesc: 'Temukan koleksi permata, batu akik, perhiasan emas perak, dan kerajinan Dayak khas Kalimantan di Plaza Kebun Sayur.',
+  },
+  {
+    route: 'fashion',
+    key: 'seo.fashion.title',
+    fallbackTitle: 'Sentra Fashion & Busana Khas - Plaza Kebun Sayur Balikpapan',
+    descKey: 'seo.fashion.description',
+    fallbackDesc: 'Temukan koleksi batik Kalimantan, tenun ikat, busana adat Dayak, pakaian modern, dan aksesoris pilihan di Plaza Kebun Sayur.',
+    image: 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1200&q=80',
+  },
+  {
+    route: 'informasi',
+    key: 'seo.informasi.title',
+    altKey: 'seo.agenda.title',
+    fallbackTitle: 'Pusat Informasi & Promo Plaza - Plaza Kebun Sayur Balikpapan',
+    descKey: 'seo.informasi.description',
+    altDescKey: 'seo.agenda.description',
+    fallbackDesc: 'Informasi pameran batu mulia, pentas seni Dayak, bazar cinderamata, serta pengumuman promo spesial kios di Plaza Kebun Sayur.',
+    image: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=1200&q=80',
+  },
+  {
+    route: 'panduan-kunjungan',
+    key: 'seo.panduan.title',
+    fallbackTitle: 'Panduan Kunjungan & Fasilitas - Plaza Kebun Sayur Balikpapan',
+    descKey: 'seo.panduan.description',
+    fallbackDesc: 'Informasi fasilitas gedung, jam operasional, pos keamanan, musholla, dan panduan lengkap untuk wisatawan di Plaza Kebun Sayur.',
+    image: 'https://images.unsplash.com/photo-1582533561751-ef6f6ab93a2e?w=1200&q=80',
+  },
+  {
+    route: 'kontak',
+    key: 'seo.kontak.title',
+    fallbackTitle: 'Hubungi Kami - Pengelola Plaza Kebun Sayur Balikpapan',
+    descKey: 'seo.kontak.description',
+    fallbackDesc: 'Hubungi pengelola gedung Plaza Kebun Sayur untuk informasi kemitraan, direktori kios, layanan informasi, dan kritik/saran.',
+    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80',
+  },
+  {
+    route: 'kebijakan-privasi',
+    key: 'seo.privacy.title',
+    fallbackTitle: 'Kebijakan Privasi - Plaza Kebun Sayur Balikpapan',
+    descKey: 'seo.privacy.description',
+    fallbackDesc: 'Komitmen perlindungan data pribadi dan transparansi pemrosesan data pengunjung sesuai UU No. 27 Tahun 2022 di Plaza Kebun Sayur.',
+  },
+  {
+    route: 'syarat-ketentuan',
+    key: 'seo.terms.title',
+    fallbackTitle: 'Syarat & Ketentuan Penggunaan - Plaza Kebun Sayur Balikpapan',
+    descKey: 'seo.terms.description',
+    fallbackDesc: 'Syarat dan ketentuan penggunaan situs direktori komersial, batasan tanggung jawab transaksi kios, dan hak cipta di Plaza Kebun Sayur.',
+  },
+];
+
+function resolvePageMeta(contents, config, defaultOgImage) {
+  const customTitle = contents[config.key] || (config.altKey ? contents[config.altKey] : null);
+  const customDesc = contents[config.descKey] || (config.altDescKey ? contents[config.altDescKey] : null);
+
+  return {
+    route: config.route,
+    title: customTitle || config.fallbackTitle,
+    description: customDesc || config.fallbackDesc,
+    image: config.image || defaultOgImage,
+    url: `https://plazakebunsayur.com/${config.route}`,
+  };
+}
+
 function buildStaticPages(contents, defaultOgImage) {
-  return [
-    {
-      route: 'belanja',
-      title: contents['seo.belanja.title'] || 'Direktori Belanja & Batu Mulia - Plaza Kebun Sayur Balikpapan',
-      description: contents['seo.belanja.description'] || 'Temukan koleksi permata, batu akik, perhiasan emas perak, dan kerajinan Dayak khas Kalimantan di Plaza Kebun Sayur.',
-      image: defaultOgImage,
-      url: 'https://plazakebunsayur.com/belanja',
-    },
-    {
-      route: 'fashion',
-      title: contents['seo.fashion.title'] || 'Sentra Fashion & Busana Khas - Plaza Kebun Sayur Balikpapan',
-      description: contents['seo.fashion.description'] || 'Temukan koleksi batik Kalimantan, tenun ikat, busana adat Dayak, pakaian modern, dan aksesoris pilihan di Plaza Kebun Sayur.',
-      image: 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1200&q=80',
-      url: 'https://plazakebunsayur.com/fashion',
-    },
-    {
-      route: 'informasi',
-      title: contents['seo.informasi.title'] || contents['seo.agenda.title'] || 'Pusat Informasi & Promo Plaza - Plaza Kebun Sayur Balikpapan',
-      description: contents['seo.informasi.description'] || contents['seo.agenda.description'] || 'Informasi pameran batu mulia, pentas seni Dayak, bazar cinderamata, serta pengumuman promo spesial kios di Plaza Kebun Sayur.',
-      image: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=1200&q=80',
-      url: 'https://plazakebunsayur.com/informasi',
-    },
-    {
-      route: 'panduan-kunjungan',
-      title: contents['seo.panduan.title'] || 'Panduan Kunjungan & Fasilitas - Plaza Kebun Sayur Balikpapan',
-      description: contents['seo.panduan.description'] || 'Informasi fasilitas gedung, jam operasional, pos keamanan, musholla, dan panduan lengkap untuk wisatawan di Plaza Kebun Sayur.',
-      image: 'https://images.unsplash.com/photo-1582533561751-ef6f6ab93a2e?w=1200&q=80',
-      url: 'https://plazakebunsayur.com/panduan-kunjungan',
-    },
-    {
-      route: 'kontak',
-      title: contents['seo.kontak.title'] || 'Hubungi Kami - Pengelola Plaza Kebun Sayur Balikpapan',
-      description: contents['seo.kontak.description'] || 'Hubungi pengelola gedung Plaza Kebun Sayur untuk informasi kemitraan, direktori kios, layanan informasi, dan kritik/saran.',
-      image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80',
-      url: 'https://plazakebunsayur.com/kontak',
-    },
-    {
-      route: 'kebijakan-privasi',
-      title: contents['seo.privacy.title'] || 'Kebijakan Privasi - Plaza Kebun Sayur Balikpapan',
-      description: contents['seo.privacy.description'] || 'Komitmen perlindungan data pribadi dan transparansi pemrosesan data pengunjung sesuai UU No. 27 Tahun 2022 di Plaza Kebun Sayur.',
-      image: defaultOgImage,
-      url: 'https://plazakebunsayur.com/kebijakan-privasi',
-    },
-    {
-      route: 'syarat-ketentuan',
-      title: contents['seo.terms.title'] || 'Syarat & Ketentuan Penggunaan - Plaza Kebun Sayur Balikpapan',
-      description: contents['seo.terms.description'] || 'Syarat dan ketentuan penggunaan situs direktori komersial, batasan tanggung jawab transaksi kios, dan hak cipta di Plaza Kebun Sayur.',
-      image: defaultOgImage,
-      url: 'https://plazakebunsayur.com/syarat-ketentuan',
-    },
-  ];
+  return STATIC_PAGE_CONFIGS.map((config) => resolvePageMeta(contents, config, defaultOgImage));
 }
 
 function renderStaticPages(staticPages) {
@@ -236,33 +257,50 @@ function buildTenantSchema(tenant, isFashion, photoUrl) {
   };
 }
 
+function isFashionCategory(categoryType) {
+  if (categoryType === 'fashion') return true;
+  return categoryType === 'culinary';
+}
+
+function resolveTenantDescription(tenant) {
+  if (tenant.description) {
+    return tenant.description.replace(/\s+/g, ' ').slice(0, 155);
+  }
+  const floorName = tenant.floor?.name || 'Plaza Kebun Sayur Balikpapan';
+  return `Kunjungi toko ${tenant.name} di ${floorName}`;
+}
+
+function renderSingleTenant(tenant) {
+  const isFashion = isFashionCategory(tenant.category?.type);
+  const folder = isFashion ? 'fashion' : 'belanja';
+  const pageUrl = `https://plazakebunsayur.com/${folder}/${tenant.slug}`;
+  const cleanDesc = resolveTenantDescription(tenant);
+  const photoUrl = tenant.image_url || 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=1200&q=80';
+
+  const schema = buildTenantSchema(tenant, isFashion, photoUrl);
+  const tenantHtml = injectMeta(template, {
+    title: `${tenant.name} - Plaza Kebun Sayur Balikpapan`,
+    description: cleanDesc,
+    image: photoUrl,
+    url: pageUrl,
+    schema,
+  });
+
+  const dest = path.join(distDir, folder, tenant.slug, 'index.html');
+  writeHtml(dest, tenantHtml);
+
+  if (isFashion) {
+    writeRedirectHtml(
+      path.join(distDir, 'kuliner', tenant.slug, 'index.html'),
+      `https://plazakebunsayur.com/fashion/${tenant.slug}`
+    );
+  }
+}
+
 function renderTenantPages(tenants) {
   let count = 0;
   for (const tenant of tenants) {
-    const isFashion = tenant.category?.type === 'fashion' || tenant.category?.type === 'culinary';
-    const folder = isFashion ? 'fashion' : 'belanja';
-    const pageUrl = `https://plazakebunsayur.com/${folder}/${tenant.slug}`;
-    const cleanDesc = (tenant.description || `Kunjungi toko ${tenant.name} di ${tenant.floor?.name || 'Plaza Kebun Sayur Balikpapan'}`).replace(/\s+/g, ' ').slice(0, 155);
-    const photoUrl = tenant.image_url || 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=1200&q=80';
-
-    const schema = buildTenantSchema(tenant, isFashion, photoUrl);
-    const tenantHtml = injectMeta(template, {
-      title: `${tenant.name} - Plaza Kebun Sayur Balikpapan`,
-      description: cleanDesc,
-      image: photoUrl,
-      url: pageUrl,
-      schema,
-    });
-
-    const dest = path.join(distDir, folder, tenant.slug, 'index.html');
-    writeHtml(dest, tenantHtml);
-
-    if (isFashion) {
-      writeRedirectHtml(
-        path.join(distDir, 'kuliner', tenant.slug, 'index.html'),
-        `https://plazakebunsayur.com/fashion/${tenant.slug}`
-      );
-    }
+    renderSingleTenant(tenant);
     count++;
   }
   return count;

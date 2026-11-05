@@ -1,0 +1,86 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\WhatsOn;
+use Illuminate\Database\Seeder;
+
+class WhatsOnSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $items = [
+            [
+                'title' => 'Festival Pesona Budaya & Batu Mulia Balikpapan 2026',
+                'slug' => 'festival-pesona-budaya-batu-mulia-2026',
+                'type' => 'event',
+                'start_date' => '2026-10-10',
+                'end_date' => '2026-10-15',
+                'time' => '10.00 – 17.30 WITA',
+                'location' => 'Atrium Utama (Lantai Dasar & Koridor Timur)',
+                'admission' => 'Gratis (Terbuka untuk Umum)',
+                'banner_image' => 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=1200&q=80',
+                'summary' => 'Pameran akbar koleksi permata nusantara, kontes batu akik Borneo, dan pentas tari tradisional Dayak di Atrium Plaza Kebun Sayur.',
+                'content' => 'Sambut semarak Festival Budaya Plaza Kebun Sayur! Dimeriahkan oleh puluhan kolektor batu akik se-Kalimantan, demonstrasi pembuatan ukiran mandau langsung oleh pengrajin pedalaman, serta promo diskon khusus perhiasan emas dan kerajinan.',
+                'highlights' => [
+                    'Pameran lebih dari 500 koleksi batu akik & permata alam langka se-Borneo (Red Borneo, Kecubung, Jamrud).',
+                    'Kontes dan uji keaslian batu mulia dengan sertifikasi gemologi langsung di tempat.',
+                    'Pertunjukan musik petik Sape dan tarian tradisional Dayak Kenyah setiap sore.',
+                    'Demonstrasi langsung pembuatan ukiran kayu ulin dan pengrajin ikat cincin perak.',
+                ],
+                'terms' => 'Terbuka untuk umum tanpa biaya pendaftaran. Pengunjung wajib menjaga ketertiban, kebersihan, dan keselamatan barang bawaan masing-masing.',
+                'contact_person' => 'Bpk. Syahril (Koordinator Acara)',
+                'contact_phone' => '081234567890',
+                'is_active' => true,
+            ],
+            [
+                'title' => 'Promo Wisata Cinderamata IKN & Nusantara',
+                'slug' => 'promo-wisata-cinderamata-ikn',
+                'type' => 'promo',
+                'start_date' => '2026-09-01',
+                'end_date' => '2026-10-31',
+                'time' => '09.00 – 18.00 WITA (Buka Setiap Hari)',
+                'location' => 'Kios Cinderamata, Batik & Kios Depan Berpartisipasi',
+                'admission' => 'Promo Belanja Langsung',
+                'banner_image' => 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80',
+                'summary' => 'Dapatkan suvenir gantungan manik khas Dayak gratis untuk setiap pembelian kain batik atau perhiasan minimal Rp 500.000.',
+                'content' => 'Menyambut para delegasi dan wisatawan Nusantara ke Kalimantan Timur, puluhan kios cinderamata di Plaza Kebun Sayur memberikan penawaran suvenir spesial selama bulan ini.',
+                'highlights' => [
+                    'Gratis suvenir gantungan kunci manik Dayak eksklusif dengan belanja minimal Rp 500.000.',
+                    'Diskon spesial hingga 20% untuk pembelian kain tenun dan batik motif mangrove Balikpapan.',
+                    'Kemasan khusus dus siap bagasi pesawat untuk produk oleh-oleh khas dan kerajinan.',
+                ],
+                'terms' => 'Berlaku selama persediaan suvenir bonus masih ada di kios mitra berpartisipasi. Cukup tunjukkan nota belanja transaksi hari yang sama.',
+                'contact_person' => 'Kantor Pengelola Plaza Kebun Sayur',
+                'contact_phone' => '080000000000',
+                'is_active' => true,
+            ],
+            [
+                'title' => 'Promo Diskon Kios Fashion & Batik Mahakam',
+                'slug' => 'promo-diskon-kios-fashion-batik-mahakam',
+                'type' => 'promo',
+                'start_date' => '2026-11-01',
+                'end_date' => '2026-11-30',
+                'time' => '09.00 – 18.00 WITA',
+                'location' => 'Lantai 1 Sentra Busana & Batik',
+                'admission' => 'Potongan Langsung di Kios',
+                'banner_image' => 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&w=1200&q=80',
+                'summary' => 'Diskon belanja hingga 20% untuk pembelian kain batik motif mangrove, sarung tenun, dan baju etnik Dayak di kios berpartisipasi.',
+                'content' => 'Kunjungi sentra busana lantai 1 Plaza Kebun Sayur dan nikmati penawaran istimewa sepanjang bulan ini. Setiap transaksi busana adat dan kain tenun berkesempatan mendapatkan voucher suvenir cenderamata.',
+                'highlights' => [
+                    'Diskon langsung 15-20% untuk kain batik motif mangrove khas Balikpapan.',
+                    'Gratis masker etnik kain tenun untuk pembelanjaan minimal Rp 300.000.',
+                    'Layanan ukur baju dan jahit custom pakaian adat di tempat.',
+                ],
+                'terms' => 'Berlaku di seluruh kios batik & busana lantai 1 bertanda khusus promo. Tidak dapat digabungkan dengan promo lain.',
+                'contact_person' => 'Ibu Rahmawati (Koordinator Kios Fashion)',
+                'contact_phone' => '08125557788',
+                'is_active' => true,
+            ],
+        ];
+
+        foreach ($items as $item) {
+            WhatsOn::create($item);
+        }
+    }
+}
