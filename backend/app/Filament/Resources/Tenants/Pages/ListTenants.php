@@ -33,80 +33,98 @@ class ListTenants extends ListRecords
                 ->color('gray')
                 ->url(fn (): string => FloorResource::getUrl()),
 
-            Action::make('headerAndSeo')
-                ->label('Header & SEO Belanja')
-                ->icon(Heroicon::OutlinedDocumentText)
-                ->color('primary')
-                ->modalHeading('Pengaturan Header & SEO Direktori Belanja')
-                ->modalDescription('Ubah teks tajuk header dan metadata SEO untuk halaman direktori belanja (/belanja).')
-                ->modalSubmitActionLabel('Simpan Perubahan')
-                ->fillForm(function (): array {
-                    $defaults = PageContent::defaults();
-                    $saved = PageContent::whereIn('key', [
-                        'header.belanja.eyebrow',
-                        'header.belanja.title',
-                        'header.belanja.description',
-                        'seo.belanja.title',
-                        'seo.belanja.description',
-                    ])->pluck('value', 'key')->toArray();
-
-                    return [
-                        'eyebrow' => $saved['header.belanja.eyebrow'] ?? $defaults['header.belanja.eyebrow']['default'] ?? 'Direktori Kios & Belanja',
-                        'title' => $saved['header.belanja.title'] ?? $defaults['header.belanja.title']['default'] ?? 'Belanja Khas Kalimantan',
-                        'description' => $saved['header.belanja.description'] ?? $defaults['header.belanja.description']['default'] ?? '',
-                        'seo_title' => $saved['seo.belanja.title'] ?? $defaults['seo.belanja.title']['default'] ?? 'Direktori Belanja | Plaza Kebun Sayur',
-                        'seo_description' => $saved['seo.belanja.description'] ?? $defaults['seo.belanja.description']['default'] ?? '',
-                    ];
-                })
-                ->form([
-                    TextInput::make('eyebrow')
-                        ->label('Teks Pembuka Header (Eyebrow)')
-                        ->required(),
-                    TextInput::make('title')
-                        ->label('Judul Header Halaman Belanja')
-                        ->required(),
-                    Textarea::make('description')
-                        ->label('Deskripsi Header')
-                        ->rows(3),
-                    TextInput::make('seo_title')
-                        ->label('Judul SEO (Meta Title)')
-                        ->required(),
-                    Textarea::make('seo_description')
-                        ->label('Deskripsi SEO (Meta Description)')
-                        ->rows(3)
-                        ->required(),
-                ])
-                ->action(function (array $data): void {
-                    PageContent::updateOrCreate(
-                        ['key' => 'header.belanja.eyebrow'],
-                        ['value' => $data['eyebrow'], 'group' => 'header', 'type' => 'text', 'label' => 'Header Belanja Eyebrow']
-                    );
-                    PageContent::updateOrCreate(
-                        ['key' => 'header.belanja.title'],
-                        ['value' => $data['title'], 'group' => 'header', 'type' => 'text', 'label' => 'Header Belanja Title']
-                    );
-                    PageContent::updateOrCreate(
-                        ['key' => 'header.belanja.description'],
-                        ['value' => $data['description'], 'group' => 'header', 'type' => 'textarea', 'label' => 'Header Belanja Description']
-                    );
-                    PageContent::updateOrCreate(
-                        ['key' => 'seo.belanja.title'],
-                        ['value' => $data['seo_title'], 'group' => 'seo', 'type' => 'text', 'label' => 'SEO Belanja Title']
-                    );
-                    PageContent::updateOrCreate(
-                        ['key' => 'seo.belanja.description'],
-                        ['value' => $data['seo_description'], 'group' => 'seo', 'type' => 'textarea', 'label' => 'SEO Belanja Description']
-                    );
-
-                    Notification::make()
-                        ->title('Header & SEO Belanja Berhasil Diperbarui')
-                        ->success()
-                        ->send();
-                }),
+            static::getHeaderAndSeoAction(),
 
             CreateAction::make()
                 ->label('Tambah Kios Baru')
                 ->icon(Heroicon::OutlinedPlus),
         ];
+    }
+
+    protected static function getHeaderAndSeoAction(): Action
+    {
+        return Action::make('headerAndSeo')
+            ->label('Header & SEO Belanja')
+            ->icon(Heroicon::OutlinedDocumentText)
+            ->color('primary')
+            ->modalHeading('Pengaturan Header & SEO Direktori Belanja')
+            ->modalDescription('Ubah teks tajuk header dan metadata SEO untuk halaman direktori belanja (/belanja).')
+            ->modalSubmitActionLabel('Simpan Perubahan')
+            ->fillForm(fn (): array => static::getHeaderAndSeoFormData())
+            ->form(static::getHeaderAndSeoFormSchema())
+            ->action(function (array $data): void {
+                static::saveHeaderAndSeoData($data);
+            });
+    }
+
+    protected static function getHeaderAndSeoFormData(): array
+    {
+        $defaults = PageContent::defaults();
+        $saved = PageContent::whereIn('key', [
+            'header.belanja.eyebrow',
+            'header.belanja.title',
+            'header.belanja.description',
+            'seo.belanja.title',
+            'seo.belanja.description',
+        ])->pluck('value', 'key')->toArray();
+
+        return [
+            'eyebrow' => $saved['header.belanja.eyebrow'] ?? $defaults['header.belanja.eyebrow']['default'] ?? 'Direktori Kios & Belanja',
+            'title' => $saved['header.belanja.title'] ?? $defaults['header.belanja.title']['default'] ?? 'Belanja Khas Kalimantan',
+            'description' => $saved['header.belanja.description'] ?? $defaults['header.belanja.description']['default'] ?? '',
+            'seo_title' => $saved['seo.belanja.title'] ?? $defaults['seo.belanja.title']['default'] ?? 'Direktori Belanja | Plaza Kebun Sayur',
+            'seo_description' => $saved['seo.belanja.description'] ?? $defaults['seo.belanja.description']['default'] ?? '',
+        ];
+    }
+
+    protected static function getHeaderAndSeoFormSchema(): array
+    {
+        return [
+            TextInput::make('eyebrow')
+                ->label('Teks Pembuka Header (Eyebrow)')
+                ->required(),
+            TextInput::make('title')
+                ->label('Judul Header Halaman Belanja')
+                ->required(),
+            Textarea::make('description')
+                ->label('Deskripsi Header')
+                ->rows(3),
+            TextInput::make('seo_title')
+                ->label('Judul SEO (Meta Title)')
+                ->required(),
+            Textarea::make('seo_description')
+                ->label('Deskripsi SEO (Meta Description)')
+                ->rows(3)
+                ->required(),
+        ];
+    }
+
+    protected static function saveHeaderAndSeoData(array $data): void
+    {
+        PageContent::updateOrCreate(
+            ['key' => 'header.belanja.eyebrow'],
+            ['value' => $data['eyebrow'], 'group' => 'header', 'type' => 'text', 'label' => 'Header Belanja Eyebrow']
+        );
+        PageContent::updateOrCreate(
+            ['key' => 'header.belanja.title'],
+            ['value' => $data['title'], 'group' => 'header', 'type' => 'text', 'label' => 'Header Belanja Title']
+        );
+        PageContent::updateOrCreate(
+            ['key' => 'header.belanja.description'],
+            ['value' => $data['description'], 'group' => 'header', 'type' => 'textarea', 'label' => 'Header Belanja Description']
+        );
+        PageContent::updateOrCreate(
+            ['key' => 'seo.belanja.title'],
+            ['value' => $data['seo_title'], 'group' => 'seo', 'type' => 'text', 'label' => 'SEO Belanja Title']
+        );
+        PageContent::updateOrCreate(
+            ['key' => 'seo.belanja.description'],
+            ['value' => $data['seo_description'], 'group' => 'seo', 'type' => 'textarea', 'label' => 'SEO Belanja Description']
+        );
+
+        Notification::make()
+            ->title('Header & SEO Belanja Berhasil Diperbarui')
+            ->success()
+            ->send();
     }
 }

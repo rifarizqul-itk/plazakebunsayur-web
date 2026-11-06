@@ -35,6 +35,17 @@ class QuickActionsWidget extends Widget
     {
         $frontendUrl = rtrim(config('app.frontend_url', env('FRONTEND_URL', '')), '/');
 
+        return array_merge(
+            $this->getMainPagesLinks($frontendUrl),
+            $this->getUtilityPagesLinks($frontendUrl),
+        );
+    }
+
+    /**
+     * @return array<int, array<string, string>>
+     */
+    protected function getMainPagesLinks(string $frontendUrl): array
+    {
         return [
             [
                 'number' => '1',
@@ -69,6 +80,15 @@ class QuickActionsWidget extends Widget
                 'badge' => 'Informasi',
                 'badge_color' => 'success',
             ],
+        ];
+    }
+
+    /**
+     * @return array<int, array<string, string>>
+     */
+    protected function getUtilityPagesLinks(string $frontendUrl): array
+    {
+        return [
             [
                 'number' => '4',
                 'title' => 'Halaman Panduan',

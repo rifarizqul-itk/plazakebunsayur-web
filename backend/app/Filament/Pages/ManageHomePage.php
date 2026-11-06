@@ -188,10 +188,30 @@ class ManageHomePage extends Page
             ->icon(Heroicon::OutlinedPhoto)
             ->schema([
                 $this->getHeroMainSlideSection(),
-                static::getHeroCategorySlideSection('2', 'home.hero.slide.batu_mulia', 'Sentra Batu Mulia Borneo', 'Sentra Batu Mulia Borneo'),
-                static::getHeroCategorySlideSection('3', 'home.hero.slide.cinderamata', 'Cinderamata & Etnik Dayak', 'Cinderamata & Etnik Dayak'),
-                static::getHeroCategorySlideSection('4', 'home.hero.slide.fashion', 'Sentra Fashion & Busana Kaltim', 'Sentra Fashion & Busana Kaltim'),
-                static::getHeroCategorySlideSection('5', 'home.hero.slide.suasana', 'Suasana Kios Plaza Kebun Sayur', 'Suasana Kios Plaza Kebun Sayur'),
+                static::getHeroCategorySlideSection([
+                    'num' => '2',
+                    'prefix' => 'home.hero.slide.batu_mulia',
+                    'name' => 'Sentra Batu Mulia Borneo',
+                    'tag' => 'Sentra Batu Mulia Borneo',
+                ]),
+                static::getHeroCategorySlideSection([
+                    'num' => '3',
+                    'prefix' => 'home.hero.slide.cinderamata',
+                    'name' => 'Cinderamata & Etnik Dayak',
+                    'tag' => 'Cinderamata & Etnik Dayak',
+                ]),
+                static::getHeroCategorySlideSection([
+                    'num' => '4',
+                    'prefix' => 'home.hero.slide.fashion',
+                    'name' => 'Sentra Fashion & Busana Kaltim',
+                    'tag' => 'Sentra Fashion & Busana Kaltim',
+                ]),
+                static::getHeroCategorySlideSection([
+                    'num' => '5',
+                    'prefix' => 'home.hero.slide.suasana',
+                    'name' => 'Suasana Kios Plaza Kebun Sayur',
+                    'tag' => 'Suasana Kios Plaza Kebun Sayur',
+                ]),
             ]);
     }
 
@@ -229,8 +249,16 @@ class ManageHomePage extends Page
             ])->columns(2);
     }
 
-    protected static function getHeroCategorySlideSection(string $slideNum, string $keyPrefix, string $slideName, string $tagPlaceholder): Section
+    /**
+     * @param array{num: string, prefix: string, name: string, tag: string} $config
+     */
+    protected static function getHeroCategorySlideSection(array $config): Section
     {
+        $slideNum = $config['num'];
+        $keyPrefix = $config['prefix'];
+        $slideName = $config['name'];
+        $tagPlaceholder = $config['tag'];
+
         return Section::make("Slide {$slideNum}: {$slideName}")
             ->description("Slide carousel yang menyorot {$slideName}")
             ->schema([
@@ -271,14 +299,37 @@ class ManageHomePage extends Page
                             ->label('Deskripsi Singkat'),
                     ])->columns(2),
 
-                static::getActionCardSection('1', 'home.action.belanja', 'Kios Belanja (Batu Mulia & Cinderamata)', 'KIOS BELANJA'),
-                static::getActionCardSection('2', 'home.action.fashion', 'Sentra Fashion & Kerajinan', 'SENTRA FASHION'),
-                static::getActionCardSection('3', 'home.action.panduan', 'Informasi Gedung & Panduan', 'INFORMASI GEDUNG'),
+                static::getActionCardSection([
+                    'num' => '1',
+                    'prefix' => 'home.action.belanja',
+                    'name' => 'Kios Belanja (Batu Mulia & Cinderamata)',
+                    'eyebrow' => 'KIOS BELANJA',
+                ]),
+                static::getActionCardSection([
+                    'num' => '2',
+                    'prefix' => 'home.action.fashion',
+                    'name' => 'Sentra Fashion & Kerajinan',
+                    'eyebrow' => 'SENTRA FASHION',
+                ]),
+                static::getActionCardSection([
+                    'num' => '3',
+                    'prefix' => 'home.action.panduan',
+                    'name' => 'Informasi Gedung & Panduan',
+                    'eyebrow' => 'INFORMASI GEDUNG',
+                ]),
             ]);
     }
 
-    protected static function getActionCardSection(string $cardNum, string $keyPrefix, string $cardName, string $eyebrowPlaceholder): Section
+    /**
+     * @param array{num: string, prefix: string, name: string, eyebrow: string} $config
+     */
+    protected static function getActionCardSection(array $config): Section
     {
+        $cardNum = $config['num'];
+        $keyPrefix = $config['prefix'];
+        $cardName = $config['name'];
+        $eyebrowPlaceholder = $config['eyebrow'];
+
         return Section::make("Kartu {$cardNum}: {$cardName}")
             ->description("Pengaturan konten dan foto untuk kartu {$cardName}")
             ->schema([
