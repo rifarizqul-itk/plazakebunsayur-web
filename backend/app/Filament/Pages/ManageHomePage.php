@@ -60,12 +60,18 @@ class ManageHomePage extends Page
             'home.hero.image',
             'home.quick_access.title',
             'home.quick_access.description',
+            'home.action.belanja.category',
             'home.action.belanja.title',
             'home.action.belanja.btn_text',
+            'home.action.belanja.image',
+            'home.action.fashion.category',
             'home.action.fashion.title',
             'home.action.fashion.btn_text',
+            'home.action.fashion.image',
+            'home.action.panduan.category',
             'home.action.panduan.title',
             'home.action.panduan.btn_text',
+            'home.action.panduan.image',
             'home.promos.eyebrow',
             'home.promos.title',
             'home.promos.cta_label',
@@ -81,6 +87,7 @@ class ManageHomePage extends Page
             'home.history.p2',
             'home.history.p3',
             'home.history.cta_label',
+            'home.history.image',
             'home.events.title',
             'home.events.description',
             'seo.home.title',
@@ -155,21 +162,65 @@ class ManageHomePage extends Page
                                             ->label('Deskripsi Singkat'),
                                     ])->columns(2),
 
-                                Section::make('Kartu Aksi Utama Halaman')
+                                Section::make('Kartu 1: Kios Belanja (Batu Mulia & Cinderamata)')
+                                    ->description('Kartu aksi pertama yang mengarah ke direktori belanja')
                                     ->schema([
+                                        TextInput::make(static::toFormFieldName('home.action.belanja.category'))
+                                            ->label('Label Kategori (Eyebrow)')
+                                            ->placeholder('KIOS BELANJA'),
                                         TextInput::make(static::toFormFieldName('home.action.belanja.title'))
-                                            ->label('Judul Kartu Belanja'),
+                                            ->label('Judul Kartu'),
                                         TextInput::make(static::toFormFieldName('home.action.belanja.btn_text'))
-                                            ->label('Tombol Kartu Belanja'),
+                                            ->label('Teks Tombol Aksi'),
+                                        FileUpload::make(static::toFormFieldName('home.action.belanja.image'))
+                                            ->label('Foto Latar Kartu Belanja (Batu Mulia / Cinderamata)')
+                                            ->disk('public')
+                                            ->directory('page-contents')
+                                            ->image()
+                                            ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
+                                            ->helperText('Format JPG, PNG, atau WebP. Otomatis dikompres ke WebP.')
+                                            ->columnSpanFull(),
+                                    ])->columns(3),
+
+                                Section::make('Kartu 2: Sentra Fashion & Kerajinan')
+                                    ->description('Kartu aksi kedua yang menyorot busana & batik khas')
+                                    ->schema([
+                                        TextInput::make(static::toFormFieldName('home.action.fashion.category'))
+                                            ->label('Label Kategori (Eyebrow)')
+                                            ->placeholder('SENTRA FASHION'),
                                         TextInput::make(static::toFormFieldName('home.action.fashion.title'))
-                                            ->label('Judul Kartu Fashion & Kerajinan'),
+                                            ->label('Judul Kartu'),
                                         TextInput::make(static::toFormFieldName('home.action.fashion.btn_text'))
-                                            ->label('Tombol Kartu Fashion'),
+                                            ->label('Teks Tombol Aksi'),
+                                        FileUpload::make(static::toFormFieldName('home.action.fashion.image'))
+                                            ->label('Foto Latar Kartu Fashion (Batik / Busana)')
+                                            ->disk('public')
+                                            ->directory('page-contents')
+                                            ->image()
+                                            ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
+                                            ->helperText('Format JPG, PNG, atau WebP. Otomatis dikompres ke WebP.')
+                                            ->columnSpanFull(),
+                                    ])->columns(3),
+
+                                Section::make('Kartu 3: Informasi Gedung & Panduan')
+                                    ->description('Kartu aksi ketiga yang mengarah ke panduan kunjungan & fasilitas')
+                                    ->schema([
+                                        TextInput::make(static::toFormFieldName('home.action.panduan.category'))
+                                            ->label('Label Kategori (Eyebrow)')
+                                            ->placeholder('INFORMASI GEDUNG'),
                                         TextInput::make(static::toFormFieldName('home.action.panduan.title'))
-                                            ->label('Judul Kartu Panduan Kunjungan'),
+                                            ->label('Judul Kartu'),
                                         TextInput::make(static::toFormFieldName('home.action.panduan.btn_text'))
-                                            ->label('Tombol Kartu Panduan'),
-                                    ])->columns(2),
+                                            ->label('Teks Tombol Aksi'),
+                                        FileUpload::make(static::toFormFieldName('home.action.panduan.image'))
+                                            ->label('Foto Latar Kartu Panduan (Suasana / Fasilitas)')
+                                            ->disk('public')
+                                            ->directory('page-contents')
+                                            ->image()
+                                            ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
+                                            ->helperText('Format JPG, PNG, atau WebP. Otomatis dikompres ke WebP.')
+                                            ->columnSpanFull(),
+                                    ])->columns(3),
                             ]),
 
                         Tab::make('Sorotan & Promosi')
@@ -227,6 +278,14 @@ class ManageHomePage extends Page
                                             ->columnSpanFull(),
                                         TextInput::make(static::toFormFieldName('home.history.cta_label'))
                                             ->label('Label Tombol Pelajari'),
+                                        FileUpload::make(static::toFormFieldName('home.history.image'))
+                                            ->label('Foto Sejarah Gedung')
+                                            ->disk('public')
+                                            ->directory('page-contents')
+                                            ->image()
+                                            ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
+                                            ->helperText('Format JPG, PNG, atau WebP. Otomatis dikompres ke WebP.')
+                                            ->columnSpanFull(),
                                     ])->columns(2),
                             ]),
 
