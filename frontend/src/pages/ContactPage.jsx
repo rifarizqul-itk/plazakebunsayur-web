@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { MapPin, Phone, MessageCircle, Mail, Clock, Send, CheckCircle2, AlertCircle } from 'lucide-react';
-import { PageHeader } from '../components/layout/PageHeader';
 import { Container } from '../components/layout/Container';
 import { Input, Textarea } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
@@ -8,6 +7,18 @@ import { submitContactMessage } from '../services/api';
 import { generateManagementWhatsAppLink } from '../utils/whatsapp';
 import { useContent, useSiteSettings } from '../hooks/useContent';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
+
+function parseContactList(value) {
+  if (!value) return [];
+  return String(value)
+    .split(/[,;\n\r]+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+function sanitizePhoneHref(phone) {
+  return phone.replace(/[^\d+]/g, '');
+}
 
 function useContactForm() {
   const [formData, setFormData] = useState({
@@ -63,31 +74,22 @@ function useContactForm() {
 }
 
 function OfficeInfoColumn({
-  officeEyebrow,
   officeTitle,
-  officeDesc,
   officeAddress,
   mallHours,
   securityPhone,
   managementEmail,
   waLink,
 }) {
+  const phones = parseContactList(securityPhone);
+  const emails = parseContactList(managementEmail);
+
   return (
     <div className="lg:col-span-5 flex flex-col gap-6">
       <div>
-        {officeEyebrow && (
-          <span className="text-xs font-semibold text-text-muted block mb-1.5">
-            {officeEyebrow}
-          </span>
-        )}
-        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary mb-2">
           {officeTitle}
-        </h2>
-        {officeDesc && (
-          <p className="text-xs sm:text-sm text-text-secondary mt-1">
-            {officeDesc}
-          </p>
-        )}
+        </h1>
       </div>
 
       <div className="divide-y divide-border-subtle text-xs sm:text-sm">
@@ -113,21 +115,45 @@ function OfficeInfoColumn({
 
         <div className="py-4 flex items-start gap-3.5">
           <Phone size={18} className="text-brand-primary shrink-0 mt-0.5" />
-          <div>
+          <div className="min-w-0 flex-1">
             <strong className="block text-text-primary text-sm font-semibold">Telepon Pos Keamanan & Pengaduan</strong>
-            <span className="text-text-secondary mt-0.5 block tabular-nums">
-              {securityPhone}
-            </span>
+            <div className="mt-1 flex flex-col gap-1 text-text-secondary tabular-nums">
+              {phones.length > 0 ? (
+                phones.map((phone, idx) => (
+                  <a
+                    key={idx}
+                    href={`tel:${sanitizePhoneHref(phone)}`}
+                    className="hover:text-brand-primary hover:underline transition-colors block"
+                  >
+                    {phone}
+                  </a>
+                ))
+              ) : (
+                <span>{securityPhone || '-'}</span>
+              )}
+            </div>
           </div>
         </div>
 
         <div className="py-4 flex items-start gap-3.5">
           <Mail size={18} className="text-brand-primary shrink-0 mt-0.5" />
-          <div>
+          <div className="min-w-0 flex-1">
             <strong className="block text-text-primary text-sm font-semibold">Surat Elektronik (Email)</strong>
-            <span className="text-text-secondary mt-0.5 block">
-              {managementEmail}
-            </span>
+            <div className="mt-1 flex flex-col gap-1 text-text-secondary">
+              {emails.length > 0 ? (
+                emails.map((email, idx) => (
+                  <a
+                    key={idx}
+                    href={`mailto:${email}`}
+                    className="hover:text-brand-primary hover:underline transition-colors block break-all"
+                  >
+                    {email}
+                  </a>
+                ))
+              ) : (
+                <span>{managementEmail || '-'}</span>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -269,18 +295,7 @@ export function ContactPage() {
   const metaDesc = useContent('seo.kontak.description', 'Hubungi kantor manajemen Plaza Kebun Sayur Balikpapan untuk informasi sewa tempat, perizinan acara, dan layanan pengaduan.');
   useDocumentMeta(metaTitle, metaDesc);
 
-  const headerTitle = useContent('header.kontak.title', 'Hubungi Pengelola Plaza Kebun Sayur');
-  const headerDesc = useContent(
-    'header.kontak.description',
-    'Punya pertanyaan seputar fasilitas gedung, agenda kunjungan rombongan, atau barang tertinggal? Tim pengelola mall siap membantu Anda.'
-  );
-
-  const officeEyebrow = useContent('contact.office_eyebrow', 'Kantor Pengelola');
   const officeTitle = useContent('contact.office_title', 'Informasi Kontak Resmi');
-  const officeDesc = useContent(
-    'contact.office_description',
-    'Kunjungi kantor manajemen mall di lantai dasar atau hubungi pusat layanan terpadu berikut.'
-  );
   const formTitle = useContent('contact.form_title', 'Kirim Pesan atau Pertanyaan');
   const formDesc = useContent(
     'contact.form_description',
@@ -297,19 +312,12 @@ export function ContactPage() {
   const formState = useContactForm();
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <PageHeader
-        title={headerTitle}
-        description={headerDesc}
-      />
-
+    <div className="flex flex-col min-h-screen bg-canvas">
       <section className="py-10 sm:py-14 bg-canvas flex-1">
         <Container>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
             <OfficeInfoColumn
-              officeEyebrow={officeEyebrow}
               officeTitle={officeTitle}
-              officeDesc={officeDesc}
               officeAddress={officeAddress}
               mallHours={mallHours}
               securityPhone={securityPhone}

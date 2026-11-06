@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, RotateCcw, X, AlertCircle } from 'lucide-react';
 import { Container } from '../components/layout/Container';
+import { PageHeader } from '../components/layout/PageHeader';
 import { TenantCard } from '../components/directory/TenantCard';
 import { CategoryFilter } from '../components/directory/CategoryFilter';
 import { SkeletonCard } from '../components/ui/SkeletonCard';
@@ -192,15 +193,14 @@ function ActiveFilterBadges({
   );
 }
 
-function ShoppingFilterHeader({
-  headerTitle,
-  headerDesc,
+function ShoppingFilterFrame({
   searchQuery,
   handleSearchChange,
   selectedFloorId,
   setSelectedFloorId,
   floors,
   categories,
+  visibleCategories,
   selectedCatId,
   setSelectedCatId,
   selectedType,
@@ -214,15 +214,8 @@ function ShoppingFilterHeader({
   const selectedFloorObj = floors.find((f) => f.id === selectedFloorId);
 
   return (
-    <div className="p-6 sm:p-8 bg-surface-subtle border border-border-subtle rounded-md mb-6">
-      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary mb-2">
-        {headerTitle}
-      </h1>
-      <p className="text-xs sm:text-sm text-text-secondary leading-relaxed max-w-2xl mb-6">
-        {headerDesc}
-      </p>
-
-      <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 mb-4">
+    <div className="bg-canvas border border-border-subtle rounded-lg shadow-card p-5 sm:p-6 mb-8 flex flex-col gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
         <div className="sm:col-span-8 relative">
           <input
             id="shopping-search"
@@ -266,6 +259,18 @@ function ShoppingFilterHeader({
             ))}
           </select>
         </div>
+      </div>
+
+      <div className="relative">
+        <CategoryFilter
+          categories={visibleCategories}
+          selectedCategoryId={selectedCatId}
+          onSelectCategory={(id) => {
+            setSelectedCatId(id);
+            setCurrentPage(1);
+          }}
+        />
+        <div className="sm:hidden pointer-events-none absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-canvas to-transparent" />
       </div>
 
       <ActiveFilterBadges
@@ -440,10 +445,6 @@ export function ShoppingDirectory() {
   useDocumentMeta(metaTitle, metaDesc);
 
   const headerTitle = useContent('header.belanja.title', 'Direktori Kios Belanja');
-  const headerDesc = useContent(
-    'header.belanja.description',
-    'Cari kios batu akik, permata, kerajinan Dayak Kenyah, perhiasan emas perak, busana etnik, batik, dan cinderamata khas Kalimantan.'
-  );
 
   const [searchParams, setSearchParams] = useSearchParams();
   const filterState = useShoppingFilterState(searchParams, setSearchParams);
@@ -463,17 +464,21 @@ export function ShoppingDirectory() {
 
   return (
     <div className="flex flex-col min-h-screen bg-canvas">
+      <PageHeader
+        title={headerTitle}
+        backgroundImage="/assets/Photograph_of_plaza_building.webp"
+      />
+
       <section className="py-8 sm:py-12 flex-1">
         <Container>
-          <ShoppingFilterHeader
-            headerTitle={headerTitle}
-            headerDesc={headerDesc}
+          <ShoppingFilterFrame
             searchQuery={filterState.searchQuery}
             handleSearchChange={filterState.handleSearchChange}
             selectedFloorId={filterState.selectedFloorId}
             setSelectedFloorId={filterState.setSelectedFloorId}
             floors={floors}
             categories={categories}
+            visibleCategories={visibleCategories}
             selectedCatId={filterState.selectedCatId}
             setSelectedCatId={filterState.setSelectedCatId}
             selectedType={filterState.selectedType}
@@ -483,18 +488,6 @@ export function ShoppingDirectory() {
             setCurrentPage={filterState.setCurrentPage}
             handleResetFilters={filterState.handleResetFilters}
           />
-
-          <div className="relative mb-6">
-            <CategoryFilter
-              categories={visibleCategories}
-              selectedCategoryId={filterState.selectedCatId}
-              onSelectCategory={(id) => {
-                filterState.setSelectedCatId(id);
-                filterState.setCurrentPage(1);
-              }}
-            />
-            <div className="sm:hidden pointer-events-none absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-canvas to-transparent" />
-          </div>
 
           <ShoppingToolbar
             totalCount={meta.total || tenants.length}

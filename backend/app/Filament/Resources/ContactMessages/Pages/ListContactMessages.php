@@ -84,11 +84,13 @@ class ListContactMessages extends ListRecords
                         ->required(),
                     TextInput::make('management_email')
                         ->label('Email Resmi Pengelola')
-                        ->email()
+                        ->placeholder('Contoh: pengelola@plazakebunsayur.com, info@plazakebunsayur.com')
+                        ->helperText('Dapat memasukkan lebih dari satu alamat email, pisahkan dengan koma (,).')
                         ->required(),
                     TextInput::make('security_phone')
                         ->label('Telepon Pos Keamanan Gedung')
-                        ->placeholder('Contoh: (0542) 734567')
+                        ->placeholder('Contoh: (0542) 734567, 081234567890')
+                        ->helperText('Dapat memasukkan lebih dari satu nomor telepon, pisahkan dengan koma (,).')
                         ->required(),
                     Textarea::make('office_address')
                         ->label('Alamat Kantor Pengelola')

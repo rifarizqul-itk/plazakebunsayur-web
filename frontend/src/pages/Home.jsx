@@ -165,7 +165,7 @@ export function Home() {
   );
   useDocumentMeta(metaTitle, metaDesc);
 
-  const eventsTitle = useContent('home.events.title', 'Informasi & Kegiatan Mendatang');
+  const eventsTitle = useContent('home.events.title', 'Events');
   const { promos, olehOlehTenants, latestEvents, loading } = useHomeData();
 
   return (

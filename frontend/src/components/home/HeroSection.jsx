@@ -1,17 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
-import {
-  ArrowRight,
-  ChevronLeft,
-  ChevronRight,
-  Copy,
-  Check,
-  ExternalLink,
-} from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Container } from '../layout/Container';
 import { useContent, useContentImage, useSiteSettings } from '../../hooks/useContent';
 import { resolveBuildingPhotos } from '../../utils/media';
-import { SlideItem, SlideControls, ActionCardItem } from './HeroSliderParts';
+import { SlideItem, ActionCardItem } from './HeroSliderParts';
 
 function useHeroSlider(totalSlides) {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -46,53 +38,13 @@ function useHeroSlider(totalSlides) {
   };
 }
 
-function useWitaClock() {
-  const [witaTime, setWitaTime] = useState('');
-
-  useEffect(() => {
-    const checkOperatingStatus = () => {
-      const now = new Date();
-      const utcHours = now.getUTCHours();
-      const utcMinutes = now.getUTCMinutes();
-      const witaHours = (utcHours + 8) % 24;
-
-      const formattedTime = `${String(witaHours).padStart(2, '0')}:${String(utcMinutes).padStart(2, '0')} WITA`;
-      setWitaTime(formattedTime);
-    };
-
-    checkOperatingStatus();
-    const interval = setInterval(checkOperatingStatus, 60000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return witaTime;
-}
-
-function useCopyAddress(mallAddress) {
-  const [copiedAddress, setCopiedAddress] = useState(false);
-
-  const handleCopyAddress = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(mallAddress);
-      setCopiedAddress(true);
-      setTimeout(() => setCopiedAddress(false), 2200);
-    } catch {
-      setCopiedAddress(true);
-      setTimeout(() => setCopiedAddress(false), 2200);
-    }
-  }, [mallAddress]);
-
-  return { copiedAddress, handleCopyAddress };
-}
 
 function HeroSliderModule({
   activeSlides,
   currentSlide,
-  isPaused,
   setIsPaused,
   nextSlide,
   prevSlide,
-  setCurrentSlide,
 }) {
   return (
     <section
@@ -119,7 +71,7 @@ function HeroSliderModule({
       <button
         type="button"
         onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 flex items-center justify-center bg-surface-dark/70 hover:bg-brand-primary active:bg-brand-primary-pressed text-white border border-white/20 transition-all rounded-sm cursor-pointer opacity-80 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100"
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 flex items-center justify-center text-white transition-all cursor-pointer opacity-80 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100"
         aria-label="Slide sebelumnya"
       >
         <ChevronLeft size={22} />
@@ -128,110 +80,17 @@ function HeroSliderModule({
       <button
         type="button"
         onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 flex items-center justify-center bg-surface-dark/70 hover:bg-brand-primary active:bg-brand-primary-pressed text-white border border-white/20 transition-all rounded-sm cursor-pointer opacity-80 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100"
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 flex items-center justify-center text-white transition-all cursor-pointer opacity-80 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100"
         aria-label="Slide berikutnya"
       >
         <ChevronRight size={22} />
       </button>
-
-      <SlideControls
-        isPaused={isPaused}
-        onTogglePause={() => setIsPaused((prev) => !prev)}
-        currentSlide={currentSlide}
-        totalSlides={activeSlides.length}
-        onSelectSlide={setCurrentSlide}
-      />
     </section>
-  );
-}
-
-function QuickInfoModule({
-  mallHours,
-  witaTime,
-  mallAddress,
-  mapsUrl,
-  copiedAddress,
-  handleCopyAddress,
-}) {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
-      {/* Box 1: Opening Hours */}
-      <div className="p-6 bg-surface-subtle border border-border-subtle rounded-md flex flex-col gap-1.5 hover:border-border-strong transition-colors">
-        <h4 className="text-base font-bold text-text-primary">
-          Waktu operasional mall
-        </h4>
-        <p className="text-sm font-semibold text-text-primary">
-          {mallHours}
-        </p>
-        {witaTime && (
-          <span className="text-xs text-text-muted">
-            Waktu lokal WITA saat ini: <span className="font-mono font-medium text-text-secondary">{witaTime}</span>
-          </span>
-        )}
-        <Link
-          to="/panduan-kunjungan"
-          className="inline-flex items-center gap-1 min-h-[44px] py-2 text-xs font-semibold text-brand-primary hover:underline mt-1 self-start"
-        >
-          <span>Lihat jadwal operasional lengkap</span>
-          <ArrowRight size={13} />
-        </Link>
-      </div>
-
-      {/* Box 2: Getting Here with Interactive Quick-Copy */}
-      <div className="p-6 bg-surface-subtle border border-border-subtle rounded-md flex flex-col gap-1.5 hover:border-border-strong transition-colors">
-        <div className="flex items-center justify-between flex-wrap gap-2">
-          <h4 className="text-base font-bold text-text-primary">
-            Petunjuk lokasi dan akses
-          </h4>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={handleCopyAddress}
-              className="inline-flex items-center gap-1.5 min-h-[44px] px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-text-primary hover:text-brand-primary active:bg-surface-muted bg-canvas border border-border-subtle rounded-sm transition-all cursor-pointer"
-              title="Salin alamat lengkap untuk navigasi GPS / ojek online"
-            >
-              {copiedAddress ? (
-                <>
-                  <Check size={14} className="text-emerald-600" />
-                  <span className="text-emerald-700">Tersalin!</span>
-                </>
-              ) : (
-                <>
-                  <Copy size={14} className="text-text-muted" />
-                  <span>Salin Alamat</span>
-                </>
-              )}
-            </button>
-            <a
-              href={mapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 min-h-[44px] px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-text-primary hover:text-brand-primary active:bg-surface-muted bg-canvas border border-border-subtle rounded-sm transition-all"
-              title="Buka rute navigasi langsung di Google Maps"
-            >
-              <span>Buka Maps</span>
-              <ExternalLink size={14} />
-            </a>
-          </div>
-        </div>
-        <p className="text-sm font-semibold text-text-primary">
-          {mallAddress}
-        </p>
-        <Link
-          to="/panduan-kunjungan"
-          className="inline-flex items-center gap-1 min-h-[44px] py-2 text-xs font-semibold text-brand-primary hover:underline mt-1 self-start"
-        >
-          <span>Lihat informasi lokasi & fasilitas gedung</span>
-          <ArrowRight size={13} />
-        </Link>
-      </div>
-    </div>
   );
 }
 
 export function HeroSection() {
   const siteSettings = useSiteSettings();
-  const witaTime = useWitaClock();
 
   const heroImagesRaw = useContent('home.hero.images', null);
   const heroImage = useContentImage('home.hero.image', '/assets/Photograph_of_plaza_building.webp');
@@ -371,23 +230,15 @@ export function HeroSection() {
 
   const slider = useHeroSlider(activeSlides.length);
 
-  const mallAddress = siteSettings?.office_address || 'Plaza Kebun Sayur, Jl. Letjen Suprapto, Baru Ilir, Kec. Balikpapan Barat, Kota Balikpapan, Kalimantan Timur 76131';
-  const mallHours = siteSettings?.mall_opening_hours || '08.00 – 18.00 WITA (Buka Setiap Hari)';
-  const mapsUrl = siteSettings?.maps_url || 'https://maps.google.com/?q=Plaza+Kebun+Sayur+Balikpapan';
-
-  const { copiedAddress, handleCopyAddress } = useCopyAddress(mallAddress);
-
   return (
     <div className="flex flex-col bg-canvas">
       {/* 1. Auto-Sliding Photo Highlights Gallery */}
       <HeroSliderModule
         activeSlides={activeSlides}
         currentSlide={slider.currentSlide}
-        isPaused={slider.isPaused}
         setIsPaused={slider.setIsPaused}
         nextSlide={slider.nextSlide}
         prevSlide={slider.prevSlide}
-        setCurrentSlide={slider.setCurrentSlide}
       />
 
       {/* 2. Layanan dan Komoditas Belanja */}
@@ -409,15 +260,6 @@ export function HeroSection() {
               <ActionCardItem key={card.id} card={card} />
             ))}
           </div>
-
-          <QuickInfoModule
-            mallHours={mallHours}
-            witaTime={witaTime}
-            mallAddress={mallAddress}
-            mapsUrl={mapsUrl}
-            copiedAddress={copiedAddress}
-            handleCopyAddress={handleCopyAddress}
-          />
         </Container>
       </section>
     </div>

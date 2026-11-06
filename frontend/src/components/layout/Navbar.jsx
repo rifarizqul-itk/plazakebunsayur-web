@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, Search, MessageCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { NavLink, Link } from 'react-router-dom';
+import { Menu, X, MessageCircle } from 'lucide-react';
 import { Container } from './Container';
 import { generateManagementWhatsAppLink } from '../../utils/whatsapp';
 import { useContent, useContentImage, useNavItems, useSiteSettings } from '../../hooks/useContent';
@@ -95,52 +95,6 @@ function MobileNavItem({ item, onClose }) {
   );
 }
 
-function useNavSearch(setMobileMenuOpen, mobileMenuOpen) {
-  const [searchNavInput, setSearchNavInput] = useState('');
-  const searchInputRef = useRef(null);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && mobileMenuOpen) {
-        setMobileMenuOpen(false);
-        return;
-      }
-      if (e.key === 'Escape' && document.activeElement === searchInputRef.current) {
-        searchInputRef.current?.blur();
-        return;
-      }
-
-      const isInput =
-        ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName) || e.target.isContentEditable;
-      const isSearchShortcut = e.key === '/' || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k');
-      if (!isInput && isSearchShortcut) {
-        e.preventDefault();
-        searchInputRef.current?.focus();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [mobileMenuOpen, setMobileMenuOpen]);
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    const query = searchNavInput.trim();
-    if (query) {
-      navigate(`/belanja?q=${encodeURIComponent(query)}`);
-      setSearchNavInput('');
-      setMobileMenuOpen(false);
-    }
-  };
-
-  return {
-    searchNavInput,
-    setSearchNavInput,
-    searchInputRef,
-    handleSearchSubmit,
-  };
-}
 
 function NavbarBrand({ logoUrl, brandName, brandSubLocation }) {
   return (
@@ -168,53 +122,18 @@ function NavbarBrand({ logoUrl, brandName, brandSubLocation }) {
   );
 }
 
-function DesktopSearchAndHotline({
-  searchInputRef,
-  searchPlaceholder,
-  searchNavInput,
-  setSearchNavInput,
-  handleSearchSubmit,
-  isFashionPage,
-  waLink,
-}) {
+function DesktopCta({ waLink }) {
   return (
     <div className="hidden lg:flex items-center gap-3">
-      <form onSubmit={handleSearchSubmit} className="relative w-44 xl:w-56" role="search">
-        <input
-          ref={searchInputRef}
-          type="text"
-          placeholder={searchPlaceholder}
-          aria-label={isFashionPage ? 'Cari busana atau batik' : 'Cari nama kios atau produk'}
-          value={searchNavInput}
-          onChange={(e) => setSearchNavInput(e.target.value)}
-          className="w-full py-1.5 pl-2.5 pr-14 text-xs bg-surface-subtle border-b-2 border-border-strong text-text-primary placeholder:text-text-muted focus:outline-none focus:bg-canvas focus:border-brand-primary transition-all duration-200 rounded-sm"
-        />
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-1">
-          <kbd
-            aria-hidden="true"
-            className="hidden xl:inline-flex items-center justify-center px-1.5 py-0.5 text-[9px] font-mono font-semibold text-text-muted bg-surface-muted border border-border-subtle rounded-sm select-none pointer-events-none"
-            title="Tekan / untuk fokus pencarian"
-          >
-            /
-          </kbd>
-          <button
-            type="submit"
-            aria-label="Kirim pencarian"
-            className="p-1 text-text-primary hover:text-brand-primary transition-colors cursor-pointer"
-          >
-            <Search size={14} />
-          </button>
-        </div>
-      </form>
-
       <a
         href={waLink}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-text-primary bg-surface-subtle hover:bg-surface-muted hover:border-brand-primary border border-border-subtle rounded-sm transition-colors min-h-[44px] whitespace-nowrap shrink-0"
+        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 min-h-[38px] text-xs font-semibold text-white bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed rounded-lg transition-colors whitespace-nowrap shrink-0 shadow-subtle"
+        aria-label="Hubungi Kami"
       >
-        <MessageCircle size={14} className="text-whatsapp" />
-        <span>Hotline Pengelola</span>
+        <MessageCircle size={16} className="text-white" />
+        <span>Hubungi Kami</span>
       </a>
     </div>
   );
@@ -249,34 +168,11 @@ function MobileActions({ waLink, mobileMenuOpen, setMobileMenuOpen }) {
 
 function MobileDrawer({
   navItems,
-  searchPlaceholder,
-  searchNavInput,
-  setSearchNavInput,
-  handleSearchSubmit,
-  isFashionPage,
   waLink,
   onClose,
 }) {
   return (
     <div className="lg:hidden border-b border-mono-800 bg-surface-dark text-white px-4 pt-4 pb-6 flex flex-col gap-2 shadow-card animate-fadeIn">
-      <form onSubmit={handleSearchSubmit} className="relative mb-2">
-        <input
-          type="text"
-          placeholder={searchPlaceholder}
-          aria-label={isFashionPage ? 'Cari busana atau batik' : 'Cari nama kios atau produk'}
-          value={searchNavInput}
-          onChange={(e) => setSearchNavInput(e.target.value)}
-          className="w-full py-2.5 pl-3 pr-9 min-h-[44px] text-xs border border-mono-700 rounded-sm bg-mono-900 text-white placeholder:text-mono-400 focus:outline-none focus:border-gold"
-        />
-        <button
-          type="submit"
-          aria-label="Kirim pencarian"
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-mono-400 hover:text-gold"
-        >
-          <Search size={16} />
-        </button>
-      </form>
-
       {navItems.map((item) => (
         <MobileNavItem
           key={item.id || item.path}
@@ -291,10 +187,10 @@ function MobileDrawer({
           target="_blank"
           rel="noopener noreferrer"
           onClick={onClose}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed rounded-sm min-h-[44px]"
+          className="w-full flex items-center justify-center gap-2 px-3.5 py-1.5 min-h-[38px] text-xs font-bold uppercase tracking-wider text-white bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed rounded-lg"
         >
-          <MessageCircle size={16} />
-          <span>WhatsApp Hotline Pengelola</span>
+          <MessageCircle size={16} className="text-white" />
+          <span>Hubungi Kami</span>
         </a>
       </div>
     </div>
@@ -303,7 +199,6 @@ function MobileDrawer({
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const location = useLocation();
 
   const siteSettings = useSiteSettings();
   const waNumber = siteSettings?.management_whatsapp || '080000000000';
@@ -315,16 +210,6 @@ export function Navbar() {
 
   const rawNavItems = headerNavItems?.length > 0 ? headerNavItems : DEFAULT_HEADER_NAV;
   const navItems = normalizeNavItems(rawNavItems);
-
-  const isFashionPage = location.pathname.startsWith('/fashion');
-  const searchPlaceholder = isFashionPage ? 'Cari busana / batik...' : 'Cari kios / produk...';
-
-  const {
-    searchNavInput,
-    setSearchNavInput,
-    searchInputRef,
-    handleSearchSubmit,
-  } = useNavSearch(setMobileMenuOpen, mobileMenuOpen);
 
   return (
     <header className="sticky top-0 z-50 bg-canvas transition-colors shadow-sm">
@@ -343,15 +228,7 @@ export function Navbar() {
               ))}
             </nav>
 
-            <DesktopSearchAndHotline
-              searchInputRef={searchInputRef}
-              searchPlaceholder={searchPlaceholder}
-              searchNavInput={searchNavInput}
-              setSearchNavInput={setSearchNavInput}
-              handleSearchSubmit={handleSearchSubmit}
-              isFashionPage={isFashionPage}
-              waLink={waLink}
-            />
+            <DesktopCta waLink={waLink} />
 
             <MobileActions
               waLink={waLink}
@@ -365,11 +242,6 @@ export function Navbar() {
       {mobileMenuOpen && (
         <MobileDrawer
           navItems={navItems}
-          searchPlaceholder={searchPlaceholder}
-          searchNavInput={searchNavInput}
-          setSearchNavInput={setSearchNavInput}
-          handleSearchSubmit={handleSearchSubmit}
-          isFashionPage={isFashionPage}
           waLink={waLink}
           onClose={() => setMobileMenuOpen(false)}
         />

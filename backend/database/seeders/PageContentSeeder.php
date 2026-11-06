@@ -57,7 +57,15 @@ class PageContentSeeder extends Seeder
     {
         $str = is_array($value) ? json_encode($value) : (string) $value;
 
-        if ($str === 'Akses Cepat Direktori') {
+        $legacyExactMatches = [
+            'Akses Cepat Direktori',
+            'Promo Minggu Ini / Bulan Ini',
+            'Oleh-Oleh Khas & Cenderamata',
+            'Informasi & Promo Terkini',
+            'Informasi & Kegiatan Mendatang',
+        ];
+
+        if (in_array($str, $legacyExactMatches, true)) {
             return true;
         }
 
