@@ -58,6 +58,26 @@ class ManageHomePage extends Page
             'home.hero.building_tag',
             'home.hero.building_cta',
             'home.hero.image',
+            'home.hero.slide.batu_mulia.tag',
+            'home.hero.slide.batu_mulia.title',
+            'home.hero.slide.batu_mulia.desc',
+            'home.hero.slide.batu_mulia.cta',
+            'home.hero.slide.batu_mulia.image',
+            'home.hero.slide.cinderamata.tag',
+            'home.hero.slide.cinderamata.title',
+            'home.hero.slide.cinderamata.desc',
+            'home.hero.slide.cinderamata.cta',
+            'home.hero.slide.cinderamata.image',
+            'home.hero.slide.fashion.tag',
+            'home.hero.slide.fashion.title',
+            'home.hero.slide.fashion.desc',
+            'home.hero.slide.fashion.cta',
+            'home.hero.slide.fashion.image',
+            'home.hero.slide.suasana.tag',
+            'home.hero.slide.suasana.title',
+            'home.hero.slide.suasana.desc',
+            'home.hero.slide.suasana.cta',
+            'home.hero.slide.suasana.image',
             'home.quick_access.title',
             'home.quick_access.description',
             'home.action.belanja.category',
@@ -115,8 +135,8 @@ class ManageHomePage extends Page
                         Tab::make('Hero & Banner')
                             ->icon(Heroicon::OutlinedPhoto)
                             ->schema([
-                                Section::make('Teks Banner Utama')
-                                    ->description('Teks hero banner yang pertama kali dilihat pengunjung di halaman beranda')
+                                Section::make('Slide 1: Gedung Utama Plaza Kebun Sayur')
+                                    ->description('Slide pembuka carousel hero banner di halaman beranda')
                                     ->schema([
                                         TextInput::make(static::toFormFieldName('home.hero.eyebrow'))
                                             ->label('Teks Pembuka (Eyebrow)')
@@ -132,10 +152,6 @@ class ManageHomePage extends Page
                                             ->label('Label Tombol Utama (CTA 1)'),
                                         TextInput::make(static::toFormFieldName('home.hero.cta_secondary'))
                                             ->label('Label Tombol Sekunder (CTA 2)'),
-                                    ])->columns(2),
-
-                                Section::make('Badge Status & Gambar Utama')
-                                    ->schema([
                                         TextInput::make(static::toFormFieldName('home.hero.building_tag'))
                                             ->label('Tag Status Gedung'),
                                         TextInput::make(static::toFormFieldName('home.hero.building_cta'))
@@ -149,6 +165,102 @@ class ManageHomePage extends Page
                                             ->helperText('Format JPG, PNG, atau WebP. Otomatis dikompres ke WebP.')
                                             ->columnSpanFull(),
                                     ])->columns(2),
+
+                                Section::make('Slide 2: Sentra Batu Mulia Borneo')
+                                    ->description('Slide carousel kedua yang menyorot kerajinan batu akik & permata')
+                                    ->schema([
+                                        TextInput::make(static::toFormFieldName('home.hero.slide.batu_mulia.tag'))
+                                            ->label('Label Tag Kategori')
+                                            ->placeholder('Sentra Batu Mulia Borneo'),
+                                        TextInput::make(static::toFormFieldName('home.hero.slide.batu_mulia.title'))
+                                            ->label('Judul Slide'),
+                                        Textarea::make(static::toFormFieldName('home.hero.slide.batu_mulia.desc'))
+                                            ->label('Deskripsi Ringkas')
+                                            ->rows(2)
+                                            ->columnSpanFull(),
+                                        TextInput::make(static::toFormFieldName('home.hero.slide.batu_mulia.cta'))
+                                            ->label('Teks Tombol Aksi (CTA)'),
+                                        FileUpload::make(static::toFormFieldName('home.hero.slide.batu_mulia.image'))
+                                            ->label('Foto Slide Batu Mulia')
+                                            ->disk('public')
+                                            ->directory('page-contents')
+                                            ->image()
+                                            ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
+                                            ->helperText('Format JPG, PNG, atau WebP. Otomatis dikompres ke WebP.')
+                                            ->columnSpanFull(),
+                                    ])->columns(2)->collapsed(),
+
+                                Section::make('Slide 3: Cinderamata & Etnik Dayak')
+                                    ->description('Slide carousel ketiga yang menyorot manik-manik, ukiran Dayak & suvenir')
+                                    ->schema([
+                                        TextInput::make(static::toFormFieldName('home.hero.slide.cinderamata.tag'))
+                                            ->label('Label Tag Kategori')
+                                            ->placeholder('Cinderamata & Etnik Dayak'),
+                                        TextInput::make(static::toFormFieldName('home.hero.slide.cinderamata.title'))
+                                            ->label('Judul Slide'),
+                                        Textarea::make(static::toFormFieldName('home.hero.slide.cinderamata.desc'))
+                                            ->label('Deskripsi Ringkas')
+                                            ->rows(2)
+                                            ->columnSpanFull(),
+                                        TextInput::make(static::toFormFieldName('home.hero.slide.cinderamata.cta'))
+                                            ->label('Teks Tombol Aksi (CTA)'),
+                                        FileUpload::make(static::toFormFieldName('home.hero.slide.cinderamata.image'))
+                                            ->label('Foto Slide Cinderamata')
+                                            ->disk('public')
+                                            ->directory('page-contents')
+                                            ->image()
+                                            ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
+                                            ->helperText('Format JPG, PNG, atau WebP. Otomatis dikompres ke WebP.')
+                                            ->columnSpanFull(),
+                                    ])->columns(2)->collapsed(),
+
+                                Section::make('Slide 4: Sentra Fashion & Busana Kaltim')
+                                    ->description('Slide carousel keempat yang menyorot batik Balikpapan & busana etnik')
+                                    ->schema([
+                                        TextInput::make(static::toFormFieldName('home.hero.slide.fashion.tag'))
+                                            ->label('Label Tag Kategori')
+                                            ->placeholder('Sentra Fashion & Busana Kaltim'),
+                                        TextInput::make(static::toFormFieldName('home.hero.slide.fashion.title'))
+                                            ->label('Judul Slide'),
+                                        Textarea::make(static::toFormFieldName('home.hero.slide.fashion.desc'))
+                                            ->label('Deskripsi Ringkas')
+                                            ->rows(2)
+                                            ->columnSpanFull(),
+                                        TextInput::make(static::toFormFieldName('home.hero.slide.fashion.cta'))
+                                            ->label('Teks Tombol Aksi (CTA)'),
+                                        FileUpload::make(static::toFormFieldName('home.hero.slide.fashion.image'))
+                                            ->label('Foto Slide Fashion')
+                                            ->disk('public')
+                                            ->directory('page-contents')
+                                            ->image()
+                                            ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
+                                            ->helperText('Format JPG, PNG, atau WebP. Otomatis dikompres ke WebP.')
+                                            ->columnSpanFull(),
+                                    ])->columns(2)->collapsed(),
+
+                                Section::make('Slide 5: Suasana Kios Plaza Kebun Sayur')
+                                    ->description('Slide carousel kelima yang menyorot keramahan kios & aktivitas perniagaan')
+                                    ->schema([
+                                        TextInput::make(static::toFormFieldName('home.hero.slide.suasana.tag'))
+                                            ->label('Label Tag Kategori')
+                                            ->placeholder('Suasana Kios Plaza Kebun Sayur'),
+                                        TextInput::make(static::toFormFieldName('home.hero.slide.suasana.title'))
+                                            ->label('Judul Slide'),
+                                        Textarea::make(static::toFormFieldName('home.hero.slide.suasana.desc'))
+                                            ->label('Deskripsi Ringkas')
+                                            ->rows(2)
+                                            ->columnSpanFull(),
+                                        TextInput::make(static::toFormFieldName('home.hero.slide.suasana.cta'))
+                                            ->label('Teks Tombol Aksi (CTA)'),
+                                        FileUpload::make(static::toFormFieldName('home.hero.slide.suasana.image'))
+                                            ->label('Foto Slide Suasana')
+                                            ->disk('public')
+                                            ->directory('page-contents')
+                                            ->image()
+                                            ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
+                                            ->helperText('Format JPG, PNG, atau WebP. Otomatis dikompres ke WebP.')
+                                            ->columnSpanFull(),
+                                    ])->columns(2)->collapsed(),
                             ]),
 
                         Tab::make('Akses Cepat & Aksi')

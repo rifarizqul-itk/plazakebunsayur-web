@@ -10,7 +10,7 @@ import { fetchCategories, fetchFloors, fetchTenants } from '../services/api';
 import { useContent } from '../hooks/useContent';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 
-function buildTenantQueryParams({ selectedCatId, selectedFloorId, searchQuery, sortOrder, currentPage }) {
+function buildTenantQueryParams({ selectedCatId, selectedFloorId, searchQuery, sortOrder, currentPage, selectedType }) {
   const params = {
     sort: sortOrder,
     page: currentPage,
@@ -19,10 +19,11 @@ function buildTenantQueryParams({ selectedCatId, selectedFloorId, searchQuery, s
   if (selectedCatId) params.category_id = selectedCatId;
   if (selectedFloorId) params.floor_id = selectedFloorId;
   if (searchQuery) params.q = searchQuery;
+  if (selectedType) params.type = selectedType;
   return params;
 }
 
-function useShoppingData({ selectedCatId, selectedFloorId, searchQuery, sortOrder, currentPage }) {
+function useShoppingData({ selectedCatId, selectedFloorId, searchQuery, sortOrder, currentPage, selectedType }) {
   const [categories, setCategories] = useState([]);
   const [floors, setFloors] = useState([]);
   const [tenants, setTenants] = useState([]);
@@ -59,6 +60,7 @@ function useShoppingData({ selectedCatId, selectedFloorId, searchQuery, sortOrde
           searchQuery,
           sortOrder,
           currentPage,
+          selectedType,
         });
         const res = await fetchTenants(queryParams);
         if (!isCancelled) {
@@ -84,7 +86,7 @@ function useShoppingData({ selectedCatId, selectedFloorId, searchQuery, sortOrde
       isCancelled = true;
       clearTimeout(timer);
     };
-  }, [selectedCatId, selectedFloorId, searchQuery, currentPage, sortOrder, retryCount]);
+  }, [selectedCatId, selectedFloorId, searchQuery, currentPage, sortOrder, retryCount, selectedType]);
 
   return {
     categories,
@@ -120,10 +122,14 @@ function ActiveFilterBadges({
   setSelectedCatId,
   selectedFloorObj,
   setSelectedFloorId,
+  selectedType,
+  setSelectedType,
+  searchParams,
+  setSearchParams,
   setCurrentPage,
   handleResetFilters,
 }) {
-  const hasActiveFilters = Boolean(searchQuery || selectedCategoryObj || selectedFloorObj);
+  const hasActiveFilters = Boolean(searchQuery || selectedCategoryObj || selectedFloorObj || selectedType);
   if (!hasActiveFilters) return null;
 
   return (
@@ -135,6 +141,20 @@ function ActiveFilterBadges({
           label={`Pencarian: "${searchQuery}"`}
           onRemove={() => handleSearchChange('')}
           ariaLabel="Hapus kata kunci pencarian"
+        />
+      )}
+
+      {selectedType && (
+        <FilterBadge
+          label={`Sentra: ${selectedType === 'fashion' ? 'Fashion & Busana' : selectedType}`}
+          onRemove={() => {
+            setSelectedType('');
+            const newParams = new URLSearchParams(searchParams);
+            newParams.delete('type');
+            setSearchParams(newParams);
+            setCurrentPage(1);
+          }}
+          ariaLabel="Hapus filter sentra"
         />
       )}
 
@@ -183,6 +203,10 @@ function ShoppingFilterHeader({
   categories,
   selectedCatId,
   setSelectedCatId,
+  selectedType,
+  setSelectedType,
+  searchParams,
+  setSearchParams,
   setCurrentPage,
   handleResetFilters,
 }) {
@@ -251,6 +275,10 @@ function ShoppingFilterHeader({
         setSelectedCatId={setSelectedCatId}
         selectedFloorObj={selectedFloorObj}
         setSelectedFloorId={setSelectedFloorId}
+        selectedType={selectedType}
+        setSelectedType={setSelectedType}
+        searchParams={searchParams}
+        setSearchParams={setSearchParams}
         setCurrentPage={setCurrentPage}
         handleResetFilters={handleResetFilters}
       />
@@ -358,10 +386,13 @@ export function ShoppingDirectory() {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const initialQuery = searchParams.get('q') || '';
+  const initialType = searchParams.get('type') || '';
 
   const [selectedCatId, setSelectedCatId] = useState(null);
   const [selectedFloorId, setSelectedFloorId] = useState(null);
+  const [selectedType, setSelectedType] = useState(initialType);
   const [prevInitialQuery, setPrevInitialQuery] = useState(initialQuery);
+  const [prevInitialType, setPrevInitialType] = useState(initialType);
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [sortOrder, setSortOrder] = useState('name_asc');
   const [currentPage, setCurrentPage] = useState(1);
@@ -371,27 +402,40 @@ export function ShoppingDirectory() {
     setSearchQuery(initialQuery);
   }
 
+  if (prevInitialType !== initialType) {
+    setPrevInitialType(initialType);
+    setSelectedType(initialType);
+  }
+
   const { categories, floors, tenants, meta, loading, error, retry } = useShoppingData({
     selectedCatId,
     selectedFloorId,
     searchQuery,
     sortOrder,
     currentPage,
+    selectedType,
   });
+
+  const visibleCategories = selectedType
+    ? categories.filter((c) => c.type === selectedType)
+    : categories;
 
   const handleSearchChange = (val) => {
     setSearchQuery(val);
     setCurrentPage(1);
+    const newParams = new URLSearchParams(searchParams);
     if (val) {
-      setSearchParams({ q: val });
+      newParams.set('q', val);
     } else {
-      setSearchParams({});
+      newParams.delete('q');
     }
+    setSearchParams(newParams);
   };
 
   const handleResetFilters = () => {
     setSelectedCatId(null);
     setSelectedFloorId(null);
+    setSelectedType('');
     setSearchQuery('');
     setSearchParams({});
     setCurrentPage(1);
@@ -412,13 +456,17 @@ export function ShoppingDirectory() {
             categories={categories}
             selectedCatId={selectedCatId}
             setSelectedCatId={setSelectedCatId}
+            selectedType={selectedType}
+            setSelectedType={setSelectedType}
+            searchParams={searchParams}
+            setSearchParams={setSearchParams}
             setCurrentPage={setCurrentPage}
             handleResetFilters={handleResetFilters}
           />
 
           <div className="relative mb-6">
             <CategoryFilter
-              categories={categories}
+              categories={visibleCategories}
               selectedCategoryId={selectedCatId}
               onSelectCategory={(id) => {
                 setSelectedCatId(id);
