@@ -42,7 +42,7 @@ class ListPageContents extends ListRecords
                         } else {
                             Notification::make()
                                 ->title('Gagal Memicu Build')
-                                ->body('Server hosting mengembalikan status: ' . $response->status())
+                                ->body('Server hosting mengembalikan status: '.$response->status())
                                 ->danger()
                                 ->send();
                         }

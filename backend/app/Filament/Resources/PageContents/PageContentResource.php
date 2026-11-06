@@ -5,8 +5,8 @@ namespace App\Filament\Resources\PageContents;
 use App\Filament\Resources\PageContents\Pages\EditPageContent;
 use App\Filament\Resources\PageContents\Pages\ListPageContents;
 use App\Models\PageContent;
+use App\Services\ImageOptimizerService;
 use BackedEnum;
-use UnitEnum;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
@@ -19,6 +19,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class PageContentResource extends Resource
 {
@@ -31,6 +32,11 @@ class PageContentResource extends Resource
     protected static ?string $modelLabel = 'Konten & Teks Halaman';
 
     protected static ?string $pluralModelLabel = 'Konten & Teks Halaman';
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -52,7 +58,7 @@ class PageContentResource extends Resource
                     ->disk('public')
                     ->directory('page-contents')
                     ->image()
-                    ->saveUploadedFileUsing(fn ($file) => app(\App\Services\ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
+                    ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
                     ->helperText('Format JPG, PNG, atau WebP. Ukuran berkas bebas, otomatis dikompres ke WebP.')
                     ->visible(fn (?PageContent $record): bool => $record?->type === 'image')
                     ->columnSpanFull(),
@@ -63,7 +69,7 @@ class PageContentResource extends Resource
                     ->image()
                     ->multiple()
                     ->reorderable()
-                    ->saveUploadedFileUsing(fn ($file) => app(\App\Services\ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
+                    ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
                     ->helperText('Unggah beberapa foto gedung/kegiatan. Ukuran berkas bebas, otomatis dikompres ke WebP.')
                     ->visible(fn (?PageContent $record): bool => $record?->type === 'images')
                     ->columnSpanFull(),

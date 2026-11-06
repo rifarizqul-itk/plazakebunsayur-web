@@ -32,7 +32,7 @@
         "group": "seo",
         "label": "SEO: Deskripsi Halaman Belanja",
         "help": "Deskripsi meta halaman belanja.",
-        "default": "Katalog lengkap kios batu mulia, perhiasan, suvenir Dayak, batik, dan kerajinan tradisional di Plaza Kebun Sayur Balikpapan."
+        "default": "Katalog lengkap kios batu mulia, perhiasan, busana adat Dayak, batik khas Kalimantan Timur, pakaian tradisional, dan suvenir khas di Plaza Kebun Sayur Balikpapan."
     },
     "seo.fashion.title": {
         "type": "text",

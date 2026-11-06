@@ -123,12 +123,6 @@ export function ShopDetail() {
         const data = await fetchTenantBySlug(slug);
         if (isCancelled) return;
 
-        // Type Guard: If this tenant is fashion, redirect via replace to /fashion/:slug
-        if (data.category?.type === 'fashion') {
-          navigate(`/fashion/${slug}`, { replace: true });
-          return;
-        }
-
         setTenant(data);
         setActiveImageIndex(0);
       } catch (err) {

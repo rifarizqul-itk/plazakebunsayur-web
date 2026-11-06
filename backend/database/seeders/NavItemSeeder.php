@@ -13,7 +13,7 @@ class NavItemSeeder extends Seeder
     public function run(): void
     {
         // Clean up legacy paths
-        NavItem::whereIn('path', ['/kuliner', '/agenda'])->delete();
+        NavItem::whereIn('path', ['/kuliner', '/agenda', '/fashion'])->delete();
 
         $items = array_merge(
             $this->getHeaderNavItems(),
@@ -53,21 +53,12 @@ class NavItemSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'label' => 'FASHION',
-                'path' => '/fashion',
-                'location' => 'header',
-                'is_external' => false,
-                'is_cta' => false,
-                'order_index' => 3,
-                'is_active' => true,
-            ],
-            [
                 'label' => 'INFORMASI',
                 'path' => '/informasi',
                 'location' => 'header',
                 'is_external' => false,
                 'is_cta' => false,
-                'order_index' => 4,
+                'order_index' => 3,
                 'is_active' => true,
             ],
             [
@@ -76,7 +67,7 @@ class NavItemSeeder extends Seeder
                 'location' => 'header',
                 'is_external' => false,
                 'is_cta' => false,
-                'order_index' => 5,
+                'order_index' => 4,
                 'is_active' => true,
             ],
             [
@@ -85,7 +76,7 @@ class NavItemSeeder extends Seeder
                 'location' => 'header',
                 'is_external' => false,
                 'is_cta' => false,
-                'order_index' => 6,
+                'order_index' => 5,
                 'is_active' => true,
             ],
         ];
@@ -104,21 +95,12 @@ class NavItemSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'label' => 'Sentra Fashion & Batik',
-                'path' => '/fashion',
-                'location' => 'footer',
-                'is_external' => false,
-                'is_cta' => false,
-                'order_index' => 2,
-                'is_active' => true,
-            ],
-            [
                 'label' => 'Informasi & Promo Plaza',
                 'path' => '/informasi',
                 'location' => 'footer',
                 'is_external' => false,
                 'is_cta' => false,
-                'order_index' => 3,
+                'order_index' => 2,
                 'is_active' => true,
             ],
             [
@@ -127,7 +109,7 @@ class NavItemSeeder extends Seeder
                 'location' => 'footer',
                 'is_external' => false,
                 'is_cta' => false,
-                'order_index' => 4,
+                'order_index' => 3,
                 'is_active' => true,
             ],
             [
@@ -136,7 +118,7 @@ class NavItemSeeder extends Seeder
                 'location' => 'footer',
                 'is_external' => false,
                 'is_cta' => false,
-                'order_index' => 5,
+                'order_index' => 4,
                 'is_active' => true,
             ],
         ];

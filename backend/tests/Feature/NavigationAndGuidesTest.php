@@ -2,10 +2,23 @@
 
 namespace Tests\Feature;
 
+use App\Filament\Pages\ManageHomePage;
+use App\Filament\Pages\ManageIdentityLegalPage;
+use App\Filament\Pages\ManagePanduanPage;
 use App\Filament\Resources\AccessRoutes\AccessRouteResource;
+use App\Filament\Resources\BuildingRules\BuildingRuleResource;
+use App\Filament\Resources\Categories\CategoryResource;
+use App\Filament\Resources\ContactMessages\ContactMessageResource;
+use App\Filament\Resources\Facilities\FacilityResource;
+use App\Filament\Resources\Floors\FloorResource;
+use App\Filament\Resources\LegalPages\LegalPageResource;
 use App\Filament\Resources\NavItems\NavItemResource;
 use App\Filament\Resources\NavItems\Pages\ListNavItems;
+use App\Filament\Resources\PageContents\PageContentResource;
 use App\Filament\Resources\ShoppingTips\ShoppingTipResource;
+use App\Filament\Resources\SiteSettings\SiteSettingResource;
+use App\Filament\Resources\Tenants\TenantResource;
+use App\Filament\Resources\WhatsOns\WhatsOnResource;
 use App\Models\AccessRoute;
 use App\Models\NavItem;
 use App\Models\ShoppingTip;
@@ -18,16 +31,16 @@ class NavigationAndGuidesTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_access_route_and_shopping_tip_resources_register_navigation(): void
+    public function test_access_route_and_shopping_tip_resources_hidden_from_main_navigation(): void
     {
-        $this->assertTrue(
+        $this->assertFalse(
             AccessRouteResource::shouldRegisterNavigation(),
-            'AccessRouteResource should register in Filament navigation'
+            'AccessRouteResource should be hidden from main sidebar navigation'
         );
 
-        $this->assertTrue(
+        $this->assertFalse(
             ShoppingTipResource::shouldRegisterNavigation(),
-            'ShoppingTipResource should register in Filament navigation'
+            'ShoppingTipResource should be hidden from main sidebar navigation'
         );
     }
 
@@ -134,4 +147,87 @@ class NavigationAndGuidesTest extends TestCase
             ->assertJsonPath('data.shopping_tips.0.title', 'Tips Satu')
             ->assertJsonPath('data.shopping_tips.1.title', 'Tips Dua');
     }
+
+    public function test_all_ten_sub_resources_are_hidden_from_main_sidebar_navigation(): void
+    {
+        $hiddenResources = [
+            FacilityResource::class,
+            AccessRouteResource::class,
+            ShoppingTipResource::class,
+            BuildingRuleResource::class,
+            NavItemResource::class,
+            LegalPageResource::class,
+            CategoryResource::class,
+            FloorResource::class,
+            PageContentResource::class,
+            SiteSettingResource::class,
+        ];
+
+        foreach ($hiddenResources as $resource) {
+            $this->assertFalse(
+                $resource::shouldRegisterNavigation(),
+                "{$resource} should be hidden from main sidebar navigation (shouldRegisterNavigation() === false)"
+            );
+        }
+    }
+
+    public function test_six_public_facing_pages_and_resources_have_correct_navigation_order_and_labels(): void
+    {
+        $this->assertEquals('1. Halaman Beranda', ManageHomePage::getNavigationLabel());
+        $this->assertEquals(1, ManageHomePage::getNavigationSort());
+
+        $this->assertEquals('2. Halaman Belanja', TenantResource::getNavigationLabel());
+        $this->assertEquals(2, TenantResource::getNavigationSort());
+
+        $this->assertEquals('3. Halaman Informasi', WhatsOnResource::getNavigationLabel());
+        $this->assertEquals(3, WhatsOnResource::getNavigationSort());
+
+        $this->assertEquals('4. Halaman Panduan', ManagePanduanPage::getNavigationLabel());
+        $this->assertEquals(4, ManagePanduanPage::getNavigationSort());
+
+        $this->assertEquals('5. Halaman Kontak', ContactMessageResource::getNavigationLabel());
+        $this->assertEquals(5, ContactMessageResource::getNavigationSort());
+
+        $this->assertEquals('6. Identitas, Menu & Hukum', ManageIdentityLegalPage::getNavigationLabel());
+        $this->assertEquals(6, ManageIdentityLegalPage::getNavigationSort());
+    }
+
+    public function test_smart_google_maps_embed_url_extraction(): void
+    {
+        $iframeSnippet = '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.8924495252077!2d116.82160367496476!3d-1.234368035571572" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>';
+        $extracted = ManagePanduanPage::extractMapEmbedUrl($iframeSnippet);
+        $this->assertEquals(
+            'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.8924495252077!2d116.82160367496476!3d-1.234368035571572',
+            $extracted
+        );
+
+        $singleQuoteSnippet = "<iframe width='100%' height='300' src='https://www.google.com/maps/embed?pb=test123'></iframe>";
+        $this->assertEquals(
+            'https://www.google.com/maps/embed?pb=test123',
+            ManagePanduanPage::extractMapEmbedUrl($singleQuoteSnippet)
+        );
+
+        $plainUrl = '  https://www.google.com/maps/embed?pb=bare_url  ';
+        $this->assertEquals(
+            'https://www.google.com/maps/embed?pb=bare_url',
+            ManagePanduanPage::extractMapEmbedUrl($plainUrl)
+        );
+
+        $this->assertNull(ManagePanduanPage::extractMapEmbedUrl(''));
+        $this->assertNull(ManagePanduanPage::extractMapEmbedUrl(null));
+    }
+
+    public function test_field_name_transformation_helpers(): void
+    {
+        $key = 'home.hero.cta_primary';
+        $field = ManageHomePage::toFormFieldName($key);
+        $this->assertEquals('home___hero___cta_primary', $field);
+        $this->assertEquals($key, ManageHomePage::fromFormFieldName($field));
+
+        $panduanKey = 'header.panduan.eyebrow';
+        $panduanField = ManagePanduanPage::toFormFieldName($panduanKey);
+        $this->assertEquals('header___panduan___eyebrow', $panduanField);
+        $this->assertEquals($panduanKey, ManagePanduanPage::fromFormFieldName($panduanField));
+    }
 }
+

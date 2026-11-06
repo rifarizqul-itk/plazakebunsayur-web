@@ -6,8 +6,8 @@ use App\Filament\Resources\WhatsOns\Pages\CreateWhatsOn;
 use App\Filament\Resources\WhatsOns\Pages\EditWhatsOn;
 use App\Filament\Resources\WhatsOns\Pages\ListWhatsOns;
 use App\Models\WhatsOn;
+use App\Services\ImageOptimizerService;
 use BackedEnum;
-use UnitEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -15,8 +15,8 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -26,6 +26,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
+use UnitEnum;
 
 class WhatsOnResource extends Resource
 {
@@ -33,7 +34,11 @@ class WhatsOnResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
 
-    protected static UnitEnum|string|null $navigationGroup = 'Informasi Pengunjung';
+    protected static ?string $navigationLabel = '3. Halaman Informasi';
+
+    protected static ?int $navigationSort = 3;
+
+    protected static UnitEnum|string|null $navigationGroup = null;
 
     protected static ?string $modelLabel = 'Informasi & Promo';
 
@@ -104,7 +109,7 @@ class WhatsOnResource extends Resource
                 ->disk('public')
                 ->directory('whats-on')
                 ->image()
-                ->saveUploadedFileUsing(fn ($file) => app(\App\Services\ImageOptimizerService::class)->optimizeWhatsOnBanner($file))
+                ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeWhatsOnBanner($file))
                 ->helperText('Rekomendasi rasio 16:9 (1600x900 px). Ukuran berkas bebas, otomatis dikompres ke WebP.'),
         ];
     }

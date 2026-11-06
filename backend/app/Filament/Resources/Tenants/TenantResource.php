@@ -6,15 +6,15 @@ use App\Filament\Resources\Tenants\Pages\CreateTenant;
 use App\Filament\Resources\Tenants\Pages\EditTenant;
 use App\Filament\Resources\Tenants\Pages\ListTenants;
 use App\Models\Tenant;
+use App\Services\ImageOptimizerService;
 use BackedEnum;
-use UnitEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -25,6 +25,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
+use UnitEnum;
 
 class TenantResource extends Resource
 {
@@ -32,7 +33,11 @@ class TenantResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingStorefront;
 
-    protected static UnitEnum|string|null $navigationGroup = 'Direktori & Konten';
+    protected static ?string $navigationLabel = '2. Halaman Belanja';
+
+    protected static ?int $navigationSort = 2;
+
+    protected static UnitEnum|string|null $navigationGroup = null;
 
     protected static ?string $modelLabel = 'Kios / Stan';
 
@@ -122,7 +127,7 @@ class TenantResource extends Resource
                 ->disk('public')
                 ->directory('tenants')
                 ->image()
-                ->saveUploadedFileUsing(fn ($file) => app(\App\Services\ImageOptimizerService::class)->optimizeTenantPhoto($file))
+                ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeTenantPhoto($file))
                 ->helperText('Rekomendasi rasio 4:3 (800x600 px). Ukuran berkas bebas, otomatis dikompres ke WebP.'),
             FileUpload::make('images')
                 ->label('Galeri Foto Kios / Produk (Bisa Geser / Swipe)')
@@ -131,7 +136,7 @@ class TenantResource extends Resource
                 ->disk('public')
                 ->directory('tenants')
                 ->image()
-                ->saveUploadedFileUsing(fn ($file) => app(\App\Services\ImageOptimizerService::class)->optimizeTenantPhoto($file))
+                ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeTenantPhoto($file))
                 ->helperText('Unggah 2–3+ foto suasana kios atau produk unggulan. Ukuran berkas bebas, otomatis dikompres ke WebP.')
                 ->columnSpanFull(),
             Textarea::make('description')

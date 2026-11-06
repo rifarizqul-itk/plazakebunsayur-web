@@ -7,7 +7,6 @@ use App\Filament\Resources\Floors\Pages\EditFloor;
 use App\Filament\Resources\Floors\Pages\ListFloors;
 use App\Models\Floor;
 use BackedEnum;
-use UnitEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -17,6 +16,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class FloorResource extends Resource
 {
@@ -29,6 +29,11 @@ class FloorResource extends Resource
     protected static ?string $modelLabel = 'Lantai Gedung';
 
     protected static ?string $pluralModelLabel = 'Daftar Lantai';
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
 
     public static function form(Schema $schema): Schema
     {

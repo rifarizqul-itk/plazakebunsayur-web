@@ -127,7 +127,7 @@ function OlehOlehGrid({ tenants, loading }) {
         <TenantCard
           key={tenant.id}
           tenant={tenant}
-          basePath={tenant.category?.type === 'fashion' ? '/fashion' : '/belanja'}
+          basePath="/belanja"
         />
       ))}
     </div>

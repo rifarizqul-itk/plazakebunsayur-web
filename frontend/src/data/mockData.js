@@ -618,17 +618,15 @@ export const MOCK_NAV_ITEMS = {
   header: [
     { id: 1, label: 'BERANDA', path: '/', location: 'header', is_external: false, is_cta: false },
     { id: 2, label: 'BELANJA', path: '/belanja', location: 'header', is_external: false, is_cta: false },
-    { id: 3, label: 'FASHION', path: '/fashion', location: 'header', is_external: false, is_cta: false },
-    { id: 4, label: 'INFORMASI', path: '/informasi', location: 'header', is_external: false, is_cta: false },
-    { id: 5, label: 'PANDUAN', path: '/panduan-kunjungan', location: 'header', is_external: false, is_cta: false },
-    { id: 6, label: 'KONTAK', path: '/kontak', location: 'header', is_external: false, is_cta: false },
+    { id: 3, label: 'INFORMASI', path: '/informasi', location: 'header', is_external: false, is_cta: false },
+    { id: 4, label: 'PANDUAN', path: '/panduan-kunjungan', location: 'header', is_external: false, is_cta: false },
+    { id: 5, label: 'KONTAK', path: '/kontak', location: 'header', is_external: false, is_cta: false },
   ],
   footer: [
-    { id: 7, label: 'Direktori Kios Belanja', path: '/belanja', location: 'footer', is_external: false },
-    { id: 8, label: 'Sentra Fashion & Busana Khas', path: '/fashion', location: 'footer', is_external: false },
-    { id: 9, label: 'Informasi & Promo Plaza', path: '/informasi', location: 'footer', is_external: false },
-    { id: 10, label: 'Panduan Kunjungan Gedung', path: '/panduan-kunjungan', location: 'footer', is_external: false },
-    { id: 11, label: 'Kontak & Pengaduan', path: '/kontak', location: 'footer', is_external: false },
+    { id: 6, label: 'Direktori Kios Belanja', path: '/belanja', location: 'footer', is_external: false },
+    { id: 7, label: 'Informasi & Promo Plaza', path: '/informasi', location: 'footer', is_external: false },
+    { id: 8, label: 'Panduan Kunjungan Gedung', path: '/panduan-kunjungan', location: 'footer', is_external: false },
+    { id: 9, label: 'Kontak & Pengaduan', path: '/kontak', location: 'footer', is_external: false },
   ],
 };
 

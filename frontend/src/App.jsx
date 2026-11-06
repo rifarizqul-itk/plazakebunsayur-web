@@ -5,8 +5,6 @@ import { Footer } from './components/layout/Footer';
 import { Home } from './pages/Home';
 import { ShoppingDirectory } from './pages/ShoppingDirectory';
 import { ShopDetail } from './pages/ShopDetail';
-import { FashionDirectory } from './pages/FashionDirectory';
-import { FashionDetail } from './pages/FashionDetail';
 import { EventsPage } from './pages/EventsPage';
 import { EventDetail } from './pages/EventDetail';
 import { PlanYourVisit } from './pages/PlanYourVisit';
@@ -33,9 +31,14 @@ function ScrollToTop() {
 /**
  * Wrapper redirect untuk rute legacy yang meneruskan parameter :slug
  */
+function LegacyFashionSlugRedirect() {
+  const { slug } = useParams();
+  return <Navigate to={slug ? `/belanja/${slug}` : '/belanja'} replace />;
+}
+
 function LegacyKulinerSlugRedirect() {
   const { slug } = useParams();
-  return <Navigate to={slug ? `/fashion/${slug}` : '/fashion'} replace />;
+  return <Navigate to={slug ? `/belanja/${slug}` : '/belanja'} replace />;
 }
 
 function LegacyAgendaSlugRedirect() {
@@ -58,13 +61,13 @@ export function App() {
               <Route path="/" element={<Home />} />
               <Route path="/belanja" element={<ShoppingDirectory />} />
               <Route path="/belanja/:slug" element={<ShopDetail />} />
-              <Route path="/fashion" element={<FashionDirectory />} />
-              <Route path="/fashion/:slug" element={<FashionDetail />} />
               <Route path="/informasi" element={<EventsPage />} />
               <Route path="/informasi/:slug" element={<EventDetail />} />
 
               {/* Legacy Backward-Compatibility Redirects */}
-              <Route path="/kuliner" element={<Navigate to="/fashion" replace />} />
+              <Route path="/fashion" element={<Navigate to="/belanja" replace />} />
+              <Route path="/fashion/:slug" element={<LegacyFashionSlugRedirect />} />
+              <Route path="/kuliner" element={<Navigate to="/belanja" replace />} />
               <Route path="/kuliner/:slug" element={<LegacyKulinerSlugRedirect />} />
               <Route path="/agenda" element={<Navigate to="/informasi" replace />} />
               <Route path="/agenda/:slug" element={<LegacyAgendaSlugRedirect />} />

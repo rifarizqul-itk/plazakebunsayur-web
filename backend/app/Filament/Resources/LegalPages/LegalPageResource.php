@@ -30,6 +30,11 @@ class LegalPageResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Halaman Hukum & Privasi';
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
+
     public static function canCreate(): bool
     {
         return false;

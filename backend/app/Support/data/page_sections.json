@@ -18,7 +18,7 @@
         "group": "header",
         "label": "Hal. Belanja: Deskripsi",
         "help": "Deskripsi header halaman belanja.",
-        "default": "Jelajahi kios batu mulia, perhiasan emas dan perak, cinderamata khas Dayak, serta batik Kalimantan di Plaza Kebun Sayur."
+        "default": "Jelajahi kios batu mulia, perhiasan emas dan perak, busana etnik Dayak, batik khas Kalimantan, kain tenun, serta cinderamata di Plaza Kebun Sayur."
     },
     "header.fashion.eyebrow": {
         "type": "text",
