@@ -173,14 +173,16 @@ class ManagePanduanPage extends Page
                             ->required(),
                         TextInput::make('setting_security_phone')
                             ->label('Nomor Telepon Pos Keamanan Gedung')
-                            ->placeholder('Contoh: (0542) 734567')
+                            ->placeholder('Contoh: (0542) 734567, 081234567890')
+                            ->helperText('Dapat memasukkan lebih dari satu nomor telepon, pisahkan dengan koma (,).')
                             ->required(),
                         TextInput::make('setting_management_whatsapp')
                             ->label('WhatsApp Resmi Pengelola')
                             ->placeholder('Contoh: 081234567890'),
                         TextInput::make('setting_management_email')
                             ->label('Email Resmi Pengelola')
-                            ->email(),
+                            ->placeholder('Contoh: pengelola@plazakebunsayur.com, info@plazakebunsayur.com')
+                            ->helperText('Dapat memasukkan lebih dari satu alamat email, pisahkan dengan koma (,).'),
                     ])->columns(2),
 
                 Section::make('Teks Panduan Jam Buka di Website')

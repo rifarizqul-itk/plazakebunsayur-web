@@ -90,12 +90,15 @@ class PageContentApiTest extends TestCase
         $this->assertEquals('INFORMASI GEDUNG', $data['home.action.panduan.category']);
 
         // Promos & Oleh-Oleh
-        $this->assertEquals('Promo Minggu Ini / Bulan Ini', $data['home.promos.title']);
+        $this->assertEquals('Promo Saat Ini', $data['home.promos.title']);
         $this->assertEquals('Penawaran Spesial Kios & Gedung', $data['home.promos.eyebrow']);
         $this->assertEquals('Lihat semua promo & informasi', $data['home.promos.cta_label']);
-        $this->assertEquals('Oleh-Oleh Khas & Cenderamata', $data['home.oleh_oleh.title']);
+        $this->assertEquals('Kios Belanja Pilihan', $data['home.oleh_oleh.title']);
         $this->assertEquals('Batik, Busana Adat & Kerajinan Khas', $data['home.oleh_oleh.eyebrow']);
         $this->assertEquals('Lihat semua kios belanja & oleh-oleh', $data['home.oleh_oleh.cta_label']);
+
+        // Events / Informasi Beranda
+        $this->assertEquals('Events', $data['home.events.title']);
 
         // History
         $this->assertEquals('Aktivitas perdagangan langsung dengan para pengrajin dan pedagang lokal menjadikan kawasan ini tujuan belanja cinderamata di Balikpapan.', $data['home.history.p3']);

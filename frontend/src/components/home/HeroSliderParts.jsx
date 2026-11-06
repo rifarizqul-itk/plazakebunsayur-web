@@ -6,13 +6,8 @@ import { Container } from '../layout/Container';
 export function SlideItem({ slide, idx, isActive }) {
   const isFirstSlide = idx === 0;
 
-  return (
-    <div
-      className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-        isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
-      }`}
-      aria-hidden={!isActive}
-    >
+  const innerContent = (
+    <>
       <img
         src={slide.image}
         alt={slide.title}
@@ -25,9 +20,6 @@ export function SlideItem({ slide, idx, isActive }) {
       <div className="absolute bottom-0 left-0 right-0 z-20 pb-8 sm:pb-12 pt-16">
         <Container>
           <div className="max-w-xl flex flex-col gap-1.5 text-white">
-            <span className="text-xs font-semibold tracking-wider uppercase text-gold">
-              {slide.tag}
-            </span>
             {isFirstSlide ? (
               <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white leading-tight">
                 {slide.title}
@@ -40,18 +32,32 @@ export function SlideItem({ slide, idx, isActive }) {
             <p className="text-xs sm:text-sm text-mono-200 line-clamp-2 mt-0.5">
               {slide.desc}
             </p>
-            {slide.ctaHref && (
-              <Link
-                to={slide.ctaHref}
-                className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-white hover:text-gold transition-colors self-start group/link min-h-[44px] py-2"
-              >
-                <span>{slide.ctaText}</span>
-                <ArrowRight size={14} className="transition-transform group-hover/link:translate-x-1" />
-              </Link>
-            )}
           </div>
         </Container>
       </div>
+    </>
+  );
+
+  const containerClasses = `absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+    isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+  }`;
+
+  if (slide.ctaHref) {
+    return (
+      <Link
+        to={slide.ctaHref}
+        className={`${containerClasses} block`}
+        aria-hidden={!isActive}
+        tabIndex={isActive ? 0 : -1}
+      >
+        {innerContent}
+      </Link>
+    );
+  }
+
+  return (
+    <div className={containerClasses} aria-hidden={!isActive}>
+      {innerContent}
     </div>
   );
 }
@@ -112,39 +118,29 @@ export function SlideControls({ isPaused, onTogglePause, currentSlide, totalSlid
 
 export function ActionCardItem({ card }) {
   return (
-    <div className="group flex flex-col bg-canvas border border-border-subtle hover:border-border-strong active:border-border-strong transition-all duration-150 rounded-md overflow-hidden">
-      <Link
-        to={card.href}
-        tabIndex={-1}
-        aria-hidden="true"
-        className="relative block w-full aspect-[4/3] bg-surface-muted overflow-hidden focus:outline-none"
-      >
-        <img
-          src={card.image}
-          alt={card.title}
-          loading="lazy"
-          className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500 ease-out"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-mono-900/80 via-transparent to-transparent opacity-90" />
-        <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-1 text-left">
-          <span className="text-xs font-bold uppercase tracking-wider text-gold drop-shadow-sm">
-            {card.category}
-          </span>
-          <h3 className="text-lg sm:text-xl font-bold text-white drop-shadow-md leading-snug line-clamp-2">
-            {card.title}
-          </h3>
-        </div>
-      </Link>
-
-      <div className="p-4 bg-canvas flex flex-col justify-end mt-auto">
-        <Link
-          to={card.href}
-          className="w-full min-h-[44px] flex items-center justify-center gap-2 py-2.5 px-4 text-xs font-bold uppercase tracking-wider text-white hover:text-white bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed rounded-sm shadow-subtle transition-colors group/btn cursor-pointer"
-        >
+    <Link
+      to={card.href}
+      className="group relative block w-full aspect-[4/3] bg-surface-muted rounded-md overflow-hidden border border-border-subtle hover:border-border-strong transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+    >
+      <img
+        src={card.image}
+        alt={card.title}
+        loading="lazy"
+        className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500 ease-out"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-mono-900/90 via-mono-900/40 to-transparent" />
+      <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-1.5 text-left">
+        <span className="text-xs font-bold uppercase tracking-wider text-gold drop-shadow-sm">
+          {card.category}
+        </span>
+        <h3 className="text-lg sm:text-xl font-bold text-white drop-shadow-md leading-snug line-clamp-2">
+          {card.title}
+        </h3>
+        <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-white group-hover:text-gold transition-colors mt-1">
           <span>{card.btnText}</span>
-          <ArrowRight size={15} className="group-hover/btn:translate-x-1 transition-transform" />
-        </Link>
+          <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }

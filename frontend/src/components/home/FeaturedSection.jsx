@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Calendar, Tag } from 'lucide-react';
 import { Container } from '../layout/Container';
-import { TenantCard } from '../directory/TenantCard';
 import { SkeletonCard } from '../ui/SkeletonCard';
 import { useContent } from '../../hooks/useContent';
 import { formatDateRange } from '../../utils/date';
@@ -52,21 +51,15 @@ function PromoCard({ promo }) {
               {promo.title}
             </h3>
           </Link>
-
-          {promo.summary && (
-            <p className="text-xs sm:text-sm text-text-secondary line-clamp-2 leading-relaxed">
-              {promo.summary}
-            </p>
-          )}
         </div>
 
-        <div className="pt-3 border-t border-border-subtle mt-1">
+        <div className="pt-2 mt-auto">
           <Link
             to={detailLink}
-            className="w-full min-h-[44px] flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold text-text-primary hover:text-brand-primary hover:border-brand-primary active:bg-surface-muted bg-surface-subtle border border-border-subtle rounded-sm transition-colors group/btn"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-primary hover:text-brand-primary-hover group/link transition-colors"
           >
             <span>Lihat Detail Promo</span>
-            <ArrowRight size={14} className="text-text-secondary group-hover/btn:text-brand-primary group-hover/btn:translate-x-0.5 transition-all" />
+            <ArrowRight size={13} className="group-hover/link:translate-x-0.5 transition-transform" />
           </Link>
         </div>
       </div>
@@ -102,6 +95,37 @@ function PromoGrid({ promos, loading }) {
   );
 }
 
+function FeaturedTenantCard({ tenant, basePath = '/belanja' }) {
+  if (!tenant) return null;
+  const detailLink = `${basePath}/${tenant.slug}`;
+  const imageSource = tenant.image_url || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80';
+
+  return (
+    <Link
+      to={detailLink}
+      className="group relative block w-full aspect-[4/3] rounded-md overflow-hidden bg-surface-muted border border-border-subtle hover:border-border-strong transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+    >
+      <img
+        src={imageSource}
+        alt={tenant.name}
+        loading="lazy"
+        decoding="async"
+        className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500 ease-out"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-mono-900/90 via-mono-900/35 to-transparent" />
+      <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-1.5 text-left">
+        <h3 className="text-base sm:text-lg font-bold text-white drop-shadow-md leading-snug line-clamp-2">
+          {tenant.name}
+        </h3>
+        <div className="inline-flex items-center gap-1 text-xs font-semibold text-white/90 group-hover:text-gold transition-colors">
+          <span>Lihat Detail</span>
+          <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 function OlehOlehGrid({ tenants, loading }) {
   if (loading) {
     return (
@@ -124,7 +148,7 @@ function OlehOlehGrid({ tenants, loading }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       {tenants.map((tenant) => (
-        <TenantCard
+        <FeaturedTenantCard
           key={tenant.id}
           tenant={tenant}
           basePath="/belanja"
@@ -154,12 +178,10 @@ export function FeaturedSection({
   const activePromos = promos.slice(0, 4);
   const activeOlehOleh = resolveActiveOlehOleh(olehOlehTenants, retailTenants, culinaryTenants);
 
-  const promoEyebrow = useContent('home.promos.eyebrow', 'Penawaran Spesial Kios & Gedung');
-  const promoTitle = useContent('home.promos.title', 'Promo Minggu Ini / Bulan Ini');
+  const promoTitle = useContent('home.promos.title', 'Promo Saat Ini');
   const promoCtaLabel = useContent('home.promos.cta_label', 'Lihat semua promo & informasi');
 
-  const olehOlehEyebrow = useContent('home.oleh_oleh.eyebrow', 'Batik, Busana Adat & Kerajinan Khas');
-  const olehOlehTitle = useContent('home.oleh_oleh.title', 'Oleh-Oleh Khas & Cenderamata');
+  const olehOlehTitle = useContent('home.oleh_oleh.title', 'Kios Belanja Pilihan');
   const olehOlehCtaLabel = useContent('home.oleh_oleh.cta_label', 'Lihat semua kios belanja & oleh-oleh');
 
   return (
@@ -168,11 +190,6 @@ export function FeaturedSection({
         {/* 1. Promo Minggu Ini / Bulan Ini */}
         <div className="flex flex-col gap-6">
           <div>
-            {promoEyebrow && (
-              <span className="text-xs font-semibold text-brand-primary tracking-wide block mb-1">
-                {promoEyebrow}
-              </span>
-            )}
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">
               {promoTitle}
             </h2>
@@ -194,11 +211,6 @@ export function FeaturedSection({
         {/* 2. Oleh-Oleh Khas & Cenderamata */}
         <div className="flex flex-col gap-6 mt-16 sm:mt-20 pt-12 border-t border-border-subtle">
           <div>
-            {olehOlehEyebrow && (
-              <span className="text-xs font-semibold text-brand-primary tracking-wide block mb-1">
-                {olehOlehEyebrow}
-              </span>
-            )}
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">
               {olehOlehTitle}
             </h2>

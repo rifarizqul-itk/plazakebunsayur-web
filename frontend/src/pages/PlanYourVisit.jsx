@@ -27,7 +27,6 @@ import { useContent, useSiteSettings } from '../hooks/useContent';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import {
   ACCESS_ROUTES,
-  SHOPPING_TIPS,
   BUILDING_RULES,
 } from '../content/visitGuide';
 
@@ -181,7 +180,6 @@ function VisitHoursAndLocationSection({
 
 function VisitInfoListSection({
   title,
-  description,
   items,
   icon: Icon,
   iconColor = 'text-brand-primary',
@@ -192,9 +190,6 @@ function VisitInfoListSection({
         <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary">
           {title}
         </h2>
-        <p className="text-xs sm:text-sm text-text-secondary mt-1 max-w-[68ch]">
-          {description}
-        </p>
       </div>
 
       <div className="divide-y divide-border-subtle">
@@ -223,37 +218,36 @@ function VisitInfoListSection({
   );
 }
 
-function VisitFacilitiesSection({ facilitiesTitle, facilitiesDesc, facilities }) {
+function VisitFacilitiesSection({ facilitiesTitle, facilities }) {
   return (
     <section>
       <div className="border-b border-border-subtle pb-4 mb-6">
         <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary">
           {facilitiesTitle}
         </h2>
-        <p className="text-xs sm:text-sm text-text-secondary mt-1 max-w-[68ch]">
-          {facilitiesDesc}
-        </p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-3">
         {facilities.map((fac) => {
           const Icon = getFacilityIcon(fac.icon_name || fac.name);
           return (
             <div
               key={fac.id || fac.name}
-              className="flex flex-col items-center justify-center text-center p-5 bg-surface-subtle border border-border-subtle rounded-md hover:border-brand-primary/40 transition-colors"
+              className="flex items-center gap-3.5 py-3 border-b border-border-subtle"
             >
-              <div className="w-12 h-12 rounded-full bg-brand-primary/10 text-brand-primary flex items-center justify-center mb-3">
-                <Icon size={22} />
+              <div className="w-10 h-10 rounded-lg bg-brand-primary/10 text-brand-primary flex items-center justify-center shrink-0">
+                <Icon size={20} />
               </div>
-              <h3 className="text-sm font-bold text-text-primary">
-                {fac.name}
-              </h3>
-              {fac.location_note && (
-                <span className="text-xs text-text-muted mt-1">
-                  {fac.location_note}
-                </span>
-              )}
+              <div className="min-w-0 flex-1">
+                <h3 className="text-sm font-semibold text-text-primary truncate">
+                  {fac.name}
+                </h3>
+                {fac.location_note && (
+                  <p className="text-xs text-text-muted truncate mt-0.5">
+                    {fac.location_note}
+                  </p>
+                )}
+              </div>
             </div>
           );
         })}
@@ -275,10 +269,6 @@ export function PlanYourVisit() {
   const siteSettings = useSiteSettings();
 
   const headerTitle = useContent('header.panduan.title', 'Rencanakan Kunjungan Anda');
-  const headerDesc = useContent(
-    'header.panduan.description',
-    'Panduan terpadu jam operasional gedung, titik lokasi, fasilitas umum, serta tata tertib kunjungan di Plaza Kebun Sayur Balikpapan.'
-  );
 
   const hoursTitle = useContent('panduan.hours_title', 'Waktu Operasional & Lokasi Mall');
   const hoursDetail = useContent(
@@ -295,25 +285,8 @@ export function PlanYourVisit() {
     'Terletak di pusat perniagaan Kebun Sayur, Balikpapan Barat, berhadapan langsung dengan koridor jalan raya utama dan dekat kawasan permukiman Kampung Baru.'
   );
   const facilitiesTitle = useContent('panduan.facilities_title', 'Fasilitas Gedung Plaza');
-  const facilitiesDesc = useContent(
-    'panduan.facilities_description',
-    'Fasilitas penunjang kenyamanan belanja dan ibadah yang tersedia di lingkungan gedung Plaza Kebun Sayur.'
-  );
   const routesTitle = useContent('panduan.routes_title', 'Akses Transportasi Menuju Lokasi');
-  const routesDesc = useContent(
-    'panduan.routes_description',
-    'Panduan rute perjalanan dari bandara, pelabuhan, dan angkutan kota menuju Plaza Kebun Sayur.'
-  );
-  const tipsTitle = useContent('panduan.tips_title', 'Tips Berbelanja Cerdas');
-  const tipsDesc = useContent(
-    'panduan.tips_description',
-    'Praktik terbaik saat berbelanja suvenir, kerajinan etnik, dan batu mulia di Plaza Kebun Sayur.'
-  );
   const rulesTitle = useContent('panduan.rules_title', 'Tata Tertib & Keamanan');
-  const rulesDesc = useContent(
-    'panduan.rules_description',
-    'Panduan ketertiban demi kenyamanan, kebersihan, dan keselamatan bersama selama berada di Plaza Kebun Sayur.'
-  );
 
   useEffect(() => {
     let isCancelled = false;
@@ -338,7 +311,6 @@ export function PlanYourVisit() {
   }, []);
 
   const accessRoutes = visitGuide?.access_routes?.length > 0 ? visitGuide.access_routes : ACCESS_ROUTES;
-  const shoppingTips = visitGuide?.shopping_tips?.length > 0 ? visitGuide.shopping_tips : SHOPPING_TIPS;
   const buildingRules = visitGuide?.building_rules?.length > 0 ? visitGuide.building_rules : BUILDING_RULES;
   const filteredFacilities = filterSafeFacilities(facilities);
 
@@ -351,7 +323,7 @@ export function PlanYourVisit() {
     <div className="flex flex-col min-h-screen bg-canvas">
       <PageHeader
         title={headerTitle}
-        description={headerDesc}
+        backgroundImage="/assets/Photograph_of_plaza_building.webp"
       />
 
       <section className="py-10 sm:py-14 bg-canvas flex-1">
@@ -371,27 +343,16 @@ export function PlanYourVisit() {
 
             <VisitInfoListSection
               title={routesTitle}
-              description={routesDesc}
               items={accessRoutes}
             />
 
             <VisitFacilitiesSection
               facilitiesTitle={facilitiesTitle}
-              facilitiesDesc={facilitiesDesc}
               facilities={filteredFacilities}
             />
 
             <VisitInfoListSection
-              title={tipsTitle}
-              description={tipsDesc}
-              items={shoppingTips}
-              icon={Sparkles}
-              iconColor="text-gold-text"
-            />
-
-            <VisitInfoListSection
               title={rulesTitle}
-              description={rulesDesc}
               items={buildingRules}
               icon={ShieldAlert}
             />

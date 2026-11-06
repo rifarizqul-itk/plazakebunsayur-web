@@ -1,6 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
 import { Container } from '../layout/Container';
 import { useContent, useContentImage } from '../../hooks/useContent';
 
@@ -19,7 +17,6 @@ export function HistorySection() {
     'home.history.p3',
     'Aktivitas perdagangan langsung dengan para pengrajin dan pedagang lokal menjadikan kawasan ini tujuan belanja cinderamata di Balikpapan.'
   );
-  const ctaLabel = useContent('home.history.cta_label', 'Pelajari Panduan Kunjungan Gedung');
   const historyImage = useContentImage('home.history.image', '/assets/Photograph_of_plaza_building.webp');
 
   return (
@@ -42,16 +39,6 @@ export function HistorySection() {
               <p>{p1}</p>
               <p>{p2}</p>
               <p>{p3}</p>
-            </div>
-
-            <div className="pt-2">
-              <Link
-                to="/panduan-kunjungan"
-                className="group/guide inline-flex items-center gap-2 px-6 py-3 min-h-[44px] bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-pressed text-white font-bold text-xs uppercase tracking-wider transition-colors rounded-sm self-start"
-              >
-                <span>{ctaLabel}</span>
-                <ArrowRight size={14} className="transition-transform duration-200 group-hover/guide:translate-x-1" />
-              </Link>
             </div>
           </div>
 

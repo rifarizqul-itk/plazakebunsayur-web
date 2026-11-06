@@ -333,7 +333,7 @@
         "group": "home",
         "label": "Promo: Judul Bagian",
         "help": "Judul bagian promo minggu ini / bulan ini.",
-        "default": "Promo Minggu Ini / Bulan Ini"
+        "default": "Promo Saat Ini"
     },
     "home.promos.cta_label": {
         "type": "text",
@@ -354,7 +354,7 @@
         "group": "home",
         "label": "Oleh-Oleh: Judul Bagian",
         "help": "Judul bagian oleh-oleh khas & cenderamata.",
-        "default": "Oleh-Oleh Khas & Cenderamata"
+        "default": "Kios Belanja Pilihan"
     },
     "home.oleh_oleh.cta_label": {
         "type": "text",
@@ -438,7 +438,7 @@
         "group": "home",
         "label": "Informasi Beranda: Judul",
         "help": "Judul cuplikan informasi & promo di halaman utama.",
-        "default": "Informasi & Promo Terkini"
+        "default": "Events"
     },
     "home.events.description": {
         "type": "textarea",

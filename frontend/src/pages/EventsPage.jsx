@@ -28,10 +28,6 @@ export function EventsPage() {
   const [loading, setLoading] = useState(true);
 
   const headerTitle = useContent('header.informasi.title', 'Pusat Informasi & Promo Plaza');
-  const headerDesc = useContent(
-    'header.informasi.description',
-    'Temukan jadwal agenda kegiatan, pameran seni budaya Dayak, bazar cenderamata, serta pengumuman promo spesial kios di Plaza Kebun Sayur Balikpapan.'
-  );
 
   useEffect(() => {
     async function loadEvents() {
@@ -53,7 +49,7 @@ export function EventsPage() {
     <div className="flex flex-col min-h-screen">
       <PageHeader
         title={headerTitle}
-        description={headerDesc}
+        backgroundImage="/assets/Photograph_of_plaza_building.webp"
       />
 
       <section className="py-10 sm:py-14 bg-canvas flex-1">
