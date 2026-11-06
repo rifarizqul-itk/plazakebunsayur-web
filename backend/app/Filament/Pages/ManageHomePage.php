@@ -42,14 +42,20 @@ class ManageHomePage extends Page
         return str_replace('___', '.', $field);
     }
 
-    public function mount(): void
+    public static function getPageKeys(): array
     {
-        $this->fillForm();
+        return array_merge(
+            static::getHeroKeys(),
+            static::getActionKeys(),
+            static::getHighlightKeys(),
+            static::getHistoryKeys(),
+            static::getEventAndSeoKeys(),
+        );
     }
 
-    protected function fillForm(): void
+    protected static function getHeroKeys(): array
     {
-        $keys = [
+        return [
             'home.hero.eyebrow',
             'home.hero.title',
             'home.hero.subtitle',
@@ -78,6 +84,12 @@ class ManageHomePage extends Page
             'home.hero.slide.suasana.desc',
             'home.hero.slide.suasana.cta',
             'home.hero.slide.suasana.image',
+        ];
+    }
+
+    protected static function getActionKeys(): array
+    {
+        return [
             'home.quick_access.title',
             'home.quick_access.description',
             'home.action.belanja.category',
@@ -92,6 +104,12 @@ class ManageHomePage extends Page
             'home.action.panduan.title',
             'home.action.panduan.btn_text',
             'home.action.panduan.image',
+        ];
+    }
+
+    protected static function getHighlightKeys(): array
+    {
+        return [
             'home.promos.eyebrow',
             'home.promos.title',
             'home.promos.cta_label',
@@ -101,6 +119,12 @@ class ManageHomePage extends Page
             'home.featured.eyebrow',
             'home.featured.title',
             'home.featured.description',
+        ];
+    }
+
+    protected static function getHistoryKeys(): array
+    {
+        return [
             'home.history.eyebrow',
             'home.history.title',
             'home.history.p1',
@@ -108,12 +132,27 @@ class ManageHomePage extends Page
             'home.history.p3',
             'home.history.cta_label',
             'home.history.image',
+        ];
+    }
+
+    protected static function getEventAndSeoKeys(): array
+    {
+        return [
             'home.events.title',
             'home.events.description',
             'seo.home.title',
             'seo.home.description',
         ];
+    }
 
+    public function mount(): void
+    {
+        $this->fillForm();
+    }
+
+    protected function fillForm(): void
+    {
+        $keys = static::getPageKeys();
         $defaults = PageContent::defaults();
         $saved = PageContent::whereIn('key', $keys)->pluck('value', 'key')->toArray();
 
@@ -132,308 +171,242 @@ class ManageHomePage extends Page
             ->components([
                 Tabs::make('HomeTabs')
                     ->tabs([
-                        Tab::make('Hero & Banner')
-                            ->icon(Heroicon::OutlinedPhoto)
-                            ->schema([
-                                Section::make('Slide 1: Gedung Utama Plaza Kebun Sayur')
-                                    ->description('Slide pembuka carousel hero banner di halaman beranda')
-                                    ->schema([
-                                        TextInput::make(static::toFormFieldName('home.hero.eyebrow'))
-                                            ->label('Teks Pembuka (Eyebrow)')
-                                            ->placeholder('Contoh: Pusat Kerajinan & Cinderamata Khas Balikpapan'),
-                                        TextInput::make(static::toFormFieldName('home.hero.title'))
-                                            ->label('Judul Utama Banner')
-                                            ->placeholder('Contoh: Plaza Kebun Sayur'),
-                                        Textarea::make(static::toFormFieldName('home.hero.subtitle'))
-                                            ->label('Subjudul Banner')
-                                            ->rows(2)
-                                            ->columnSpanFull(),
-                                        TextInput::make(static::toFormFieldName('home.hero.cta_primary'))
-                                            ->label('Label Tombol Utama (CTA 1)'),
-                                        TextInput::make(static::toFormFieldName('home.hero.cta_secondary'))
-                                            ->label('Label Tombol Sekunder (CTA 2)'),
-                                        TextInput::make(static::toFormFieldName('home.hero.building_tag'))
-                                            ->label('Tag Status Gedung'),
-                                        TextInput::make(static::toFormFieldName('home.hero.building_cta'))
-                                            ->label('Teks CTA Status'),
-                                        FileUpload::make(static::toFormFieldName('home.hero.image'))
-                                            ->label('Foto Utama Hero Gedung')
-                                            ->disk('public')
-                                            ->directory('page-contents')
-                                            ->image()
-                                            ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
-                                            ->helperText('Format JPG, PNG, atau WebP. Otomatis dikompres ke WebP.')
-                                            ->columnSpanFull(),
-                                    ])->columns(2),
-
-                                Section::make('Slide 2: Sentra Batu Mulia Borneo')
-                                    ->description('Slide carousel kedua yang menyorot kerajinan batu akik & permata')
-                                    ->schema([
-                                        TextInput::make(static::toFormFieldName('home.hero.slide.batu_mulia.tag'))
-                                            ->label('Label Tag Kategori')
-                                            ->placeholder('Sentra Batu Mulia Borneo'),
-                                        TextInput::make(static::toFormFieldName('home.hero.slide.batu_mulia.title'))
-                                            ->label('Judul Slide'),
-                                        Textarea::make(static::toFormFieldName('home.hero.slide.batu_mulia.desc'))
-                                            ->label('Deskripsi Ringkas')
-                                            ->rows(2)
-                                            ->columnSpanFull(),
-                                        TextInput::make(static::toFormFieldName('home.hero.slide.batu_mulia.cta'))
-                                            ->label('Teks Tombol Aksi (CTA)'),
-                                        FileUpload::make(static::toFormFieldName('home.hero.slide.batu_mulia.image'))
-                                            ->label('Foto Slide Batu Mulia')
-                                            ->disk('public')
-                                            ->directory('page-contents')
-                                            ->image()
-                                            ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
-                                            ->helperText('Format JPG, PNG, atau WebP. Otomatis dikompres ke WebP.')
-                                            ->columnSpanFull(),
-                                    ])->columns(2)->collapsed(),
-
-                                Section::make('Slide 3: Cinderamata & Etnik Dayak')
-                                    ->description('Slide carousel ketiga yang menyorot manik-manik, ukiran Dayak & suvenir')
-                                    ->schema([
-                                        TextInput::make(static::toFormFieldName('home.hero.slide.cinderamata.tag'))
-                                            ->label('Label Tag Kategori')
-                                            ->placeholder('Cinderamata & Etnik Dayak'),
-                                        TextInput::make(static::toFormFieldName('home.hero.slide.cinderamata.title'))
-                                            ->label('Judul Slide'),
-                                        Textarea::make(static::toFormFieldName('home.hero.slide.cinderamata.desc'))
-                                            ->label('Deskripsi Ringkas')
-                                            ->rows(2)
-                                            ->columnSpanFull(),
-                                        TextInput::make(static::toFormFieldName('home.hero.slide.cinderamata.cta'))
-                                            ->label('Teks Tombol Aksi (CTA)'),
-                                        FileUpload::make(static::toFormFieldName('home.hero.slide.cinderamata.image'))
-                                            ->label('Foto Slide Cinderamata')
-                                            ->disk('public')
-                                            ->directory('page-contents')
-                                            ->image()
-                                            ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
-                                            ->helperText('Format JPG, PNG, atau WebP. Otomatis dikompres ke WebP.')
-                                            ->columnSpanFull(),
-                                    ])->columns(2)->collapsed(),
-
-                                Section::make('Slide 4: Sentra Fashion & Busana Kaltim')
-                                    ->description('Slide carousel keempat yang menyorot batik Balikpapan & busana etnik')
-                                    ->schema([
-                                        TextInput::make(static::toFormFieldName('home.hero.slide.fashion.tag'))
-                                            ->label('Label Tag Kategori')
-                                            ->placeholder('Sentra Fashion & Busana Kaltim'),
-                                        TextInput::make(static::toFormFieldName('home.hero.slide.fashion.title'))
-                                            ->label('Judul Slide'),
-                                        Textarea::make(static::toFormFieldName('home.hero.slide.fashion.desc'))
-                                            ->label('Deskripsi Ringkas')
-                                            ->rows(2)
-                                            ->columnSpanFull(),
-                                        TextInput::make(static::toFormFieldName('home.hero.slide.fashion.cta'))
-                                            ->label('Teks Tombol Aksi (CTA)'),
-                                        FileUpload::make(static::toFormFieldName('home.hero.slide.fashion.image'))
-                                            ->label('Foto Slide Fashion')
-                                            ->disk('public')
-                                            ->directory('page-contents')
-                                            ->image()
-                                            ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
-                                            ->helperText('Format JPG, PNG, atau WebP. Otomatis dikompres ke WebP.')
-                                            ->columnSpanFull(),
-                                    ])->columns(2)->collapsed(),
-
-                                Section::make('Slide 5: Suasana Kios Plaza Kebun Sayur')
-                                    ->description('Slide carousel kelima yang menyorot keramahan kios & aktivitas perniagaan')
-                                    ->schema([
-                                        TextInput::make(static::toFormFieldName('home.hero.slide.suasana.tag'))
-                                            ->label('Label Tag Kategori')
-                                            ->placeholder('Suasana Kios Plaza Kebun Sayur'),
-                                        TextInput::make(static::toFormFieldName('home.hero.slide.suasana.title'))
-                                            ->label('Judul Slide'),
-                                        Textarea::make(static::toFormFieldName('home.hero.slide.suasana.desc'))
-                                            ->label('Deskripsi Ringkas')
-                                            ->rows(2)
-                                            ->columnSpanFull(),
-                                        TextInput::make(static::toFormFieldName('home.hero.slide.suasana.cta'))
-                                            ->label('Teks Tombol Aksi (CTA)'),
-                                        FileUpload::make(static::toFormFieldName('home.hero.slide.suasana.image'))
-                                            ->label('Foto Slide Suasana')
-                                            ->disk('public')
-                                            ->directory('page-contents')
-                                            ->image()
-                                            ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
-                                            ->helperText('Format JPG, PNG, atau WebP. Otomatis dikompres ke WebP.')
-                                            ->columnSpanFull(),
-                                    ])->columns(2)->collapsed(),
-                            ]),
-
-                        Tab::make('Akses Cepat & Aksi')
-                            ->icon(Heroicon::OutlinedCursorArrowRays)
-                            ->schema([
-                                Section::make('Pengantar Akses Cepat')
-                                    ->schema([
-                                        TextInput::make(static::toFormFieldName('home.quick_access.title'))
-                                            ->label('Judul Bagian Akses Cepat'),
-                                        TextInput::make(static::toFormFieldName('home.quick_access.description'))
-                                            ->label('Deskripsi Singkat'),
-                                    ])->columns(2),
-
-                                Section::make('Kartu 1: Kios Belanja (Batu Mulia & Cinderamata)')
-                                    ->description('Kartu aksi pertama yang mengarah ke direktori belanja')
-                                    ->schema([
-                                        TextInput::make(static::toFormFieldName('home.action.belanja.category'))
-                                            ->label('Label Kategori (Eyebrow)')
-                                            ->placeholder('KIOS BELANJA'),
-                                        TextInput::make(static::toFormFieldName('home.action.belanja.title'))
-                                            ->label('Judul Kartu'),
-                                        TextInput::make(static::toFormFieldName('home.action.belanja.btn_text'))
-                                            ->label('Teks Tombol Aksi'),
-                                        FileUpload::make(static::toFormFieldName('home.action.belanja.image'))
-                                            ->label('Foto Latar Kartu Belanja (Batu Mulia / Cinderamata)')
-                                            ->disk('public')
-                                            ->directory('page-contents')
-                                            ->image()
-                                            ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
-                                            ->helperText('Format JPG, PNG, atau WebP. Otomatis dikompres ke WebP.')
-                                            ->columnSpanFull(),
-                                    ])->columns(3),
-
-                                Section::make('Kartu 2: Sentra Fashion & Kerajinan')
-                                    ->description('Kartu aksi kedua yang menyorot busana & batik khas')
-                                    ->schema([
-                                        TextInput::make(static::toFormFieldName('home.action.fashion.category'))
-                                            ->label('Label Kategori (Eyebrow)')
-                                            ->placeholder('SENTRA FASHION'),
-                                        TextInput::make(static::toFormFieldName('home.action.fashion.title'))
-                                            ->label('Judul Kartu'),
-                                        TextInput::make(static::toFormFieldName('home.action.fashion.btn_text'))
-                                            ->label('Teks Tombol Aksi'),
-                                        FileUpload::make(static::toFormFieldName('home.action.fashion.image'))
-                                            ->label('Foto Latar Kartu Fashion (Batik / Busana)')
-                                            ->disk('public')
-                                            ->directory('page-contents')
-                                            ->image()
-                                            ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
-                                            ->helperText('Format JPG, PNG, atau WebP. Otomatis dikompres ke WebP.')
-                                            ->columnSpanFull(),
-                                    ])->columns(3),
-
-                                Section::make('Kartu 3: Informasi Gedung & Panduan')
-                                    ->description('Kartu aksi ketiga yang mengarah ke panduan kunjungan & fasilitas')
-                                    ->schema([
-                                        TextInput::make(static::toFormFieldName('home.action.panduan.category'))
-                                            ->label('Label Kategori (Eyebrow)')
-                                            ->placeholder('INFORMASI GEDUNG'),
-                                        TextInput::make(static::toFormFieldName('home.action.panduan.title'))
-                                            ->label('Judul Kartu'),
-                                        TextInput::make(static::toFormFieldName('home.action.panduan.btn_text'))
-                                            ->label('Teks Tombol Aksi'),
-                                        FileUpload::make(static::toFormFieldName('home.action.panduan.image'))
-                                            ->label('Foto Latar Kartu Panduan (Suasana / Fasilitas)')
-                                            ->disk('public')
-                                            ->directory('page-contents')
-                                            ->image()
-                                            ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
-                                            ->helperText('Format JPG, PNG, atau WebP. Otomatis dikompres ke WebP.')
-                                            ->columnSpanFull(),
-                                    ])->columns(3),
-                            ]),
-
-                        Tab::make('Sorotan & Promosi')
-                            ->icon(Heroicon::OutlinedSparkles)
-                            ->schema([
-                                Section::make('Header Bagian Promosi & Tenant')
-                                    ->schema([
-                                        TextInput::make(static::toFormFieldName('home.promos.eyebrow'))
-                                            ->label('Eyebrow Promosi'),
-                                        TextInput::make(static::toFormFieldName('home.promos.title'))
-                                            ->label('Judul Promosi'),
-                                        TextInput::make(static::toFormFieldName('home.promos.cta_label'))
-                                            ->label('Label Tombol Promosi'),
-                                        TextInput::make(static::toFormFieldName('home.oleh_oleh.eyebrow'))
-                                            ->label('Eyebrow Oleh-Oleh'),
-                                        TextInput::make(static::toFormFieldName('home.oleh_oleh.title'))
-                                            ->label('Judul Oleh-Oleh'),
-                                        TextInput::make(static::toFormFieldName('home.oleh_oleh.cta_label'))
-                                            ->label('Label Tombol Oleh-Oleh'),
-                                    ])->columns(3),
-
-                                Section::make('Kios & Stan Pilihan')
-                                    ->schema([
-                                        TextInput::make(static::toFormFieldName('home.featured.eyebrow'))
-                                            ->label('Eyebrow Kios Pilihan'),
-                                        TextInput::make(static::toFormFieldName('home.featured.title'))
-                                            ->label('Judul Kios Pilihan'),
-                                        Textarea::make(static::toFormFieldName('home.featured.description'))
-                                            ->label('Deskripsi Kios Pilihan')
-                                            ->rows(2)
-                                            ->columnSpanFull(),
-                                    ])->columns(2),
-                            ]),
-
-                        Tab::make('Sejarah Gedung')
-                            ->icon(Heroicon::OutlinedBuildingLibrary)
-                            ->schema([
-                                Section::make('Cerita & Narasi Sejarah')
-                                    ->schema([
-                                        TextInput::make(static::toFormFieldName('home.history.eyebrow'))
-                                            ->label('Eyebrow Sejarah'),
-                                        TextInput::make(static::toFormFieldName('home.history.title'))
-                                            ->label('Judul Bagian Sejarah'),
-                                        Textarea::make(static::toFormFieldName('home.history.p1'))
-                                            ->label('Paragraf 1')
-                                            ->rows(3)
-                                            ->columnSpanFull(),
-                                        Textarea::make(static::toFormFieldName('home.history.p2'))
-                                            ->label('Paragraf 2')
-                                            ->rows(3)
-                                            ->columnSpanFull(),
-                                        Textarea::make(static::toFormFieldName('home.history.p3'))
-                                            ->label('Paragraf 3')
-                                            ->rows(3)
-                                            ->columnSpanFull(),
-                                        TextInput::make(static::toFormFieldName('home.history.cta_label'))
-                                            ->label('Label Tombol Pelajari'),
-                                        FileUpload::make(static::toFormFieldName('home.history.image'))
-                                            ->label('Foto Sejarah Gedung')
-                                            ->disk('public')
-                                            ->directory('page-contents')
-                                            ->image()
-                                            ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
-                                            ->helperText('Format JPG, PNG, atau WebP. Otomatis dikompres ke WebP.')
-                                            ->columnSpanFull(),
-                                    ])->columns(2),
-                            ]),
-
-                        Tab::make('Event & Agenda')
-                            ->icon(Heroicon::OutlinedCalendarDays)
-                            ->schema([
-                                Section::make('Pengantar Event & Agenda')
-                                    ->schema([
-                                        TextInput::make(static::toFormFieldName('home.events.title'))
-                                            ->label('Judul Bagian Agenda'),
-                                        Textarea::make(static::toFormFieldName('home.events.description'))
-                                            ->label('Deskripsi Agenda')
-                                            ->rows(2),
-                                    ]),
-                            ]),
-
-                        Tab::make('SEO & Metadata')
-                            ->icon(Heroicon::OutlinedGlobeAlt)
-                            ->schema([
-                                Section::make('Pengaturan SEO Beranda')
-                                    ->description('Digunakan oleh mesin pencari Google dan kartu bagikan media sosial')
-                                    ->schema([
-                                        TextInput::make(static::toFormFieldName('seo.home.title'))
-                                            ->label('Meta Title')
-                                            ->required()
-                                            ->columnSpanFull(),
-                                        Textarea::make(static::toFormFieldName('seo.home.description'))
-                                            ->label('Meta Description')
-                                            ->rows(3)
-                                            ->required()
-                                            ->columnSpanFull(),
-                                    ]),
-                            ]),
+                        $this->getHeroBannerTab(),
+                        $this->getActionCardsTab(),
+                        $this->getHighlightsTab(),
+                        $this->getHistoryTab(),
+                        $this->getEventsTab(),
+                        $this->getSeoTab(),
                     ]),
             ])
             ->statePath('data');
+    }
+
+    protected function getHeroBannerTab(): Tab
+    {
+        return Tab::make('Hero & Banner')
+            ->icon(Heroicon::OutlinedPhoto)
+            ->schema([
+                $this->getHeroMainSlideSection(),
+                static::getHeroCategorySlideSection('2', 'home.hero.slide.batu_mulia', 'Sentra Batu Mulia Borneo', 'Sentra Batu Mulia Borneo'),
+                static::getHeroCategorySlideSection('3', 'home.hero.slide.cinderamata', 'Cinderamata & Etnik Dayak', 'Cinderamata & Etnik Dayak'),
+                static::getHeroCategorySlideSection('4', 'home.hero.slide.fashion', 'Sentra Fashion & Busana Kaltim', 'Sentra Fashion & Busana Kaltim'),
+                static::getHeroCategorySlideSection('5', 'home.hero.slide.suasana', 'Suasana Kios Plaza Kebun Sayur', 'Suasana Kios Plaza Kebun Sayur'),
+            ]);
+    }
+
+    protected function getHeroMainSlideSection(): Section
+    {
+        return Section::make('Slide 1: Gedung Utama Plaza Kebun Sayur')
+            ->description('Slide pembuka carousel hero banner di halaman beranda')
+            ->schema([
+                TextInput::make(static::toFormFieldName('home.hero.eyebrow'))
+                    ->label('Teks Pembuka (Eyebrow)')
+                    ->placeholder('Contoh: Pusat Kerajinan & Cinderamata Khas Balikpapan'),
+                TextInput::make(static::toFormFieldName('home.hero.title'))
+                    ->label('Judul Utama Banner')
+                    ->placeholder('Contoh: Plaza Kebun Sayur'),
+                Textarea::make(static::toFormFieldName('home.hero.subtitle'))
+                    ->label('Subjudul Banner')
+                    ->rows(2)
+                    ->columnSpanFull(),
+                TextInput::make(static::toFormFieldName('home.hero.cta_primary'))
+                    ->label('Label Tombol Utama (CTA 1)'),
+                TextInput::make(static::toFormFieldName('home.hero.cta_secondary'))
+                    ->label('Label Tombol Sekunder (CTA 2)'),
+                TextInput::make(static::toFormFieldName('home.hero.building_tag'))
+                    ->label('Tag Status Gedung'),
+                TextInput::make(static::toFormFieldName('home.hero.building_cta'))
+                    ->label('Teks CTA Status'),
+                FileUpload::make(static::toFormFieldName('home.hero.image'))
+                    ->label('Foto Utama Hero Gedung')
+                    ->disk('public')
+                    ->directory('page-contents')
+                    ->image()
+                    ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
+                    ->helperText('Format JPG, PNG, atau WebP. Otomatis dikompres ke WebP.')
+                    ->columnSpanFull(),
+            ])->columns(2);
+    }
+
+    protected static function getHeroCategorySlideSection(string $slideNum, string $keyPrefix, string $slideName, string $tagPlaceholder): Section
+    {
+        return Section::make("Slide {$slideNum}: {$slideName}")
+            ->description("Slide carousel yang menyorot {$slideName}")
+            ->schema([
+                TextInput::make(static::toFormFieldName("{$keyPrefix}.tag"))
+                    ->label('Label Tag Kategori')
+                    ->placeholder($tagPlaceholder),
+                TextInput::make(static::toFormFieldName("{$keyPrefix}.title"))
+                    ->label('Judul Slide'),
+                Textarea::make(static::toFormFieldName("{$keyPrefix}.desc"))
+                    ->label('Deskripsi Ringkas')
+                    ->rows(2)
+                    ->columnSpanFull(),
+                TextInput::make(static::toFormFieldName("{$keyPrefix}.cta"))
+                    ->label('Teks Tombol Aksi (CTA)'),
+                FileUpload::make(static::toFormFieldName("{$keyPrefix}.image"))
+                    ->label("Foto Slide {$slideName}")
+                    ->disk('public')
+                    ->directory('page-contents')
+                    ->image()
+                    ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
+                    ->helperText('Format JPG, PNG, atau WebP. Otomatis dikompres ke WebP.')
+                    ->columnSpanFull(),
+            ])
+            ->columns(2)
+            ->collapsed();
+    }
+
+    protected function getActionCardsTab(): Tab
+    {
+        return Tab::make('Akses Cepat & Aksi')
+            ->icon(Heroicon::OutlinedCursorArrowRays)
+            ->schema([
+                Section::make('Pengantar Akses Cepat')
+                    ->schema([
+                        TextInput::make(static::toFormFieldName('home.quick_access.title'))
+                            ->label('Judul Bagian Akses Cepat'),
+                        TextInput::make(static::toFormFieldName('home.quick_access.description'))
+                            ->label('Deskripsi Singkat'),
+                    ])->columns(2),
+
+                static::getActionCardSection('1', 'home.action.belanja', 'Kios Belanja (Batu Mulia & Cinderamata)', 'KIOS BELANJA'),
+                static::getActionCardSection('2', 'home.action.fashion', 'Sentra Fashion & Kerajinan', 'SENTRA FASHION'),
+                static::getActionCardSection('3', 'home.action.panduan', 'Informasi Gedung & Panduan', 'INFORMASI GEDUNG'),
+            ]);
+    }
+
+    protected static function getActionCardSection(string $cardNum, string $keyPrefix, string $cardName, string $eyebrowPlaceholder): Section
+    {
+        return Section::make("Kartu {$cardNum}: {$cardName}")
+            ->description("Pengaturan konten dan foto untuk kartu {$cardName}")
+            ->schema([
+                TextInput::make(static::toFormFieldName("{$keyPrefix}.category"))
+                    ->label('Label Kategori (Eyebrow)')
+                    ->placeholder($eyebrowPlaceholder),
+                TextInput::make(static::toFormFieldName("{$keyPrefix}.title"))
+                    ->label('Judul Kartu'),
+                TextInput::make(static::toFormFieldName("{$keyPrefix}.btn_text"))
+                    ->label('Teks Tombol Aksi'),
+                FileUpload::make(static::toFormFieldName("{$keyPrefix}.image"))
+                    ->label("Foto Latar {$cardName}")
+                    ->disk('public')
+                    ->directory('page-contents')
+                    ->image()
+                    ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
+                    ->helperText('Format JPG, PNG, atau WebP. Otomatis dikompres ke WebP.')
+                    ->columnSpanFull(),
+            ])->columns(3);
+    }
+
+    protected function getHighlightsTab(): Tab
+    {
+        return Tab::make('Sorotan & Promosi')
+            ->icon(Heroicon::OutlinedSparkles)
+            ->schema([
+                Section::make('Header Bagian Promosi & Tenant')
+                    ->schema([
+                        TextInput::make(static::toFormFieldName('home.promos.eyebrow'))
+                            ->label('Eyebrow Promosi'),
+                        TextInput::make(static::toFormFieldName('home.promos.title'))
+                            ->label('Judul Promosi'),
+                        TextInput::make(static::toFormFieldName('home.promos.cta_label'))
+                            ->label('Label Tombol Promosi'),
+                        TextInput::make(static::toFormFieldName('home.oleh_oleh.eyebrow'))
+                            ->label('Eyebrow Oleh-Oleh'),
+                        TextInput::make(static::toFormFieldName('home.oleh_oleh.title'))
+                            ->label('Judul Oleh-Oleh'),
+                        TextInput::make(static::toFormFieldName('home.oleh_oleh.cta_label'))
+                            ->label('Label Tombol Oleh-Oleh'),
+                    ])->columns(3),
+
+                Section::make('Kios & Stan Pilihan')
+                    ->schema([
+                        TextInput::make(static::toFormFieldName('home.featured.eyebrow'))
+                            ->label('Eyebrow Kios Pilihan'),
+                        TextInput::make(static::toFormFieldName('home.featured.title'))
+                            ->label('Judul Kios Pilihan'),
+                        Textarea::make(static::toFormFieldName('home.featured.description'))
+                            ->label('Deskripsi Kios Pilihan')
+                            ->rows(2)
+                            ->columnSpanFull(),
+                    ])->columns(2),
+            ]);
+    }
+
+    protected function getHistoryTab(): Tab
+    {
+        return Tab::make('Sejarah Gedung')
+            ->icon(Heroicon::OutlinedBuildingLibrary)
+            ->schema([
+                Section::make('Cerita & Narasi Sejarah')
+                    ->schema([
+                        TextInput::make(static::toFormFieldName('home.history.eyebrow'))
+                            ->label('Eyebrow Sejarah'),
+                        TextInput::make(static::toFormFieldName('home.history.title'))
+                            ->label('Judul Bagian Sejarah'),
+                        Textarea::make(static::toFormFieldName('home.history.p1'))
+                            ->label('Paragraf 1')
+                            ->rows(3)
+                            ->columnSpanFull(),
+                        Textarea::make(static::toFormFieldName('home.history.p2'))
+                            ->label('Paragraf 2')
+                            ->rows(3)
+                            ->columnSpanFull(),
+                        Textarea::make(static::toFormFieldName('home.history.p3'))
+                            ->label('Paragraf 3')
+                            ->rows(3)
+                            ->columnSpanFull(),
+                        TextInput::make(static::toFormFieldName('home.history.cta_label'))
+                            ->label('Label Tombol Pelajari'),
+                        FileUpload::make(static::toFormFieldName('home.history.image'))
+                            ->label('Foto Sejarah Gedung')
+                            ->disk('public')
+                            ->directory('page-contents')
+                            ->image()
+                            ->saveUploadedFileUsing(fn ($file) => app(ImageOptimizerService::class)->optimizeGeneralImage($file, 'page-contents'))
+                            ->helperText('Format JPG, PNG, atau WebP. Otomatis dikompres ke WebP.')
+                            ->columnSpanFull(),
+                    ])->columns(2),
+            ]);
+    }
+
+    protected function getEventsTab(): Tab
+    {
+        return Tab::make('Event & Agenda')
+            ->icon(Heroicon::OutlinedCalendarDays)
+            ->schema([
+                Section::make('Pengantar Event & Agenda')
+                    ->schema([
+                        TextInput::make(static::toFormFieldName('home.events.title'))
+                            ->label('Judul Bagian Agenda'),
+                        Textarea::make(static::toFormFieldName('home.events.description'))
+                            ->label('Deskripsi Agenda')
+                            ->rows(2),
+                    ]),
+            ]);
+    }
+
+    protected function getSeoTab(): Tab
+    {
+        return Tab::make('SEO & Metadata')
+            ->icon(Heroicon::OutlinedGlobeAlt)
+            ->schema([
+                Section::make('Pengaturan SEO Beranda')
+                    ->description('Digunakan oleh mesin pencari Google dan kartu bagikan media sosial')
+                    ->schema([
+                        TextInput::make(static::toFormFieldName('seo.home.title'))
+                            ->label('Meta Title')
+                            ->required()
+                            ->columnSpanFull(),
+                        Textarea::make(static::toFormFieldName('seo.home.description'))
+                            ->label('Meta Description')
+                            ->rows(3)
+                            ->required()
+                            ->columnSpanFull(),
+                    ]),
+            ]);
     }
 
     public function content(Schema $schema): Schema

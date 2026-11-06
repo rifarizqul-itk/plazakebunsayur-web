@@ -370,21 +370,7 @@ function ShoppingGrid({ loading, error, tenants, onRetry, onReset }) {
   );
 }
 
-export function ShoppingDirectory() {
-  const metaTitle = useContent('seo.belanja.title', 'Direktori Kios Belanja | Plaza Kebun Sayur Balikpapan');
-  const metaDesc = useContent(
-    'seo.belanja.description',
-    'Katalog lengkap kios batu mulia, perhiasan, suvenir Dayak, batik, dan kerajinan tradisional di Plaza Kebun Sayur Balikpapan.'
-  );
-  useDocumentMeta(metaTitle, metaDesc);
-
-  const headerTitle = useContent('header.belanja.title', 'Direktori Kios Belanja');
-  const headerDesc = useContent(
-    'header.belanja.description',
-    'Cari kios batu akik, permata, kerajinan Dayak Kenyah, perhiasan emas perak, busana etnik, batik, dan cinderamata khas Kalimantan.'
-  );
-
-  const [searchParams, setSearchParams] = useSearchParams();
+function useShoppingFilterState(searchParams, setSearchParams) {
   const initialQuery = searchParams.get('q') || '';
   const initialType = searchParams.get('type') || '';
 
@@ -407,19 +393,6 @@ export function ShoppingDirectory() {
     setSelectedType(initialType);
   }
 
-  const { categories, floors, tenants, meta, loading, error, retry } = useShoppingData({
-    selectedCatId,
-    selectedFloorId,
-    searchQuery,
-    sortOrder,
-    currentPage,
-    selectedType,
-  });
-
-  const visibleCategories = selectedType
-    ? categories.filter((c) => c.type === selectedType)
-    : categories;
-
   const handleSearchChange = (val) => {
     setSearchQuery(val);
     setCurrentPage(1);
@@ -441,6 +414,53 @@ export function ShoppingDirectory() {
     setCurrentPage(1);
   };
 
+  return {
+    selectedCatId,
+    setSelectedCatId,
+    selectedFloorId,
+    setSelectedFloorId,
+    selectedType,
+    setSelectedType,
+    searchQuery,
+    sortOrder,
+    setSortOrder,
+    currentPage,
+    setCurrentPage,
+    handleSearchChange,
+    handleResetFilters,
+  };
+}
+
+export function ShoppingDirectory() {
+  const metaTitle = useContent('seo.belanja.title', 'Direktori Kios Belanja | Plaza Kebun Sayur Balikpapan');
+  const metaDesc = useContent(
+    'seo.belanja.description',
+    'Katalog lengkap kios batu mulia, perhiasan, suvenir Dayak, batik, dan kerajinan tradisional di Plaza Kebun Sayur Balikpapan.'
+  );
+  useDocumentMeta(metaTitle, metaDesc);
+
+  const headerTitle = useContent('header.belanja.title', 'Direktori Kios Belanja');
+  const headerDesc = useContent(
+    'header.belanja.description',
+    'Cari kios batu akik, permata, kerajinan Dayak Kenyah, perhiasan emas perak, busana etnik, batik, dan cinderamata khas Kalimantan.'
+  );
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const filterState = useShoppingFilterState(searchParams, setSearchParams);
+
+  const { categories, floors, tenants, meta, loading, error, retry } = useShoppingData({
+    selectedCatId: filterState.selectedCatId,
+    selectedFloorId: filterState.selectedFloorId,
+    searchQuery: filterState.searchQuery,
+    sortOrder: filterState.sortOrder,
+    currentPage: filterState.currentPage,
+    selectedType: filterState.selectedType,
+  });
+
+  const visibleCategories = filterState.selectedType
+    ? categories.filter((c) => c.type === filterState.selectedType)
+    : categories;
+
   return (
     <div className="flex flex-col min-h-screen bg-canvas">
       <section className="py-8 sm:py-12 flex-1">
@@ -448,29 +468,29 @@ export function ShoppingDirectory() {
           <ShoppingFilterHeader
             headerTitle={headerTitle}
             headerDesc={headerDesc}
-            searchQuery={searchQuery}
-            handleSearchChange={handleSearchChange}
-            selectedFloorId={selectedFloorId}
-            setSelectedFloorId={setSelectedFloorId}
+            searchQuery={filterState.searchQuery}
+            handleSearchChange={filterState.handleSearchChange}
+            selectedFloorId={filterState.selectedFloorId}
+            setSelectedFloorId={filterState.setSelectedFloorId}
             floors={floors}
             categories={categories}
-            selectedCatId={selectedCatId}
-            setSelectedCatId={setSelectedCatId}
-            selectedType={selectedType}
-            setSelectedType={setSelectedType}
+            selectedCatId={filterState.selectedCatId}
+            setSelectedCatId={filterState.setSelectedCatId}
+            selectedType={filterState.selectedType}
+            setSelectedType={filterState.setSelectedType}
             searchParams={searchParams}
             setSearchParams={setSearchParams}
-            setCurrentPage={setCurrentPage}
-            handleResetFilters={handleResetFilters}
+            setCurrentPage={filterState.setCurrentPage}
+            handleResetFilters={filterState.handleResetFilters}
           />
 
           <div className="relative mb-6">
             <CategoryFilter
               categories={visibleCategories}
-              selectedCategoryId={selectedCatId}
+              selectedCategoryId={filterState.selectedCatId}
               onSelectCategory={(id) => {
-                setSelectedCatId(id);
-                setCurrentPage(1);
+                filterState.setSelectedCatId(id);
+                filterState.setCurrentPage(1);
               }}
             />
             <div className="sm:hidden pointer-events-none absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-canvas to-transparent" />
@@ -478,9 +498,9 @@ export function ShoppingDirectory() {
 
           <ShoppingToolbar
             totalCount={meta.total || tenants.length}
-            sortOrder={sortOrder}
-            setSortOrder={setSortOrder}
-            setCurrentPage={setCurrentPage}
+            sortOrder={filterState.sortOrder}
+            setSortOrder={filterState.setSortOrder}
+            setCurrentPage={filterState.setCurrentPage}
           />
 
           <ShoppingGrid
@@ -488,15 +508,15 @@ export function ShoppingDirectory() {
             error={error}
             tenants={tenants}
             onRetry={retry}
-            onReset={handleResetFilters}
-            searchQuery={searchQuery}
+            onReset={filterState.handleResetFilters}
+            searchQuery={filterState.searchQuery}
           />
 
           <div className="pt-6">
             <PaginationControls
               currentPage={meta.current_page}
               lastPage={meta.last_page}
-              onPageChange={(p) => setCurrentPage(p)}
+              onPageChange={(p) => filterState.setCurrentPage(p)}
             />
           </div>
         </Container>
