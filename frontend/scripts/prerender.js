@@ -156,14 +156,6 @@ const STATIC_PAGE_CONFIGS = [
     fallbackDesc: 'Temukan koleksi permata, batu akik, perhiasan emas perak, dan kerajinan Dayak khas Kalimantan di Plaza Kebun Sayur.',
   },
   {
-    route: 'fashion',
-    key: 'seo.fashion.title',
-    fallbackTitle: 'Sentra Fashion & Busana Khas - Plaza Kebun Sayur Balikpapan',
-    descKey: 'seo.fashion.description',
-    fallbackDesc: 'Temukan koleksi batik Kalimantan, tenun ikat, busana adat Dayak, pakaian modern, dan aksesoris pilihan di Plaza Kebun Sayur.',
-    image: 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1200&q=80',
-  },
-  {
     route: 'informasi',
     key: 'seo.informasi.title',
     altKey: 'seo.agenda.title',
@@ -232,9 +224,10 @@ function renderStaticPages(staticPages) {
 }
 
 function renderLegacyRedirects() {
-  writeRedirectHtml(path.join(distDir, 'kuliner', 'index.html'), 'https://plazakebunsayur.com/fashion');
+  writeRedirectHtml(path.join(distDir, 'fashion', 'index.html'), 'https://plazakebunsayur.com/belanja');
+  writeRedirectHtml(path.join(distDir, 'kuliner', 'index.html'), 'https://plazakebunsayur.com/belanja');
   writeRedirectHtml(path.join(distDir, 'agenda', 'index.html'), 'https://plazakebunsayur.com/informasi');
-  console.log('  🔄 Generated legacy redirects: /kuliner -> /fashion, /agenda -> /informasi');
+  console.log('  🔄 Generated legacy redirects: /fashion -> /belanja, /kuliner -> /belanja, /agenda -> /informasi');
 }
 
 function buildTenantSchema(tenant, isFashion, photoUrl) {
@@ -272,8 +265,7 @@ function resolveTenantDescription(tenant) {
 
 function renderSingleTenant(tenant) {
   const isFashion = isFashionCategory(tenant.category?.type);
-  const folder = isFashion ? 'fashion' : 'belanja';
-  const pageUrl = `https://plazakebunsayur.com/${folder}/${tenant.slug}`;
+  const pageUrl = `https://plazakebunsayur.com/belanja/${tenant.slug}`;
   const cleanDesc = resolveTenantDescription(tenant);
   const photoUrl = tenant.image_url || 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=1200&q=80';
 
@@ -286,15 +278,18 @@ function renderSingleTenant(tenant) {
     schema,
   });
 
-  const dest = path.join(distDir, folder, tenant.slug, 'index.html');
+  const dest = path.join(distDir, 'belanja', tenant.slug, 'index.html');
   writeHtml(dest, tenantHtml);
 
-  if (isFashion) {
-    writeRedirectHtml(
-      path.join(distDir, 'kuliner', tenant.slug, 'index.html'),
-      `https://plazakebunsayur.com/fashion/${tenant.slug}`
-    );
-  }
+  writeRedirectHtml(
+    path.join(distDir, 'fashion', tenant.slug, 'index.html'),
+    `https://plazakebunsayur.com/belanja/${tenant.slug}`
+  );
+
+  writeRedirectHtml(
+    path.join(distDir, 'kuliner', tenant.slug, 'index.html'),
+    `https://plazakebunsayur.com/belanja/${tenant.slug}`
+  );
 }
 
 function renderTenantPages(tenants) {

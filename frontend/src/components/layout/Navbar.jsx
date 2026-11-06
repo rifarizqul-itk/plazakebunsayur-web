@@ -8,17 +8,12 @@ import { useContent, useContentImage, useNavItems, useSiteSettings } from '../..
 const DEFAULT_HEADER_NAV = [
   { id: 1, label: 'BERANDA', path: '/', is_external: false, is_cta: false },
   { id: 2, label: 'BELANJA', path: '/belanja', is_external: false, is_cta: false },
-  { id: 3, label: 'FASHION', path: '/fashion', is_external: false, is_cta: false },
-  { id: 4, label: 'INFORMASI', path: '/informasi', is_external: false, is_cta: false },
-  { id: 5, label: 'PANDUAN', path: '/panduan-kunjungan', is_external: false, is_cta: false },
-  { id: 6, label: 'KONTAK', path: '/kontak', is_external: false, is_cta: false },
+  { id: 3, label: 'INFORMASI', path: '/informasi', is_external: false, is_cta: false },
+  { id: 4, label: 'PANDUAN', path: '/panduan-kunjungan', is_external: false, is_cta: false },
+  { id: 5, label: 'KONTAK', path: '/kontak', is_external: false, is_cta: false },
 ];
 
 function resolveItemPathAndLabel(item) {
-  if (item.path === '/kuliner') {
-    const label = item.label === 'KULINER' ? 'FASHION' : item.label;
-    return { ...item, path: '/fashion', label };
-  }
   if (item.path === '/agenda') {
     const label = item.label === 'AGENDA' ? 'INFORMASI' : item.label;
     return { ...item, path: '/informasi', label };
@@ -27,7 +22,9 @@ function resolveItemPathAndLabel(item) {
 }
 
 function normalizeNavItems(rawItems) {
-  return rawItems.map(resolveItemPathAndLabel);
+  return rawItems
+    .filter((item) => item.path !== '/fashion' && item.path !== '/kuliner')
+    .map(resolveItemPathAndLabel);
 }
 
 function DesktopNavItem({ item }) {
@@ -98,7 +95,7 @@ function MobileNavItem({ item, onClose }) {
   );
 }
 
-function useNavSearch(isFashionPage, setMobileMenuOpen, mobileMenuOpen) {
+function useNavSearch(setMobileMenuOpen, mobileMenuOpen) {
   const [searchNavInput, setSearchNavInput] = useState('');
   const searchInputRef = useRef(null);
   const navigate = useNavigate();
@@ -131,8 +128,7 @@ function useNavSearch(isFashionPage, setMobileMenuOpen, mobileMenuOpen) {
     e.preventDefault();
     const query = searchNavInput.trim();
     if (query) {
-      const targetPath = isFashionPage ? '/fashion' : '/belanja';
-      navigate(`${targetPath}?q=${encodeURIComponent(query)}`);
+      navigate(`/belanja?q=${encodeURIComponent(query)}`);
       setSearchNavInput('');
       setMobileMenuOpen(false);
     }
@@ -328,7 +324,7 @@ export function Navbar() {
     setSearchNavInput,
     searchInputRef,
     handleSearchSubmit,
-  } = useNavSearch(isFashionPage, setMobileMenuOpen, mobileMenuOpen);
+  } = useNavSearch(setMobileMenuOpen, mobileMenuOpen);
 
   return (
     <header className="sticky top-0 z-50 bg-canvas transition-colors shadow-sm">

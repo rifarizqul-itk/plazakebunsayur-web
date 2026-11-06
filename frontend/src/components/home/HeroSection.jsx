@@ -327,7 +327,7 @@ export function HeroSection() {
       title: fashTitle,
       desc: fashDesc,
       ctaText: fashCta,
-      ctaHref: '/fashion',
+      ctaHref: '/belanja',
     },
     {
       id: 'suasana-plaza',
@@ -355,7 +355,7 @@ export function HeroSection() {
       id: 'fashion',
       category: actionFashionCategory,
       title: actionFashionTitle,
-      href: '/fashion',
+      href: '/belanja',
       btnText: actionFashionBtnText,
       image: actionFashionImg,
     },

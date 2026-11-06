@@ -33,6 +33,11 @@ class ShoppingTipResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Tips Belanja Cerdas';
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema

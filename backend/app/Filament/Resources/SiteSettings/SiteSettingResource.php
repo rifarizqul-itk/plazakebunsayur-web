@@ -6,7 +6,6 @@ use App\Filament\Resources\SiteSettings\Pages\EditSiteSetting;
 use App\Filament\Resources\SiteSettings\Pages\ListSiteSettings;
 use App\Models\SiteSetting;
 use BackedEnum;
-use UnitEnum;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -15,6 +14,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class SiteSettingResource extends Resource
 {
@@ -27,6 +27,11 @@ class SiteSettingResource extends Resource
     protected static ?string $modelLabel = 'Pengaturan Informasi Gedung';
 
     protected static ?string $pluralModelLabel = 'Pengaturan Informasi Gedung';
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
 
     public static function form(Schema $schema): Schema
     {

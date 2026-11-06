@@ -33,6 +33,11 @@ class BuildingRuleResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Tata Tertib Gedung';
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema
